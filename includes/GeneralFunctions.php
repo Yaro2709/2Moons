@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -284,7 +284,7 @@ function ValidateAddress($address) {
 
 function message($mes, $dest = "", $time = "3", $topnav = false, $menu = true)
 {
-	require_once(ROOT_PATH . 'includes/classes/class.template.php');
+	require_once('includes/classes/class.template.php');
 	$template = new template();
 	$template->message($mes, $dest, $time, !$topnav);
 	exit;
@@ -528,7 +528,7 @@ function ClearCache()
 		}
 	}
 	
-	require_once ROOT_PATH.'includes/classes/Cronjob.class.php';
+	require_once 'includes/classes/Cronjob.class.php';
 	Cronjob::reCalculateCronjobs();
 	$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET eco_hash = '';");
 	clearstatcache();
@@ -610,7 +610,7 @@ function exceptionHandler($exception)
 	global $CONF;
 	if(!headers_sent()) {
 		if (!class_exists('HTTP', false)) {
-			require_once(ROOT_PATH . 'includes/classes/HTTP.class.php');
+			require_once('includes/classes/HTTP.class.php');
 		}
 		
 		HTTP::sendHeader('HTTP/1.1 503 Service Unavailable');
@@ -681,7 +681,7 @@ function exceptionHandler($exception)
 	<!-- 
 		This website is powered by 2Moons '.$VERSION.'
 		2Moons is a free Space Browsergame initially created by Jan Kr�pke and licensed under GNU/GPL.
-		2Moons is copyright 2009-2012 of Jan Kröpke. Extensions are copyright of their respective owners.
+		2Moons is copyright 2009-2013 of Jan Kröpke. Extensions are copyright of their respective owners.
 		Information and contribution at http://2moons.cc/
 	-->
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -749,9 +749,9 @@ function exceptionHandler($exception)
 	$errorText	.= "Stack trace:\r\n";
 	$errorText	.= str_replace(ROOT_PATH, '/', htmlspecialchars(str_replace('\\', '/',$exception->getTraceAsString())))."\r\n";
 	
-	if(is_writable(ROOT_PATH.'includes/error.log'))
+	if(is_writable('includes/error.log'))
 	{
-		file_put_contents(ROOT_PATH.'includes/error.log', $errorText, FILE_APPEND);
+		file_put_contents('includes/error.log', $errorText, FILE_APPEND);
 	}
 }
 
@@ -762,4 +762,50 @@ function errorHandler($errno, $errstr, $errfile, $errline)
     }
 	
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+
+// "workaround" for PHP version pre 5.3.0
+if (!function_exists('array_replace_recursive'))
+{
+    function array_replace_recursive($array, $array1)
+    {
+        if (!function_exists('recurse')) {
+            function recurse($array, $array1)
+            {
+                foreach ($array1 as $key => $value)
+                {
+                    // create new key in $array, if it is empty or not an array
+                    if (!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key])))
+                    {
+                        $array[$key] = array();
+                    }
+
+                    // overwrite the value in the base array
+                    if (is_array($value))
+                    {
+                        $value = recurse($array[$key], $value);
+                    }
+                    $array[$key] = $value;
+                }
+                return $array;
+            }
+        }
+
+        // handle the arguments, merge one by one
+        $args = func_get_args();
+        $array = $args[0];
+        if (!is_array($array))
+        {
+            return $array;
+        }
+        $count = count($args);
+        for ($i = 1; $i < $count; ++$i)
+        {
+            if (is_array($args[$i]))
+            {
+                $array = recurse($array, $args[$i]);
+            }
+        }
+        return $array;
+    }
 }

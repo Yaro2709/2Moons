@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -927,7 +927,7 @@ $LNG['op_user_name_no_alphanumeric']		= 'Bitte beim Username nur alphanumerische
 $LNG['op_change_name_pro_week']				= 'Sie Können ihren Usernamen nur 1x pro Woche ändern';
 $LNG['op_change_name_exist']				= 'Der Name %s existiert bereits';
 $LNG['op_active_build_messages']			= 'Baulistennachrichten aktivieren';
-$LNG['op_active_spy_messages_mode']			= 'Spioangeberechte zusammenfassen';
+$LNG['op_active_spy_messages_mode']			= 'Spioangeberichte zusammenfassen';
 $LNG['op_dst_mode']							= 'Sommerzeit?';
 $LNG['op_dst_mode_sel'][0]					= 'Nein';
 $LNG['op_dst_mode_sel'][1]					= 'Ja';
@@ -1125,10 +1125,11 @@ $LNG['ti_read']								= 'Ticket lesen';
 $LNG['ti_answer']							= 'Antwort schreiben';
 $LNG['ti_create']							= 'Ticket erstellt am';
 $LNG['ti_msgtime']							= 'Nachricht geschrieben am';
-$LNG['ti_responded']							= 'Ticket antworteten am ';
+$LNG['ti_responded']						= 'Ticket antworteten am ';
 $LNG['ti_not_exist']						= 'Das Ticket #%d existiert nicht!';
 $LNG['ti_from']								= 'von';
 $LNG['ti_re']								= 'RE:';
+$LNG['ti_error_no_subject']					= 'Du musst einen Betreff eingeben!';
 
 //----------------------------------------------------------------------------//
 // Rekorde 

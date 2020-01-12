@@ -12,9 +12,11 @@
 
 define('MODE', 'CHAT');
 define('ROOT_PATH', str_replace('\\', '/',dirname(AJAX_CHAT_PATH)).'/');
-require(ROOT_PATH.'includes/common.php');
-require(ROOT_PATH.'includes/pages/game/class.AbstractPage.php');
-require(ROOT_PATH.'includes/pages/game/class.ShowErrorPage.php');
+set_include_path(ROOT_PATH);
+
+require 'includes/pages/game/class.AbstractPage.php';
+require 'includes/pages/game/class.ShowErrorPage.php';
+require 'includes/common.php';
 
 if(!$SESSION->IsUserLogin() || (Config::get('game_disable') == 0 && $USER['authlevel'] == AUTH_USR))
 {
@@ -25,5 +27,3 @@ if(!isModulAvalible(MODULE_CHAT))
 {
 	ShowErrorPage::printError($LNG['sys_module_inactive']);
 }
-
-?>

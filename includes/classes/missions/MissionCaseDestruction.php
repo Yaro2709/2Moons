@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -493,8 +493,8 @@ HTML;
 						".$defendStatus." = ".$defendStatus." + 1,
 						kbmetal = kbmetal + ".$debris[901].",
 						kbcrystal = kbcrystal + ".$debris[902].",
-						lostunits = lostunits + ".$combatResult['unitLost']['attacker'].",
-						desunits = desunits + ".$combatResult['unitLost']['defender']."
+						lostunits = lostunits + ".$combatResult['unitLost']['defender'].",
+						desunits = desunits + ".$combatResult['unitLost']['attacker']."
 						WHERE
 						id IN (".implode(',', array_keys($userDefend)).");";
 						

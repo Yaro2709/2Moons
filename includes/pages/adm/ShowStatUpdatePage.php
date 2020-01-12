@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -30,7 +30,7 @@ if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FI
 
 function ShowStatUpdatePage() {
 	global $LNG;
-	require_once(ROOT_PATH.'includes/classes/class.statbuilder.php');
+	require_once('includes/classes/class.statbuilder.php');
 	$stat			= new statbuilder();
 	$result			= $stat->MakeStats();
 	$memory_p		= str_replace(array("%p", "%m"), $result['memory_peak'], $LNG['sb_top_memory']);

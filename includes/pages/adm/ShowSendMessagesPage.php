@@ -22,7 +22,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -56,7 +56,7 @@ function ShowSendMessagesPage() {
 
 		if (!empty($Message) && !empty($Subject))
 		{
-			require_once(ROOT_PATH.'includes/functions/BBCode.php');
+			require_once('includes/functions/BBCode.php');
 			if($Mode == 0 || $Mode == 2) {
 				$Time    	= TIMESTAMP;
 				$From    	= '<span class="'.$class.'">'.$LNG['user_level'][$USER['authlevel']].' '.$USER['username'].'</span>';
@@ -70,7 +70,7 @@ function ShowSendMessagesPage() {
 				}
 			}
 			if($Mode == 1 || $Mode == 2) {
-				require ROOT_PATH.'includes/classes/Mail.class.php';
+				require 'includes/classes/Mail.class.php';
 				$userList	= array();
 				
 				$USERS		= $GLOBALS['DATABASE']->query("SELECT `email`, `username` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".(!empty($Lang) ? " AND `lang` = '".$GLOBALS['DATABASE']->sql_escape($Lang)."'": "").";");
@@ -90,10 +90,18 @@ function ShowSendMessagesPage() {
 		}
 	}
 	
+	$sendModes	= $LNG['ma_modes'];
+	
+	if(Config::get('mail_active') == 0)
+	{
+		unset($sendModes[1]);
+		unset($sendModes[2]);
+	}
+	
 	$template	= new template();
 	$template->assign_vars(array(
 		'langSelector' => array_merge(array('' => $LNG['ma_all']), $LNG->getAllowedLangs(false)),
-		'modes' => $LNG['ma_modes'],
+		'modes' => $sendModes,
 	));
 	$template->show('SendMessagesPage.tpl');
 }

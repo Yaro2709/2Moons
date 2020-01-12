@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -112,7 +112,7 @@ function ShowCreatorPage()
 
 				$UserID = $GLOBALS['DATABASE']->GetInsertID();
 				
-				require_once(ROOT_PATH.'includes/functions/CreateOnePlanetRecord.php');
+				require_once('includes/functions/CreateOnePlanetRecord.php');
 				$PlanerID	= CreateOnePlanetRecord($Galaxy, $System, $Planet, $_SESSION['adminuni'], $UserID, $LNG['fcm_planet'], true, $UserAuth);
 								
 				$SQL = "UPDATE ".USERS." SET 
@@ -186,7 +186,7 @@ function ShowCreatorPage()
 					exit;
 				}
 			
-				require_once(ROOT_PATH.'includes/functions/CreateOneMoonRecord.php');
+				require_once('includes/functions/CreateOneMoonRecord.php');
 				
 				if(empty($MoonName))
 				{
@@ -240,7 +240,7 @@ function ShowCreatorPage()
 					exit;
 				}
 				
-				require_once(ROOT_PATH.'includes/functions/CreateOnePlanetRecord.php');
+				require_once('includes/functions/CreateOnePlanetRecord.php');
 				CreateOnePlanetRecord($Galaxy, $System, $Planet, $_SESSION['adminuni'], $id, '', '', false) ; 
 						
 				$SQL  = "UPDATE ".PLANETS." SET ";

@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -85,7 +85,7 @@ abstract class AbstractPage
 	
 	protected function getCronjobsTodo()
 	{
-		require_once ROOT_PATH.'includes/classes/Cronjob.class.php';
+		require_once 'includes/classes/Cronjob.class.php';
 		
 		$this->tplObj->assign_vars(array(	
 			'cronjobs'		=> Cronjob::getNeedTodoExecutedJobs()
@@ -185,6 +185,7 @@ abstract class AbstractPage
             'vmode'				=> $USER['urlaubs_modus'],
 			'authlevel'			=> $USER['authlevel'],
 			'userID'			=> $USER['id'],
+			'bodyclass'			=> $this->getWindow(),
             'game_name'			=> Config::get('game_name'),
             'uni_name'			=> Config::get('uni_name'),
 			'ga_active'			=> Config::get('ga_active'),

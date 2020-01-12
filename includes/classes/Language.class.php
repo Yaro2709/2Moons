@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  Copyright (C) 2012 Jan Krï¿½pke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -119,7 +119,7 @@ class Language implements ArrayAccess {
     }
 	
     public function addData($data) {
-		$this->container = array_merge_recursive($this->container, $data);
+		$this->container = array_replace_recursive($this->container, $data);
     }
 	
 	public function getLanguage()
@@ -145,12 +145,12 @@ class Language implements ArrayAccess {
 		ob_start();
 		
         foreach($Files as $File) {
-			require(ROOT_PATH.'language/'.$this->getLanguage().'/'.$File.'.php');
+			require('language/'.$this->getLanguage().'/'.$File.'.php');
 		}
 		
-		if(file_exists(ROOT_PATH.'language/'.$this->getLanguage().'/CUSTOM.php'))
+		if(file_exists('language/'.$this->getLanguage().'/CUSTOM.php'))
 		{
-			require(ROOT_PATH.'language/'.$this->getLanguage().'/CUSTOM.php');
+			require('language/'.$this->getLanguage().'/CUSTOM.php');
 		}
 		
 		ob_end_clean();

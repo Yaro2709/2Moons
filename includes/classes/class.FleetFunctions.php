@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -47,25 +47,28 @@ class FleetFunctions
 		global $pricelist;
 		
 		$techSpeed	= $pricelist[$Ship]['tech'];
+        $baseSpeed = $pricelist[$Ship]['speed'];
 		
 		if($techSpeed == 4) {
 			$techSpeed = $Player['impulse_motor_tech'] >= 5 ? 2 : 1;
+            $baseSpeed = $pricelist[$Ship]['speed2'];
 		}
 		if($techSpeed == 5) {
 			$techSpeed = $Player['hyperspace_motor_tech'] >= 8 ? 3 : 2;
+            $baseSpeed = $pricelist[$Ship]['speed2'];
 		}
 			
 		
 		switch($techSpeed)
 		{
 			case 1:
-				$speed	= $pricelist[$Ship]['speed'] * (1 + (0.1 * $Player['combustion_tech']));
+				$speed	= $baseSpeed * (1 + (0.1 * $Player['combustion_tech']));
 			break;
 			case 2:
-				$speed	= $pricelist[$Ship]['speed'] * (1 + (0.2 * $Player['impulse_motor_tech']));
+				$speed	= $baseSpeed * (1 + (0.2 * $Player['impulse_motor_tech']));
 			break;
 			case 3:
-				$speed	= $pricelist[$Ship]['speed'] * (1 + (0.3 * $Player['hyperspace_motor_tech']));
+				$speed	= $baseSpeed * (1 + (0.3 * $Player['hyperspace_motor_tech']));
 			break;
 			default:
 				$speed	= 0;
@@ -184,7 +187,7 @@ class FleetFunctions
 
 	public static function GetFleetMissions($USER, $MisInfo, $Planet)
 	{
-		global $resource, $CONF;
+		global $resource;
 		$Missions	= self::GetAvailableMissions($USER, $MisInfo, $Planet);
 		$stayBlock	= array();;
 		if (in_array(15, $Missions)) {
@@ -303,7 +306,6 @@ class FleetFunctions
 	
 	public static function GetAvailableMissions($USER, $MissionInfo, $GetInfoPlanet)
 	{	
-		global $CONF;
 		$YourPlanet				= (!empty($GetInfoPlanet['id_owner']) && $GetInfoPlanet['id_owner'] == $USER['id']) ? true : false;
 		$UsedPlanet				= (!empty($GetInfoPlanet['id_owner'])) ? true : false;
 		$avalibleMissions		= array();

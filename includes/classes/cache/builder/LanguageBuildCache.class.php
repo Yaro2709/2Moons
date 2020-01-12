@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -31,7 +31,8 @@ class LanguageBuildCache
 	function buildCache()
 	{
 		$languages	= array();
-		foreach (new DirectoryIterator(ROOT_PATH.'language/') as $fileInfo) {
+		foreach (new DirectoryIterator(ROOT_PATH.'language/') as $fileInfo)
+		{
 			if(!$fileInfo->isDir()) continue;
 			
 			$Lang	= $fileInfo->getBasename();
@@ -40,7 +41,7 @@ class LanguageBuildCache
 				
 			// Fixed BOM problems.
 			ob_start();
-			require(ROOT_PATH.'language/'.$Lang.'/LANG.cfg');
+			require 'language/'.$Lang.'/LANG.cfg';
 			ob_end_clean();
 			$languages[$Lang]	= $Language['name'];
 		}

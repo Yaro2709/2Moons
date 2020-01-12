@@ -21,7 +21,7 @@
  * @author FC92
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -103,8 +103,8 @@ function ShowCronjobEdit()
 		$error_msg[] = $LNG['cronjob_error_dom'];
 	if ($post_class == '')
 		$error_msg[] = $LNG['cronjob_error_class'];
-	elseif (!file_exists(ROOT_PATH . 'includes/classes/cronjob/'.$post_class.'.class.php')) 
-		$error_msg[] = $LNG['cronjob_error_filenotfound'].ROOT_PATH . 'includes/classes/cronjobs/'.$post_class.'.class.php';
+	elseif (!file_exists('includes/classes/cronjob/'.$post_class.'.class.php')) 
+		$error_msg[] = $LNG['cronjob_error_filenotfound'].'includes/classes/cronjobs/'.$post_class.'.class.php';
 	
 	if (count($error_msg) == 0)
 	{
@@ -162,7 +162,7 @@ function ShowCronjobDetail($detail,$error_msg=NULL)
 	
 	$avalibleCrons	= array();
 	
-	$dir = new DirectoryIterator(ROOT_PATH.'includes/classes/cronjob/');
+	$dir = new DirectoryIterator('includes/classes/cronjob/');
 	foreach ($dir as $fileinfo) {
 		if ($fileinfo->isFile()) {
 			$avalibleCrons[]	= $fileinfo->getBasename('.class.php');

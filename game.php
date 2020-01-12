@@ -21,29 +21,30 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.2 (2013-03-18)
+ * @version 1.7.3 (2013-05-19)
  * @info $Id$
  * @link http://2moons.cc/
  */
 
 define('MODE', 'INGAME');
 define('ROOT_PATH', str_replace('\\', '/',dirname(__FILE__)).'/');
+set_include_path(ROOT_PATH);
 
-require(ROOT_PATH.'includes/pages/game/class.AbstractPage.php');
-require(ROOT_PATH.'includes/pages/game/class.ShowErrorPage.php');
-require(ROOT_PATH.'includes/common.php');
+require 'includes/pages/game/class.AbstractPage.php';
+require 'includes/pages/game/class.ShowErrorPage.php';
+require 'includes/common.php';
 
 $page 		= HTTP::_GP('page', 'overview');
 $mode 		= HTTP::_GP('mode', 'show');
-$mode		= str_replace(array('_', '\\', '/', '.', "\0"), '', $mode);
+$page		= str_replace(array('_', '\\', '/', '.', "\0"), '', $page);
 $pageClass	= 'Show'.ucwords($page).'Page';
 
-if(!file_exists(ROOT_PATH . 'includes/pages/game/class.'.$pageClass.'.php')) {
+if(!file_exists('includes/pages/game/class.'.$pageClass.'.php')) {
 	ShowErrorPage::printError($LNG['page_doesnt_exist']);
 }
 
 // Added Autoload in feature Versions
-require(ROOT_PATH . 'includes/pages/game/class.'.$pageClass.'.php');
+require('includes/pages/game/class.'.$pageClass.'.php');
 
 $pageObj	= new $pageClass;
 // PHP 5.2 FIX
