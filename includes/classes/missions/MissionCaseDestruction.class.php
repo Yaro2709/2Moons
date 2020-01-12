@@ -319,15 +319,16 @@ HTML;
 			$stealResource = calculateSteal($fleetAttack, $targetPlanet);
 		}
 
-		if($this->_fleet['fleet_end_type'] == 3)
-		{
-			// Use planet debris, if attack on moons
-			$sql			= "SELECT der_metal, der_crystal FROM %%PLANETS%% WHERE id_luna = :moonId;";
-			$targetDebris	= $db->selectSingle($sql, array(
-				':moonId'	=> $this->_fleet['fleet_end_id']
-			));
-			$targetPlanet 	+= $targetDebris;
-		}
+        if($this->_fleet['fleet_end_type'] == 3)
+        {
+            // Use planet debris, if attack on moons
+            $sql							= "SELECT der_metal, der_crystal FROM %%PLANETS%% WHERE id_luna = :moonId;";
+            $targetDebris					= $db->selectSingle($sql, array(
+                ':moonId'	=> $this->_fleet['fleet_end_id']
+            ));
+            $targetPlanet['der_metal']		= $targetDebris['der_metal'];
+            $targetPlanet['der_crystal']	= $targetDebris['der_crystal'];
+        }
 
 		foreach($debrisResource as $elementID)
 		{
@@ -348,6 +349,8 @@ HTML;
 			'fleetDestroySuccess'	=> false,
 		);
 
+		$moonDestroyStatus				= false;
+
 		switch($combatResult['won'])
 		{
 			// Win
@@ -359,6 +362,7 @@ HTML;
 				$moonDestroyChance	= max($moonDestroyChance, 0);
 
 				$randChance	= mt_rand(1, 100);
+
 				if ($randChance <= $moonDestroyChance)
 				{
 					$sql		= 'SELECT id FROM %%PLANETS%% WHERE id_luna = :moonId;';
@@ -397,6 +401,7 @@ HTML;
 					));
 
 					PlayerUtil::deletePlanet($targetPlanet['id']);
+					$moonDestroyStatus	= $planetID;
 
 					$reportInfo['moonDestroySuccess'] = 1;
 				} else {
@@ -529,16 +534,32 @@ HTML;
 			$debrisType	= 'id';
 		}
 
-		$sql = 'UPDATE %%PLANETS%% SET
-		der_metal	= :metal,
-		der_crystal	= :crystal
-		WHERE '.$debrisType.' = :planetId;';
+		if ($moonDestroyStatus)
+		{
+			$sql = 'UPDATE %%PLANETS%% SET
+			der_metal	= :metal,
+			der_crystal	= :crystal
+			WHERE id = :planetId;';
 
-		$db->update($sql, array(
-			':metal'	=> $planetDebris[901],
-			':crystal'	=> $planetDebris[902],
-			':planetId'	=> $this->_fleet['fleet_end_id']
-		));
+			$db->update($sql, array(
+				':metal'	=> $planetDebris[901],
+				':crystal'	=> $planetDebris[902],
+				':planetId'	=> $moonDestroyStatus
+			));
+		}
+		else
+		{
+			$sql = 'UPDATE %%PLANETS%% SET
+			der_metal	= :metal,
+			der_crystal	= :crystal
+			WHERE '.$debrisType.' = :planetId;';
+
+			$db->update($sql, array(
+				':metal'	=> $planetDebris[901],
+				':crystal'	=> $planetDebris[902],
+				':planetId'	=> $this->_fleet['fleet_end_id']
+			));
+		}
 
 		$sql = 'UPDATE %%PLANETS%% SET
 		metal		= metal - :metal,

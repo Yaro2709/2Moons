@@ -4,10 +4,12 @@
 <input type="hidden" name="ajax" value="1">
 <input type="hidden" name="messcat" value="{$MessID}">
 <input type="hidden" name="side" value="{$page}">
-<table id="messagestable" style="width:760px;">
-	<tr>
-		<th colspan="4">{$LNG.mg_message_title}</th>
-	</tr>
+
+<div id="messagestable">
+<div class="title" style="margin: 0 -5px 0 -5px;">
+	{$LNG.mg_message_title}
+</div>
+<table style="width:100%;">
 	{if $MessID != 999}
 	<tr>
 		<td colspan="4">
@@ -34,7 +36,7 @@
 		<td>{$LNG.mg_subject}</td>
 	</tr>
 	{foreach $MessageList as $Message}
-	<tr id="message_{$Message.id}" class="message_head{if $MessID != 999 && $Message.unread == 1} mes_unread{/if}">
+	<tr id="message_{$Message.id}" class="title message_head{if $MessID != 999 && $Message.unread == 1} mes_unread{/if}">
 		<td style="width:40px;" rowspan="2">
 		{if $MessID != 999}<input name="messageID[{$Message.id}]" value="1" type="checkbox">{/if}
 		</td>
@@ -42,12 +44,12 @@
 		<td>{$Message.from}</td>
 		<td>{$Message.subject}
 		{if $Message.type == 1 && $MessID != 999}
-		<a href="#" onclick="return Dialog.PM({$Message.sender}, Message.CreateAnswer('{$Message.subject}'));" title="{$LNG.mg_answer_to} {strip_tags($Message.from)}"><img src="{$dpath}img/m.gif" border="0"></a>
+		<a href="#" onclick="return Dialog.PM({$Message.sender}, Message.CreateAnswer('{$Message.subject}'));" title="{$LNG.mg_answer_to} {strip_tags($Message.from)}"><i class="far fa-envelope" title="Message privé" style="font-size: 15px;"></i></a>
 		{/if}
 		</td>
 	</tr>
 	<tr class="messages_body">
-		<td colspan="3" class="left">
+		<td colspan="3" class="left" style="padding: 10px; background: rgba(0,0,0,0.7);">
 		{$Message.text}
 		</td>
 	</tr>
@@ -72,5 +74,6 @@
 	</tr>
 	{/if}
 </table>
+</div>
 </form>
 {/block}

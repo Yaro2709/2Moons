@@ -17,10 +17,30 @@
  
 // If you have custom lang vars, you can include them here. The file ll be not overwrite by updatemanager
 // Also you can overwrite exists var, too. You use the same key.
- 
-$LNG['extraone']     = 'You can buy one new planet after you have colonized %s planets.(max number of allowed planets)';
-$LNG['extratwo'] = 'You have bought';
-$LNG['extratree'] = '%s planets';
-$LNG['extrafour'] = 'You have to send out a new colonisation mission in order to use your newly planet ';
-$LNG['extrafive'] = 'Buy planet for %s DM';
-$LNG['error_3']= 'You dont have enough Dark Matter!!';
+
+/**
+ * main.navigation.tpl
+**/
+$LNG['mn_username']			= "Username";
+
+/**
+ * page.overview.default.tpl
+**/
+$LNG['ov_online_user']			= "Players online";
+$LNG['ov_ticket']				= "Ticket";
+$LNG['ov_create_moon']			= "Create moon";
+$LNG['ov_list_title_build']		= "Building";
+$LNG['ov_list_title_tech']		= "Research";
+$LNG['ov_list_title_fleet']		= "Fleet/Defense";
+
+/**
+ * Admin
+ */
+// ShowMenuPage.tpl
+$LNG['mu_mods_settings'] = "Configure Mods";
+// ConfigModsBody.tpl
+$LNG['msg_expedition'] = "Shipping Configuration";
+$LNG['msg_expedition_active'] = "Limit system";
+$LNG['msg_expedition_active_desc'] = "When activating this system you can put a limit on the resources to find during an expedition by the players";
+$LNG['msg_expedition_active_price'] = "Maximum amount of resources";
+$LNG['msg_expedition_active_price_desc'] = "Maximum amount the player can find on an expedition even if the capacity is higher";

@@ -262,6 +262,16 @@ class ShowOverviewPage extends AbstractGamePage
 			$rankInfo	= sprintf($LNG['ov_userrank_info'], pretty_number($statData['total_points']), $LNG['ov_place'],
 				$statData['total_rank'], $statData['total_rank'], $LNG['ov_of'], $config->users_amount);
 		}
+
+		/**
+		 * Addon user online
+		 * Ajout pour le nombre de joueur connecter
+		**/
+		$onlineUserResult = $db->select("SELECT * FROM %%USERS%% WHERE onlinetime > :timeUser AND authlevel < :auth ;", array(
+			':timeUser' => TIMESTAMP - 15*60,
+			':auth' => AUTH_ADM,
+		));
+		$onlineUser = $db->rowCount($onlineUserResult);
 		
 		$this->assign(array(
 			'rankInfo'					=> $rankInfo,
@@ -273,8 +283,8 @@ class ShowOverviewPage extends AbstractGamePage
 			'system'					=> $PLANET['system'],
 			'planet'					=> $PLANET['planet'],
 			'planet_type'				=> $PLANET['planet_type'],
-			'username'					=> $USER['username'],
 			'userid'					=> $USER['id'],
+			'onlineUser'				=> $onlineUser,
 			'buildInfo'					=> $buildInfo,
 			'Moon'						=> $Moon,
 			'fleets'					=> $this->GetFleets(),
@@ -291,7 +301,6 @@ class ShowOverviewPage extends AbstractGamePage
 			'ref_minpoints'				=> $config->ref_minpoints,
 			'RefLinks'					=> $RefLinks,
 			'chatOnline'				=> $chatOnline,
-			'servertime'				=> _date("M D d H:i:s", TIMESTAMP, $USER['timezone']),
 			'path'						=> HTTP_PATH,
 		));
 		

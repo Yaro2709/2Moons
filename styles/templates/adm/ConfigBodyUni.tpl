@@ -16,11 +16,11 @@
 	<td>&nbsp;</td>
 </tr><tr>
 	<td>{$se_general_speed}</td>
-	<td><input name="game_speed" value="{$game_speed}" type="text" maxlength="5"></td>
+	<td><input name="game_speed" value="{$game_speed}" type="text"></td>
 	<td><img src="./styles/resource/images/admin/i.gif" width="16" height="16" alt="" class="tooltip" data-tooltip-content="{$se_normal_speed}"></td>
 </tr><tr>
 	<td>{$se_fleet_speed}</td>
-	<td><input name="fleet_speed" value="{$fleet_speed}" type="text" maxlength="5"></td>
+	<td><input name="fleet_speed" value="{$fleet_speed}" type="text"></td>
 	<td><img src="./styles/resource/images/admin/i.gif" width="16" height="16" alt="" class="tooltip" data-tooltip-content="{$se_normal_speed_fleet}"></td>
 </tr><tr>
 	<td>{$se_resources_producion_speed}</td>

@@ -30,11 +30,29 @@
 // If you have custom lang vars, you can include them here. The file ll be not overwrite by updatemanager
 // Also you can overwrite exists var, too. You use the same key.
 
-$LNG['extraone']     = 'Vous pouvez acheter une nouvelle planète après avoir colonisé %s planètes (nombre maximum de planètes autorisées)';
-$LNG['extratwo'] = 'Vous avez bien acheté une planète';
-$LNG['extratree'] = '%s planètes';
-$LNG['extrafour'] = 'Vous devez envoyer une nouvelle mission de colonisation afin d\'utiliser votre nouvelle planète ';
-$LNG['extrafive'] = 'Acheter une planète pour %s DM';
-$LNG['error_3']= 'Vous n\'avez pas assez de matière noir!!';
- 
-?>
+/**
+ * main.navigation.tpl
+**/
+$LNG['mn_username']			= "Pseudo";
+
+/**
+ * page.overview.default.tpl
+**/
+$LNG['ov_online_user']			= "Joueurs en ligne";
+$LNG['ov_ticket']				= "Ticket";
+$LNG['ov_create_moon']			= "Créer une lune";
+$LNG['ov_list_title_build']		= "Bâtiment";
+$LNG['ov_list_title_tech']		= "Recherche";
+$LNG['ov_list_title_fleet']		= "Flotte/Défense";
+
+/**
+ * Admin
+ */
+// ShowMenuPage.tpl
+$LNG['mu_mods_settings'] = "Configurer les Mods";
+// ConfigModsBody.tpl
+$LNG['msg_expedition'] = "Configuration Expédition";
+$LNG['msg_expedition_active'] = "Système de limite";
+$LNG['msg_expedition_active_desc'] = "Lors de l'activation de ce système vous pouvez mettre une limite sur les ressource trouver lors d'une expédition par les joueurs";
+$LNG['msg_expedition_active_price'] = "Montant des ressources maximum";
+$LNG['msg_expedition_active_price_desc'] = "Montant maximum que le joueur peut trouver lors d'une expédition même si la capacité est supérieur";

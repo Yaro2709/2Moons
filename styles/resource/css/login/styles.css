@@ -6329,3 +6329,11 @@ legend {
 .thumbnail .caption .caption-label {
   color: #164bb1;
 }
+
+@media screen and (max-width: 480px)
+{
+    .mobile
+    {
+        margin-top: 80px;
+    }
+}

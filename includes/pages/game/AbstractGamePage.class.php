@@ -95,6 +95,7 @@ abstract class AbstractGamePage
 		global $PLANET, $LNG, $USER, $THEME, $resource, $reslist;
 
 		$config			= Config::get();
+		$db 			= Database::get();
 
 		$PlanetSelect	= array();
 
@@ -137,6 +138,13 @@ abstract class AbstractGamePage
 			$resourceTable[$resourceID]['current']		= $USER[$resource[$resourceID]];
 		}
 
+		/**
+		 * Addition for moving planet with arrows
+		 * Ajout pour le déplacement de planète avec les flèches
+		**/
+		$previousPlanet = $db->selectSingle("SELECT id FROM %%PLANETS%% WHERE id < :planetID AND id_owner = :userID AND destruyed = '0' ORDER BY id DESC LIMIT 1 ;", array(':planetID' => $PLANET['id'], ':userID' => $USER['id']));
+		$nextPlanet = $db->selectSingle("SELECT id FROM %%PLANETS%% WHERE id > :planetID AND id_owner = :userID AND destruyed = '0' ORDER BY id ASC LIMIT 1 ;", array(':planetID' => $PLANET['id'], ':userID' => $USER['id']));
+
 		$themeSettings	= $THEME->getStyleSettings();
 
 		$this->assign(array(
@@ -152,7 +160,10 @@ abstract class AbstractGamePage
 			'closed'			=> !$config->game_disable,
 			'hasBoard'			=> filter_var($config->forum_url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED),
 			'hasAdminAccess'	=> !empty(Session::load()->adminAccess),
-			'hasGate'			=> $PLANET[$resource[43]] > 0
+			'hasGate'			=> $PLANET[$resource[43]] > 0,
+			'username'			=> $USER['username'],
+			'previousPlanet'	=> $previousPlanet['id'],
+			'nextPlanet'		=> $nextPlanet['id'],
 		));
 	}
 
@@ -226,7 +237,7 @@ abstract class AbstractGamePage
 	}
 
 	protected function display($file) {
-		global $THEME, $LNG;
+		global $THEME, $LNG, $USER;
 
 		$this->save();
 
@@ -240,6 +251,7 @@ abstract class AbstractGamePage
 			'scripts'		=> $this->tplObj->jsscript,
 			'execscript'	=> implode("\n", $this->tplObj->script),
 			'basepath'		=> PROTOCOL.HTTP_HOST.HTTP_BASE,
+			'servertime'	=> _date("M D d H:i:s", TIMESTAMP, $USER['timezone']),
 		));
 
 		$this->assign(array(

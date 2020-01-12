@@ -1,6 +1,6 @@
 {block name="title" prepend}{$LNG.siteTitleIndex}{/block}
 {block name="content"}
-	<div class="jumbotron" style="margin-top:10px;">
+	<div class="jumbotron hidden-xs" style="margin-top:10px;">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12 col-lg-12">
@@ -12,7 +12,7 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<div class="container mobile">
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="panel panel-default">

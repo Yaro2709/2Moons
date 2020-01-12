@@ -8,6 +8,7 @@ function resourceTicker(config, init) {
 		window.setInterval(function(){resourceTicker(config)}, 1000);
 		
 	var element	= $('#'+config.valueElem);
+	var elementPoursent	= $('.'+config.valuePoursent);
 
 	if(element.hasClass('res_current_max'))
 	{
@@ -18,18 +19,26 @@ function resourceTicker(config, init) {
 	
 	if (nrResource < config.limit[1]) 
 	{
+		pourcent = Math.max(0, parseFloat(nrResource / config.limit[1]) * 100).toFixed(0);
+
 		if (!element.hasClass('res_current_warn') && nrResource >= config.limit[1] * 0.9)
 		{
 			element.addClass('res_current_warn');
 		}
 		if(viewShortlyNumber) {
-			element.attr('data-tooltip-content', NumberGetHumanReadable(nrResource));
-			element.html(shortly_number(nrResource));
+			//element.attr('data-tooltip-content', NumberGetHumanReadable(nrResource));
+			element.html(shortly_number(nrResource) + " ("+pourcent+"%) ");
+			elementPoursent.css('width', pourcent+'%');
+
 		} else {
-			element.html(NumberGetHumanReadable(nrResource));
+			element.html(NumberGetHumanReadable(nrResource) + " ("+pourcent+"%) ");
+			elementPoursent.css('width', pourcent+'%');
+
 		}
 	} else {
+		elementPoursent.css('width', '100%');
 		element.addClass('res_current_max');
+		element.html(shortly_number(nrResource) + " (100%) ");
 	}
 }
 

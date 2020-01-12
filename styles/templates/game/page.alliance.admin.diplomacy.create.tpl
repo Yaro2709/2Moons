@@ -1,32 +1,39 @@
 {block name="title" prepend}{$LNG.lm_alliance}{/block}
 {block name="content"}
-<form name="message" id="message">
-	<table style="width:95%">
-	<tr>
-		<th colspan="2">{$LNG.al_circular_send_ciruclar}</th>
-	</tr>
-	<tr>
-		<td>{$LNG.al_diplo_ally}</td>
-		<td>{html_options name="ally_id" values=$IdList output=$AllyList}</td>
-	</tr>
-	<tr>
-		<td>{$LNG.al_diplo_level_des}</td>
-		<td>{html_options name="level" values=range(1,6) output=$LNG.al_diplo_level selected=$diploMode}</td>
-	</tr>
-	<tr>
-		<td>{$LNG.al_diplo_text}<br>(<span id="cntChars">0</span> / 5000 {$LNG.al_characters})</td>
-		<td>
-			<textarea name="text" cols="60" rows="10" onkeyup="$('#cntChars').text($(this).val().length);"></textarea>
-		</td>
-	</tr>
-	<tr>
-		<th colspan="2" style="text-align:center;">
-		<input type="reset" value="{$LNG.al_circular_reset}">
-		<input type="button" onclick="return check();" value="{$LNG.al_circular_send_submit}">
-		</th>
-	</tr>
-	</table>
-</form>
+
+<div class="content_page_popup">
+	<div class="title_popup">
+		{$LNG.al_circular_send_ciruclar}
+	</div>
+
+	<div class="content_popup">
+		<form name="message" id="message">
+			<table style="width:100%">
+			<tr>
+				<td>{$LNG.al_diplo_ally}</td>
+				<td>{html_options name="ally_id" values=$IdList output=$AllyList}</td>
+			</tr>
+			<tr>
+				<td>{$LNG.al_diplo_level_des}</td>
+				<td>{html_options name="level" values=range(1,6) output=$LNG.al_diplo_level selected=$diploMode}</td>
+			</tr>
+			<tr>
+				<td>{$LNG.al_diplo_text}<br>(<span id="cntChars">0</span> / 5000 {$LNG.al_characters})</td>
+				<td>
+					<textarea style="height: 175px;" name="text" cols="60" rows="10" onkeyup="$('#cntChars').text($(this).val().length);"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2" style="text-align:center;">
+				<input type="reset" value="{$LNG.al_circular_reset}">
+				<input type="button" onclick="return check();" value="{$LNG.al_circular_send_submit}">
+				</th>
+			</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
 {/block}
 {block name="script" append}
 <script type="text/javascript">
