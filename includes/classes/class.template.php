@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -39,7 +39,7 @@ class template extends Smarty
 		$this->compile_check		= true; #Set false for production!
 		$this->jsscript				= array();
 		$this->script				= array();
-		$this->compile_dir			= is_writable(ROOT_PATH.'cache/') ? ROOT_PATH.'cache/' : sys_get_temp_dir();
+		$this->compile_dir			= is_writable(ROOT_PATH.'cache/') ? ROOT_PATH.'cache/' : $this->getTempPath();
 		$this->template_dir			= ROOT_PATH.'/styles/templates/';
 		$this->Popup				= false;
 		$this->Dialog				= false;
@@ -53,6 +53,12 @@ class template extends Smarty
 	public function execscript($script)
 	{
 		$this->script[]				= $script;
+	}
+	
+	public function getTempPath()
+	{
+		include(ROOT_PATH.'includes/libs/wcf/BasicFileUtil.class.php');
+		return BasicFileUtil::getTempFolder();
 	}
 		
 	public function assign_vars(array $var = array()) 
@@ -293,6 +299,43 @@ class template extends Smarty
 		}
 		$this->show('error_message_body.tpl');
 	}
+    /**
+    * Workaround  for new Smarty Method to add custom props...
+    */
+
+    public function __get($name)
+    {
+        $allowed = array(
+        'template_dir' => 'getTemplateDir',
+        'config_dir' => 'getConfigDir',
+        'plugins_dir' => 'getPluginsDir',
+        'compile_dir' => 'getCompileDir',
+        'cache_dir' => 'getCacheDir',
+        );
+
+        if (isset($allowed[$name])) {
+            return $this->{$allowed[$name]}();
+        } else {
+            return $this->{$name};
+        }
+    }
+	
+    public function __set($name, $value)
+    {
+        $allowed = array(
+        'template_dir' => 'setTemplateDir',
+        'config_dir' => 'setConfigDir',
+        'plugins_dir' => 'setPluginsDir',
+        'compile_dir' => 'setCompileDir',
+        'cache_dir' => 'setCacheDir',
+        );
+
+        if (isset($allowed[$name])) {
+            $this->{$allowed[$name]}($value);
+        } else {
+            $this->{$name} = $value;
+        }
+    }
 }
 
 ?>

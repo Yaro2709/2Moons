@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -89,7 +89,7 @@ class ShowSupportPage
 		$ticket = $db->uniquequery("SELECT text FROM ".SUPP." WHERE `id` = '".$TicketID."';");
 
 		$text 	= $ticket['text'].'<br><br><hr>'.sprintf($LNG['supp_player_write'], $USER['username'], tz_date(TIMESTAMP)).'<br><br>'.makebr($text).'';
-		$db->query("UPDATE ".SUPP." SET `text` = '".$db->sql_escape($text) ."',`status` = '3' WHERE `id` = '". $db->sql_escape($TicketID) ."';");
+		$db->query("UPDATE ".SUPP." SET `text` = '".$db->sql_escape($text) ."', `time` = '".TIMESTAMP."', `status` = '3' WHERE `id` = '". $db->sql_escape($TicketID) ."';");
 		$template->message($LNG['sendit_a'],"game.php?page=support", 3);
 	}
 	

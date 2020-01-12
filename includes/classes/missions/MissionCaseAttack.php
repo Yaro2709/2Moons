@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -208,6 +208,7 @@ class MissionCaseAttack extends MissionFunctions
 		$MoonChance       	= min(round($FleetDebris / 100000 * $GLOBALS['CONFIG'][$this->_fleet['fleet_universe']]['moon_factor'], 0), $GLOBALS['CONFIG'][$this->_fleet['fleet_universe']]['moon_chance']);
 		$UserChance 		= mt_rand(1, 100);
 		
+		$INFO						= $this->_fleet;
 		if ($targetPlanet['planet_type'] == 1 && $targetPlanet['id_luna'] == 0 && $MoonChance > 0 && $UserChance <= $MoonChance)
 		{		
 			require_once(ROOT_PATH.'includes/functions/CreateOneMoonRecord.php');
@@ -222,7 +223,6 @@ class MissionCaseAttack extends MissionFunctions
 			}
 		}
 
-		$INFO						= $this->_fleet;
 		$INFO['steal']				= $steal;
 		$INFO['moon']['des']		= 0;
 		$INFO['moon']['chance'] 	= $MoonChance;

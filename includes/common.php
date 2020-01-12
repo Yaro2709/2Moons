@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -48,7 +48,7 @@ ini_set('session.use_cookies', '1');
 ini_set('session.use_only_cookies', '1');
 session_set_cookie_params(SESSION_LIFETIME, '/');
 session_cache_limiter('nocache');
-session_name($dbsettings["secretword"]);
+session_name('2Moons');
 ini_set('session.use_trans_sid', 0);
 ini_set('session.auto_start', '0');
 ini_set('session.serialize_handler', 'php');  

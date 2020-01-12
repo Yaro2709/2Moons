@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -164,6 +164,7 @@ class MissionCaseDestruction extends MissionFunctions
 		}
 		
 		$db->multi_query($SQL);
+		$INFO						= $this->_fleet;
 		
 		switch ($result['won']) {
 			case "a":
@@ -203,7 +204,6 @@ class MissionCaseDestruction extends MissionFunctions
 			break;
 		}
 		
-		$INFO						= $this->_fleet;
 		$INFO['steal']				= $steal;
 		$INFO['moon']['des']		= 1;
 			

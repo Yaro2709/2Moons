@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -34,7 +34,6 @@ function ShowSupportPage()
 	global $USER, $LNG, $db;
 
 	$template			= new template();
-	
 	$ID	= request_var('id', 0);
 	
 	switch($_GET['action'])
@@ -51,17 +50,19 @@ function ShowSupportPage()
 
 			$SQL  = "UPDATE ".SUPP." SET ";
 			$SQL .= "`text` = '".$db->sql_escape($newtext)."',";
+			$SQL .= "`time` = '".TIMESTAMP."',";
 			$SQL .= "`status` = '2'";
 			$SQL .= "WHERE ";
 			$SQL .= "`id` = '".$ID."' ";
 			$db->query($SQL);
-			SendSimpleMessage($ticket['player_id'], '', TIMESTAMP, 4, $USER['username'], sprintf($LNG['sp_answer_message_title'], $ID), sprintf($LNG['sp_answer_message'], $ID)); 
+			SendSimpleMessage($ticket['player_id'], 0, TIMESTAMP, 4, $USER['username'], sprintf($LNG['sp_answer_message_title'], $ID), sprintf($LNG['sp_answer_message'], $ID)); 
 		break;
 		case 'open':
 			$ticket = $db->uniquequery("SELECT text FROM ".SUPP." WHERE `id` = '".$ID."';");
 			$newtext = $ticket['text'].'<br><br><hr>'.sprintf($LNG['sp_admin_open'], $USER['username'], tz_date(TIMESTAMP));
 			$SQL  = "UPDATE ".SUPP." SET ";
 			$SQL .= "`text` = '".$db->sql_escape($newtext)."',";
+			$SQL .= "`time` = '".TIMESTAMP."',";
 			$SQL .= "`status` = '2'";
 			$SQL .= "WHERE ";
 			$SQL .= "`id` = '".$ID."' ";
@@ -72,6 +73,7 @@ function ShowSupportPage()
 			$newtext = $ticket['text'].'<br><br><hr>'.sprintf($LNG['sp_admin_closed'], $USER['username'], tz_date(TIMESTAMP));
 			$SQL  = "UPDATE ".SUPP." SET ";
 			$SQL .= "`text` = '".$db->sql_escape($newtext)."',";
+			$SQL .= "`time` = '".TIMESTAMP."',";
 			$SQL .= "`status` = '0'";
 			$SQL .= "WHERE ";
 			$SQL .= "`id` = '".$ID."' ";

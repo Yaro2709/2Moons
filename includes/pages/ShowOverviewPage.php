@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -162,7 +162,7 @@ function ShowOverviewPage()
 	if($CONF['ref_active']) 
 	{
 		while ($RefRow = $db->fetch_array($RefLinksRAW)) {
-			$RefLinks[$RefLinks['id']]	= array(
+			$RefLinks[$RefRow['id']]	= array(
 				'username'	=> $RefRow['username'],
 				'points'	=> $RefRow['total_points']
 			);

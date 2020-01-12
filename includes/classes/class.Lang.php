@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -56,7 +56,8 @@ class Language
 					require(ROOT_PATH.'language/'.$Lang.'/LANG.cfg');
 					$Languages[$Lang]	= $Language['name'];
 				}
-				file_put_contents(ROOT_PATH.'cache/cache.languages.php', serialize($Languages));
+				if(is_writable(ROOT_PATH.'cache'))
+					file_put_contents(ROOT_PATH.'cache/cache.languages.php', serialize($Languages));
 				self::$Languages	= $Languages;
 			}
 		}

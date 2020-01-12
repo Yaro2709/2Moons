@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -135,7 +135,7 @@ switch ($page) {
 				}
 				
 				$ExistsUser 	= $db->countquery("SELECT (SELECT COUNT(*) FROM ".USERS." WHERE `universe` = '".$UNI."' AND `username` = '".$db->sql_escape($UserName)."') + (SELECT COUNT(*) FROM ".USERS_VALID." WHERE `universe` = '".$UNI."' AND `username` = '".$db->sql_escape($UserName)."')");
-				$ExistsMails	= $db->countquery("SELECT (SELECT COUNT(*) FROM ".USERS." WHERE `universe` = '".$UNI."' AND (`email` = '".$db->sql_escape($value)."' OR `email_2` = '".$db->sql_escape($value)."')) + (SELECT COUNT(*) FROM ".USERS_VALID." WHERE `universe` = '".$UNI."' AND `email` = '".$db->sql_escape($value)."')");
+				$ExistsMails	= $db->countquery("SELECT (SELECT COUNT(*) FROM ".USERS." WHERE `universe` = '".$UNI."' AND (`email` = '".$db->sql_escape($UserEmail)."' OR `email_2` = '".$db->sql_escape($UserEmail)."')) + (SELECT COUNT(*) FROM ".USERS_VALID." WHERE `universe` = '".$UNI."' AND `email` = '".$db->sql_escape($UserEmail)."')");
 				
 				if(empty($UserName))
 					$errors[]	= array('username', $LNG['empty_user_field']);

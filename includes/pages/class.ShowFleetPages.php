@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
+ * @version 1.6 (2011-11-17)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -205,9 +205,9 @@ class ShowFleetPages extends FleetFunctions
 		
 		foreach ($reslist['fleet'] as $id => $ShipID)
 		{
-			$amount		 				= min(request_var('ship'.$ShipID, '0') + 0, $PLANET[$resource[$ShipID]] + 0);
+			$amount		 				= min(request_var('ship'.$ShipID, 0.0), $PLANET[$resource[$ShipID]]);
 			
-			if ($amount <= 0 || $ShipID == 212 || !is_numeric($amount)) continue;
+			if ($amount < 1 || $ShipID == 212 || !is_numeric($amount)) continue;
 
 			$Fleet[$ShipID]				= $amount;
 			$FleetRoom			   	   += $pricelist[$ShipID]['capacity'] * $amount;
@@ -912,12 +912,12 @@ class ShowFleetPages extends FleetFunctions
 			}
 		}
 		
-		$SpeedFactor    	 = parent::GetGameSpeedFactor();
-		$Distance    		 = parent::GetTargetDistance($PLANET['galaxy'], $galaxy, $PLANET['system'], $system, $PLANET['planet'], $planet);
-		$SpeedAllMin 		 = parent::GetFleetMaxSpeed($FleetArray, $USER);
-		$Duration    		 = parent::GetMissionDuration(10, $SpeedAllMin, $Distance, $SpeedFactor, $USER);
-		$consumption   		 = parent::GetFleetConsumption($FleetArray, $Duration, $Distance, $SpeedAllMin, $USER, $SpeedFactor);
-		$duration		= $duration * (1 - $USER['factor']['shipspeed']);
+		$SpeedFactor    	= parent::GetGameSpeedFactor();
+		$Distance    		= parent::GetTargetDistance($PLANET['galaxy'], $galaxy, $PLANET['system'], $system, $PLANET['planet'], $planet);
+		$SpeedAllMin		= parent::GetFleetMaxSpeed($FleetArray, $USER);
+		$Duration			= parent::GetMissionDuration(10, $SpeedAllMin, $Distance, $SpeedFactor, $USER);
+		$consumption		= parent::GetFleetConsumption($FleetArray, $Duration, $Distance, $SpeedAllMin, $USER, $SpeedFactor);
+		$Duration			= $Duration * (1 - $USER['factor']['shipspeed']);
 
 		$UserDeuterium   	-= $consumption;
 
