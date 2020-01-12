@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -44,8 +44,8 @@ function ShowBannedPage()
 		$PrangerList[]	= array(
 			'player'	=> $u['who'],
 			'theme'		=> $u['theme'],
-			'from'		=> date(TDFORMAT,$u['time']),
-			'to'		=> date(TDFORMAT,$u['longer']),
+			'from'		=> tz_date($u['time']),
+			'to'		=> tz_date($u['longer']),
 			'admin'		=> $u['author'],
 			'mail'		=> $u['email'],
 			'info'		=> sprintf($LNG['bn_writemail'], $u['author']),

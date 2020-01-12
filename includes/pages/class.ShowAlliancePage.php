@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -35,7 +35,7 @@ class ShowAlliancePage
 		return $db->countquery("SELECT COUNT(*) FROM ".ALLIANCE_REQUEST." WHERE `userid` = ".$USER['id'].";");
 	}
 	
-	private function GetAlliance()
+	private function GetAlliance($template)
 	{
 		global $db, $UNI;
 		$tag	= request_var('tag', '', UTF8_SUPPORT);
@@ -161,7 +161,7 @@ class ShowAlliancePage
 			case 0:
 				switch($mode){
 					case 'ainfo':
-						$allyrow = $this->GetAlliance();
+						$allyrow = $this->GetAlliance($template);
 
 						if (!$allyrow) die(redirectTo("game.php?page=alliance"));
 						
@@ -382,7 +382,7 @@ class ShowAlliancePage
 								
 				switch($mode){
 					case 'ainfo':
-						$allyrow = $this->GetAlliance();
+						$allyrow = $this->GetAlliance($template);
 
 
 						if (!$allyrow) redirectTo("game.php?page=alliance");
@@ -454,7 +454,7 @@ class ShowAlliancePage
 								'galaxy'		=> $UserRow['galaxy'],
 								'system'		=> $UserRow['system'],
 								'planet'		=> $UserRow['planet'],
-								'register_time'	=> date(TDFORMAT, $UserRow['ally_register_time']),
+								'register_time'	=> tz_date($UserRow['ally_register_time']),
 								'points'		=> pretty_number($UserRow['total_points']),
 								'range'			=> $UserRow['ally_range'],
 								'onlinetime'	=> floor((TIMESTAMP - $UserRow['onlinetime']) / 60),
@@ -731,7 +731,7 @@ class ShowAlliancePage
 										'system'		=> $UserRow['system'],
 										'planet'		=> $UserRow['planet'],
 										'rank_id'		=> $UserRow['ally_rank_id']-1,
-										'register_time'	=> date(TDFORMAT, $UserRow['ally_register_time']),
+										'register_time'	=> tz_date($UserRow['ally_register_time']),
 										'points'		=> pretty_number($UserRow['total_points']),
 										'range'			=> $UserRow['ally_range'],
 										'onlinetime'	=> sprintf("%d d", floor(TIMESTAMP - $UserRow['onlinetime']) / 86400),
@@ -891,7 +891,7 @@ class ShowAlliancePage
 
 								$text  	= makebr(request_var('text', '', true));
 
-								if ($action == $LNG['al_acept_request'])
+								if ($action == 'yes')
                                 {
                                     $db->multi_query("
 										UPDATE ".ALLIANCE." SET `ally_members` = `ally_members` + 1 WHERE id='".$ally['id']."';
@@ -903,7 +903,7 @@ class ShowAlliancePage
 
                                     redirectTo('game.php?page=alliance&mode=admin&edit=ally');
                                 }
-								elseif($action == $LNG['al_decline_request'])
+								elseif($action == 'no')
 								{
 									$db->query("DELETE FROM ".ALLIANCE_REQUEST." WHERE userid = ".$id.";");
 
@@ -920,7 +920,7 @@ class ShowAlliancePage
 										'username'	=> $RequestRow['username'],
 										'text'		=> makebr($RequestRow['text']),
 										'id'		=> $RequestRow['id'],
-										'time' 		=> date(TDFORMAT, $RequestRow['time']),
+										'time' 		=> tz_date($RequestRow['time']),
 									);
 								}
 								

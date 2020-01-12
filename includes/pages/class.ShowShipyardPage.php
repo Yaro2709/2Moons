@@ -22,14 +22,14 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
  
 class ShowShipyardPage
 {
-	private function GetMaxConstructibleElements($Element)
+	public function GetMaxConstructibleElements($Element)
 	{
 		global $pricelist, $PLANET, $USER, $reslist;
 
@@ -54,7 +54,7 @@ class ShowShipyardPage
 		
 		return min($MAX);
 	}
-	private function GetMaxConstructibleRockets($Missiles)
+	public function GetMaxConstructibleRockets($Missiles)
 	{
 		global $resource, $PLANET, $USER, $CONF;
 
@@ -74,7 +74,7 @@ class ShowShipyardPage
 		);
 	}
 
-	private function GetElementRessources($Element, $Count)
+	public function GetElementRessources($Element, $Count)
 	{
 		global $pricelist;
 
@@ -86,7 +86,7 @@ class ShowShipyardPage
 		return $ResType;
 	}
 	
-	private function CancelAuftr($CancelArray) 
+	public function CancelAuftr($CancelArray) 
 	{
 		global $USER, $PLANET;
 		$ElementQueue = unserialize($PLANET['b_hangar_id']);
@@ -98,10 +98,6 @@ class ShowShipyardPage
 			$ElementQ	= $ElementQueue[$Auftr];
 			$Element	= $ElementQ[0];
 			$Count		= $ElementQ[1];
-			
-			if ($Element == 214 && $USER['rpg_destructeur'] == 1)
-				$Count = $Count / 2;
-			
 			$Resses					= $this->GetElementRessources($Element, $Count);
 			$PLANET['metal']		+= $Resses['metal']			* 0.6;
 			$PLANET['crystal']		+= $Resses['crystal']		* 0.6;
@@ -109,11 +105,15 @@ class ShowShipyardPage
 			$USER['darkmatter']		+= $Resses['darkmatter']	* 0.6;
 			unset($ElementQueue[$Auftr]);
 		}
-		$PLANET['b_hangar_id']	= serialize(array_values($ElementQueue));
+		if(empty($ElementQueue))
+			$PLANET['b_hangar_id']	= '';
+		else
+			$PLANET['b_hangar_id']	= serialize(array_values($ElementQueue));
+			
 		FirePHP::getInstance(true)->log("Queue(Hanger): ".$PLANET['b_hangar_id']);
 	}
 	
-	private function GetRestPrice($Element, $Factor = true)
+	public function GetRestPrice($Element, $Factor = true)
 	{
 		global $USER, $PLANET, $pricelist, $resource, $LNG;
 
@@ -156,7 +156,6 @@ class ShowShipyardPage
 			$MaxElements 	= $this->GetMaxConstructibleElements($Element);
 			$Count 			= min($Count, $MaxElements);
 			$BuildArray    	= !empty($PLANET['b_hangar_id']) ? unserialize($PLANET['b_hangar_id']) : array();
-			
 			if ($Element == 502 || $Element == 503)
 			{
 				$MaxMissiles	= $this->GetMaxConstructibleRockets($Missiles);
@@ -171,7 +170,9 @@ class ShowShipyardPage
 						break;
 					}
 				}
-				$Count 		= ($PLANET[$resource[$Element]] == 0 && $InBuild === false) ? 1 : 0;
+				
+				if($Count != 0 && $PLANET[$resource[$Element]] == 0 && $InBuild === false)
+					$Count 		=  1;
 			}
 
 			if(empty($Count))
@@ -182,10 +183,6 @@ class ShowShipyardPage
 			$PLANET['crystal']   	-= $Ressource['crystal'];
 			$PLANET['deuterium'] 	-= $Ressource['deuterium'];
 			$USER['darkmatter']  	-= $Ressource['darkmatter'];
-
-			if ($Element == 214 && $USER['rpg_destructeur'] == 1)
-				$Count = 2 * $Count;
-
 			$BuildArray[]			= array($Element, floattostring($Count));
 			$PLANET['b_hangar_id']	= serialize($BuildArray);
 			FirePHP::getInstance(true)->log("Queue(Hanger): ".$PLANET['b_hangar_id']);

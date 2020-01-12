@@ -10,20 +10,16 @@ body {
 	background:url("img/bkd_page.jpg") no-repeat fixed right top #0d0d0d;
 }
 
-body,input,select,textarea,a,td,th,tr,table{
+body,input,select,button,textarea,a,td,th,tr,table{
 	color:#CCC;
 }
 
-input,select,option,textarea {
+input,button,select,option,textarea {
 	background:#393939
 }
 
 #menu li:first-child, #menu li:last-child{
 	background-color:transparent;
-}
-
-a:focus {
-	outline:none
 }
 
 a:hover {
@@ -58,7 +54,7 @@ td {
 	background: linear-gradient(top, #222222 0,#030303 20px); /* W3C */
 }
 
-input {
+input,button {
 	border:1px solid #212121;
 	text-align:center
 }
@@ -120,20 +116,33 @@ select {
 	font-weight:700
 }
 
-.strong {
+.galaxy-short-noob,
+.galaxy-username-noob{
+	color:#a0ffa0
+}
+
+.galaxy-short-strong,
+.galaxy-username-strong {
 	color:#ffa0a0
 }
 
-.vacation {
+.galaxy-short-vacation,
+.galaxy-username-vacation {
 	color:#659ec7
 }
 
-.inactive {
+.galaxy-short-inactive,
+.galaxy-username-inactive {
 	color:#ccc
 }
 
-.longinactive {
+.galaxy-short-longinactive,
+.galaxy-username-longinactive {
 	color:#999
+}
+
+.galaxy-short-banned {
+	text-decoration:line-through
 }
 
 .ownattack {
@@ -188,12 +197,8 @@ select {
 	color:lime
 }
 
-.noob,.owntransport {
+.owntransport {
 	color:#a0ffa0
-}
-
-.banned,.s_button {
-	text-decoration:line-through
 }
 
 .ownespionage,.ownmissile {
@@ -204,9 +209,21 @@ select {
 	color:#f60
 }
 
+.build_submit {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    color: lime;
+}
+.onlist{
+    color: #CCC;
+}
+
 /** HEADER **/
 
 #header {
+	-moz-border-radius:0 0 20px 20px;
+	-webkit-border-radius: 0 0 20px 20px;
+    border-radius: 0 0 20px 20px;
 	background: #222222; /* Old browsers */
 	background: -moz-linear-gradient(top, #222222 0%, #030303 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#222222), color-stop(100%,#030303)); /* Chrome,Safari4+ */
@@ -215,11 +232,9 @@ select {
 	background: -ms-linear-gradient(top, #222222 0%,#030303 100%); /* IE10+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222222', endColorstr='#030303',GradientType=0 ); /* IE6-9 */
 	background: linear-gradient(top, #222222 0%,#030303 100%); /* W3C */
-	-moz-border-radius:0 0 20px 20px;
-    border-radius: 0 0 20px 20px;
 }
 
-#resources{
+#resourcesdiv{
 	text-align:center;
 }
 
@@ -247,6 +262,14 @@ select {
 	background: -ms-linear-gradient(top, #d20000 0%,#b40000 100%); /* IE10+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#D20000', endColorstr='#B40000',GradientType=0 ); /* IE6-9 */
 	background: linear-gradient(top, #d20000 0%,#b40000 100%); /* W3C */
+}
+
+.menu-head a{
+	height:78px;
+	background:none !important;
+	filter:none !important;
+	padding:0 !important;
+	text-indent: -1000em;
 }
 
 .menu-head {
@@ -287,16 +310,17 @@ select {
 /* CONTENT */
 
 .tip th{
-text-align:center
+	text-align:center
 }
 
 .top {
-vertical-align:top
+	vertical-align:top
 }
 
 .transparent,#header td, .tip td, .tip th {
-background: transparent;
-border:none
+	background: transparent;
+	border:none;
+	filter: none !important;
 }
 
 .mes_unread td {
@@ -327,5 +351,6 @@ th a,.res_current{
 }
 
 .ui-progressbar-value {
-background-image: url(img/processbar.png)
+	background-image: url(img/processbar.png);
+	background-position:top left;
 }

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -34,7 +34,20 @@ class ShowGalaxyPage extends GalaxyRows
 	private function ShowGalaxyRows($Galaxy, $System)
 	{
 		global $PLANET, $USER, $db, $LNG, $UNI, $CONF;
-		$GalaxyPlanets		= $db->query("SELECT SQL_BIG_RESULT DISTINCT p.`planet`, p.`id`, p.`id_owner`, p.`name`, p.`image`, p.`last_update`, p.`diameter`, p.`temp_min`, p.`destruyed`, p.`der_metal`, p.`der_crystal`, p.`id_luna`, u.`id` as `userid`, u.`ally_id`, u.`username`, u.`onlinetime`, u.`urlaubs_modus`, u.`banaday`, s.`total_points`, s.`total_rank`, a.`id` as `allyid`, a.`ally_tag`, a.`ally_web`, a.`ally_members`, a.`ally_name`, allys.`total_rank` as `ally_rank` FROM ".PLANETS." p	LEFT JOIN ".USERS." u ON p.`id_owner` = u.`id` LEFT JOIN ".STATPOINTS." s ON s.`id_owner` = u.`id` AND s.`stat_type` = '1'	LEFT JOIN ".ALLIANCE." a ON a.`id` = u.`ally_id` LEFT JOIN ".STATPOINTS." allys ON allys.`stat_type` = '2' AND allys.`id_owner` = a.`id` WHERE p.`universe` = '".$UNI."' AND p.`galaxy` = '".$Galaxy."' AND p.`system` = '".$System."' AND p.`planet_type` = '1' ORDER BY p.`planet` ASC;");
+		$GalaxyPlanets		= $db->query("SELECT SQL_BIG_RESULT DISTINCT 
+		p.`planet`, p.`id`, p.`id_owner`, p.`name`, p.`image`, p.`last_update`, p.`diameter`, p.`temp_min`, p.`destruyed`, p.`der_metal`, p.`der_crystal`, p.`id_luna`, 
+		u.`id` as `userid`, u.`ally_id`, u.`username`, u.`onlinetime`, u.`urlaubs_modus`, u.`banaday`, 
+		m.`id` as `m_id`, m.`diameter` as `m_diameter`, m.`name` as `m_name`, m.`temp_min` as `m_temp_min`, m.`last_update` as `m_last_update`,
+		s.`total_points`, s.`total_rank`, 
+		a.`id` as `allyid`, a.`ally_tag`, a.`ally_web`, a.`ally_members`, a.`ally_name`, 
+		allys.`total_rank` as `ally_rank` 
+		FROM ".PLANETS." p 
+		LEFT JOIN ".USERS." u ON p.`id_owner` = u.`id` 
+		LEFT JOIN ".PLANETS." m ON m.`id` = p.`id_luna`
+		LEFT JOIN ".STATPOINTS." s ON s.`id_owner` = u.`id` AND s.`stat_type` = '1'	
+		LEFT JOIN ".ALLIANCE." a ON a.`id` = u.`ally_id` 
+		LEFT JOIN ".STATPOINTS." allys ON allys.`stat_type` = '2' AND allys.`id_owner` = a.`id` 
+		WHERE p.`universe` = '".$UNI."' AND p.`galaxy` = ".$Galaxy." AND p.`system` = ".$System." AND p.`planet_type` = '1' ORDER BY p.`planet` ASC;");
 		$COUNT				= $db->num_rows($GalaxyPlanets);
 		while($GalaxyRowPlanets = $db->fetch_array($GalaxyPlanets))
 		{
@@ -55,6 +68,8 @@ class ShowGalaxyPage extends GalaxyRows
 			$GalaxyRowPlanet['galaxy']	= $Galaxy;
 			$GalaxyRowPlanet['system']	= $System;
 			
+			$IsOwn						= $GalaxyRowPlanet['id_owner'] == $USER['id'];
+			
 			if ($GalaxyRowPlanet['destruyed'] != 0)
 			{
 				$Result[$Planet]	= $LNG['gl_planet_destroyed'];
@@ -63,19 +78,17 @@ class ShowGalaxyPage extends GalaxyRows
 			
 			if ($GalaxyRowPlanet['id_luna'] != 0)
 			{
-				$GalaxyRowMoon 				= $db->uniquequery("SELECT `destruyed`, `id`, `id_owner`, `diameter`, `name`, `temp_min`, `last_update` FROM ".PLANETS." WHERE `id` = '".$GalaxyRowPlanet['id_luna']."' AND planet_type='3';");
-				$Result[$Planet]['moon']	= $this->GalaxyRowMoon($GalaxyRowMoon);
-				
-				$GalaxyRowPlanet['last_update'] = max($GalaxyRowPlanet['last_update'], $GalaxyRowMoon['last_update']);
+				$Result[$Planet]['moon']	= $this->GalaxyRowMoon($GalaxyRowPlanet, $IsOwn);
+				$GalaxyRowPlanet['last_update'] = max($GalaxyRowPlanet['last_update'], $GalaxyRowPlanet['m_last_update']);
 			} else {
 				$Result[$Planet]['moon']	= false;
 			}
 			
-			$Result[$Planet]['user']		= $this->GalaxyRowUser($GalaxyRowPlanet);
-			$Result[$Planet]['planet']		= $this->GalaxyRowPlanet($GalaxyRowPlanet);
-			$Result[$Planet]['planetname']	= $this->GalaxyRowPlanetName ($GalaxyRowPlanet);
+			$Result[$Planet]['user']		= $this->GalaxyRowUser($GalaxyRowPlanet, $IsOwn);
+			$Result[$Planet]['planet']		= $this->GalaxyRowPlanet($GalaxyRowPlanet, $IsOwn);
+			$Result[$Planet]['planetname']	= $this->GalaxyRowPlanetName($GalaxyRowPlanet);
 			
-			$Result[$Planet]['action']	= $GalaxyRowPlanet['userid'] != $USER['id'] ? $this->GalaxyRowActions($GalaxyRowPlanet) : false;
+			$Result[$Planet]['action']	= $GalaxyRowPlanet['userid'] != $USER['id'] ? $this->GalaxyRowActions($GalaxyRowPlanet, $IsOwn) : false;
 			$Result[$Planet]['ally']	= $GalaxyRowPlanet['ally_id'] != 0 ? $this->GalaxyRowAlly($GalaxyRowPlanet) : false;
 			$Result[$Planet]['derbis']	= $GalaxyRowPlanet['der_metal'] > 0 || $GalaxyRowPlanet['der_crystal'] > 0 ? $this->GalaxyRowDebris($GalaxyRowPlanet) : false;
 											
@@ -100,6 +113,7 @@ class ShowGalaxyPage extends GalaxyRows
 		$galaxy			= min(max(abs(request_var('galaxy', $PLANET['galaxy'])), 1), $CONF['max_galaxy']);
 		$system			= min(max(abs(request_var('system', $PLANET['system'])), 1), $CONF['max_system']);
 		$planet			= min(max(abs(request_var('planet', $PLANET['planet'])), 1), $CONF['max_planets']);
+		$type			= request_var('type', 1);
 		$current		= request_var('current', 0);
 			
 		if ($mode == 1)
@@ -146,6 +160,7 @@ class ShowGalaxyPage extends GalaxyRows
 			'galaxy'					=> $galaxy,
 			'system'					=> $system,
 			'planet'					=> $planet,
+			'type'						=> $type,
 			'current'					=> $current,
 			'currentmip'				=> pretty_number($PLANET[$resource[503]]),
 			'maxfleetcount'				=> $maxfleet,
@@ -161,6 +176,14 @@ class ShowGalaxyPage extends GalaxyRows
 			'current_planet'			=> $PLANET['planet'],
 			'planet_type' 				=> $PLANET['planet_type'],
 			'MissleSelector'			=> $MissleSelector,
+			'ShortStatus'				=> array(
+				'vacation'					=> $LNG['gl_short_vacation'],
+				'banned'					=> $LNG['gl_short_ban'],
+				'inactive'					=> $LNG['gl_short_inactive'],
+				'longinactive'				=> $LNG['gl_short_long_inactive'],
+				'noob'						=> $LNG['gl_short_newbie'],
+				'strong'					=> $LNG['gl_short_strong'],
+			),
 		));
 		
 		$template->show('galaxy_overview.tpl');	

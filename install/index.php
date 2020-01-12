@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -230,7 +230,11 @@ switch ($Mode) {
 				$database['user']			= request_var('user', '', true);
 				$database['userpw']			= request_var('passwort', '', true);
 				$database['databasename']	= request_var('db', '', true);
-				$prefix						= request_var('prefix', '', true);
+				$prefix						= request_var('prefix', '');
+				
+				if (!preg_match("/^[a-z0-9_]+$/i", $prefix))
+					exit(json_encode(array('msg' => $LNG['step2_prefix_invalid'], 'error' => true)));
+					
 				@touch(ROOT_PATH."includes/config.php");
 				if (!is_writable(ROOT_PATH."includes/config.php"))
 					exit(json_encode(array('msg' => $LNG['step2_conf_op_fail'], 'error' => true)));
@@ -242,9 +246,22 @@ switch ($Mode) {
 					
 				@touch(ROOT_PATH."includes/error.log");
 				ob_start();
-				$db->multi_query(str_replace("prefix_", $prefix, file_get_contents('install.sql')));
+				$db->multi_query(str_replace(array(
+					"prefix_",
+					"[LANG]universum[/LANG]",
+					"[LANG]close_reason[/LANG]",
+					"[LANG]welcome[/LANG]"
+				), array(
+					$prefix,
+					$LNG['sql_universe'],
+					$LNG['sql_close_reason'],
+					$LNG['sql_welcome']
+				), file_get_contents('install.sql')));
 				$MSG	= ob_get_clean();
 				
+				if (mysqli_error($db))
+					exit(json_encode(array('msg' => sprintf($LNG['step2_db_con_fail'], mysqli_error($db)), 'error' => true)));
+					
 				if (!empty($MSG))
 					exit(sprintf($LNG['step2_db_error'], $MSG));
 
@@ -332,7 +349,7 @@ switch ($Mode) {
 				$SQL .= "`deuterium_perhour` = '0', ";
 				$SQL .= "`deuterium_max`     = '1000000';";
 				$SQL .= "INSERT INTO ".STATPOINTS." (`id_owner`, `id_ally`, `stat_type`, `tech_rank`, `tech_old_rank`, `tech_points`, `tech_count`, `build_rank`, `build_old_rank`, `build_points`, `build_count`, `defs_rank`, `defs_old_rank`, `defs_points`, `defs_count`, `fleet_rank`, `fleet_old_rank`, `fleet_points`, `fleet_count`, `total_rank`, `total_old_rank`, `total_points`, `total_count`) VALUES ('1', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');";
-				$SQL .= "UPDATE ".CONFIG." SET `lang` = '".$LANG->GetUser()."';";
+				$SQL .= "UPDATE ".CONFIG." SET `lang` = '".$LANG->GetUser()."', `timezone` = ".(((int) date("Z") / 3600) - (int) date("I")).";";
 				$db->multi_query($SQL);
 
 				ini_set('session.save_path', ROOT_PATH.'cache/sessions');

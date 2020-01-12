@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -75,8 +75,9 @@ function ShowResourcesPage()
 	
 	$PlanetRess = new ResourceUpdate();
 	$PlanetRess->CalcResource();
+	$PlanetRess->ReBuildCache();
+	$PlanetRess->ReturnVars();
 	$PlanetRess->SavePlanetToDB();
-
 	$template	= new template();
 		
 	$BuildTemp      = $PLANET['temp_max'];
@@ -100,7 +101,7 @@ function ShowResourcesPage()
 			'name'              => $resource[$ProdID],
 			'type'  			=> $LNG['tech'][$ProdID],
 			'level'     	    => ($ProdID > 200) ? $LNG['rs_amount'] : $LNG['rs_lvl'],
-			'level_type'        => $PLANET[$resource[$ProdID]],
+			'level_type'        => pretty_number($PLANET[$resource[$ProdID]]),
 			'metal_type'        => colorNumber(pretty_number($PLANET['metal_proc'][$ProdID] * $PLANET['level_proc'])),
 			'crystal_type'      => colorNumber(pretty_number($PLANET['crystal_proc'][$ProdID] * $PLANET['level_proc'])),
 			'deuterium_type'    => colorNumber(pretty_number($thisdeu)),
@@ -126,10 +127,10 @@ function ShowResourcesPage()
 		'bonus_energy'							=> colorNumber(pretty_number($PLANET['energy_max'] - array_sum($PLANET['energy_max_proc']))),
 		'CurrPlanetList'						=> $CurrPlanetList,	
 		'Production_of_resources_in_the_planet'	=> str_replace('%s', $PLANET['name'], $LNG['rs_production_on_planet']),
-		'metal_basic_income'    				=> $CONF['metal_basic_income']     * $CONF['resource_multiplier'],
-		'crystal_basic_income'  				=> $CONF['crystal_basic_income']   * $CONF['resource_multiplier'],
-		'deuterium_basic_income'				=> $CONF['deuterium_basic_income'] * $CONF['resource_multiplier'],
-		'energy_basic_income'   				=> $CONF['energy_basic_income']    * $CONF['resource_multiplier'],
+		'metal_basic_income'    				=> pretty_number($CONF['metal_basic_income'] * $CONF['resource_multiplier']),
+		'crystal_basic_income'  				=> pretty_number($CONF['crystal_basic_income'] * $CONF['resource_multiplier']),
+		'deuterium_basic_income'				=> pretty_number($CONF['deuterium_basic_income'] * $CONF['resource_multiplier']),
+		'energy_basic_income'   				=> pretty_number($CONF['energy_basic_income'] * $CONF['resource_multiplier']),
 		'metalmax'             					=> colorNumber($PLANET['metal_max'] / 1000, pretty_number($PLANET['metal_max'] / 1000) ."k"),
 		'crystalmax'          					=> colorNumber($PLANET['crystal_max'] / 1000, pretty_number($PLANET['crystal_max'] / 1000) ."k"),
 		'deuteriummax'         					=> colorNumber($PLANET['deuterium_max'] / 1000, pretty_number($PLANET['deuterium_max'] / 1000) ."k"),
@@ -144,17 +145,6 @@ function ShowResourcesPage()
 		'weekly_crystal'        				=> colorNumber(pretty_number(floor($crystal_total   * 24 * 7))),
 		'daily_deuterium'       				=> colorNumber(pretty_number(floor($deuterium_total * 24))),
 		'weekly_deuterium'      				=> colorNumber(pretty_number(floor($deuterium_total * 24 * 7))),
-		'Metal'									=> $LNG['Metal'], 
-		'Crystal'								=> $LNG['Crystal'], 
-		'Deuterium'								=> $LNG['Deuterium'], 
-		'Energy'								=> $LNG['Energy'],
-		'rs_basic_income'						=> $LNG['rs_basic_income'], 
-		'rs_storage_capacity'					=> $LNG['rs_storage_capacity'], 
-		'rs_sum'								=> $LNG['rs_sum'], 
-		'rs_daily'								=> $LNG['rs_daily'], 
-		'rs_weekly'								=> $LNG['rs_weekly'], 	
-		'rs_calculate'							=> $LNG['rs_calculate'], 	
-		'rs_ress_bonus'							=> $LNG['rs_ress_bonus'], 	
 	));
 	
 	$template->show("resources_overview.tpl");

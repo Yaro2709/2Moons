@@ -1,30 +1,32 @@
 {include file="adm/overall_header.tpl"}
-<center>
+
 <table width="60%">
     <tr>
-                <td>{$info_information}
-                        <textarea rows="25">[daten]Server Infos: {$info}
-PHP-Version: {$vPHP}
-PHP API: {$vAPI}
-phpinfo(): http://{$gameroot}/info/index.php
+		<td>{$info_information}</td>
+    </tr>
+    <tr>
+		<td>
+<pre class="left">-- Server Info --
+Server Infos: {$info}
+PHP-Version: {$vPHP} ({$vAPI})
+JSON Verfügbar: {$json}
+BCMath Verfügbar: {$bcmath}
+cURL Verfügbar: {$curl}
 SafeMode: {$safemode}
 MemoryLimit: {$memory}
 MySQL-Client-Version: {$vMySQLc}
 MySQL-Server-Version: {$vMySQLs}
+ErrorLog: {$errorlog} ({$errorloglines}, {$log_errors})
+Timezone(PHP/CONF/USER): {$php_tz} / {$conf_tz} / {$user_tz}
+Suhosin: {$suhosin}
+
+-- Game --
 Game Version: 2Moons {$vGame}
 Game Addresse: http://{$root}/
 Game Pfad: http://{$gameroot}/index.php
-JSON Verfügbar: {$json}
-BCMath Verfügbar: {$bcmath}
-cURL Verfügbar: {$curl}
-Browser: {$browser}
-Problem besteht seit Installation:
-Verwendeter Editor:
-Screenshot:
-Problembeschreibung:
-                        [/daten]</textarea>
-                </td>
+
+Browser: {$browser}</pre>
+		</td>
     </tr>
 </table>
-</center>
 {include file="adm/overall_footer.tpl"}

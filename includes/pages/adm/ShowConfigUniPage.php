@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -164,6 +164,16 @@ function ShowConfigUniPage()
 		$CONF['ref_minpoints']			= request_var('ref_minpoints', 0);
 		$CONF['silo_factor']			= request_var('silo_factor', 0);
 		$CONF['ref_max_referals']		= request_var('ref_max_referals', 0);
+		
+		
+		if($CONF['game_speed'] == 0)
+			$CONF['game_speed'] = 1;
+		if($CONF['fleet_speed'] == 0)
+			$CONF['fleet_speed'] = 1;
+		if($CONF['resource_multiplier'] == 0)
+			$CONF['resource_multiplier'] = 1;
+		if($CONF['halt_speed'] == 0)
+			$CONF['halt_speed'] = 1;
 		
 		$config_after = array(
 			'noobprotectiontime'	=> $CONF['noobprotectiontime'],

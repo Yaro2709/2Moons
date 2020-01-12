@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -77,7 +77,7 @@ class ShowInfosPage
 		foreach($reslist['fleet'] as $Ship)
 		{
 			$ShipArray[$Ship]	=	min(request_var('ship'.$Ship, 0.0), $PLANET[$resource[$Ship]]);
-			if($ShipArray[$Ship] <= 0)
+			if($Ship == 212 || $ShipArray[$Ship] <= 0)
 				continue;
 				
 			$SubQueryOri 		.= "`".$resource[$Ship]."` = `".$resource[$Ship]."` - '". floattostring($ShipArray[$Ship])."', ";
@@ -110,7 +110,7 @@ class ShowInfosPage
 
 		foreach($reslist['fleet'] as $Ship)
 		{
-			if ($PLANET[$resource[$Ship]] <= 0)
+			if ($Ship == 212 || $PLANET[$resource[$Ship]] <= 0)
 				continue;
 			
 			$GateFleetList[]	= array(

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -108,13 +108,6 @@ switch($page)
 			
 		include_once(ROOT_PATH . 'includes/pages/class.ShowFleetPages.php');
 		ShowFleetPages::MissilesAjax();
-	break;
-	case 'shortcuts':
-		if(CheckModule(40))
-			message($LNG['sys_module_inactive'],"?page=overview", 3, true, true);
-			
-		include_once(ROOT_PATH . 'includes/pages/ShowFleetShortcuts.php');
-		ShowFleetShortcuts();
 	break;
 // ----------------------------------------------------------------------------------------------------------------------------------------------//
 	case 'buildings':

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -43,52 +43,6 @@ $LANG->includeLang(array('INGAME'));
 $action	= request_var('action', '');
 switch($action)
 {
-	case 'getfleets':
-		$LANG->includeLang(array('TECH'));
-		$OwnFleets = $db->query("SELECT DISTINCT * FROM ".FLEETS." WHERE `fleet_owner` = '".$_SESSION['id']."' OR `fleet_target_owner` = '".$_SESSION['id']."';");
-		$Record = 0;
-		if($db->num_rows($OwnFleets) == 0)
-			exit(json_encode(array()));
-		
-		require_once(ROOT_PATH . 'includes/classes/class.FlyingFleetsTable.php');
-		$FlyingFleetsTable = new FlyingFleetsTable();
-		
-		$ACSDone	= array();
-		$FleetData 	= array();
-		while ($FleetRow = $db->fetch_array($OwnFleets))
-		{
-			$Record++;
-			$IsOwner	= ($FleetRow['fleet_owner'] == $_SESSION['id']) ? true : false;
-			
-			if ($FleetRow['fleet_mess'] == 0 && $FleetRow['fleet_start_time'] > TIMESTAMP && ($FleetRow['fleet_group'] == 0 || !in_array($FleetRow['fleet_group'], $ACSDone)))
-			{
-				$ACSDone[]		= $FleetRow['fleet_group'];
-				
-				$FleetData[$FleetRow['fleet_start_time'].$FleetRow['fleet_id']] = $FlyingFleetsTable->BuildFleetEventTable($FleetRow, 0, $IsOwner, 'fs', $Record, true);
-			}
-				
-			if ($FleetRow['fleet_mission'] == 10 || ($FleetRow['fleet_mission'] == 4 && $FleetRow['fleet_mess'] == 0))
-				continue;
-
-			if ($FleetRow['fleet_mess'] != 1 && $FleetRow['fleet_end_stay'] > TIMESTAMP)
-				$FleetData[$FleetRow['fleet_end_stay'].$FleetRow['fleet_id']] = $FlyingFleetsTable->BuildFleetEventTable($FleetRow, 2, $IsOwner, 'ft', $Record);
-		
-			if ($IsOwner == false)
-				continue;
-		
-			if ($FleetRow['fleet_end_time'] > TIMESTAMP)
-				$FleetData[$FleetRow['fleet_end_time'].$FleetRow['fleet_id']] = $FlyingFleetsTable->BuildFleetEventTable($FleetRow, 1, $IsOwner, 'fe', $Record);
-		}
-		
-		$db->free_result($OwnFleets);
-		foreach($FleetData as $key => $Val) {
-			if(empty($FleetData[$key]['fleet_descr']))
-				unset($FleetData[$key]);
-		}
-		ksort($FleetData);
-		echo json_encode($FleetData);
-		exit;
-	break;
 	case 'fleet1':
 		$TargetGalaxy 					= request_var('galaxy', 0);
 		$TargetSystem 					= request_var('system', 0);
@@ -133,11 +87,31 @@ switch($action)
 				$db->query("UPDATE ".PLANETS." SET `name` = '".$db->sql_escape($newname)."' WHERE `id` = '".$_SESSION['planet']. "';");
 		}
 	break;
+	case 'saveshotcut':
+		$Shortcut		= array();
+		$ShortcutData	= $_REQUEST['shoutcut'];
+		foreach($ShortcutData as $Key => $Data) {
+			$Name	= $db->sql_escape(request_var('', $_REQUEST['shoutcut'][$Key]['name']));
+			
+			if(empty($Name) || !in_array($Data['type'], array(1, 2, 3)))
+				continue;
+				
+			$Shortcut[] = array(
+				$Name,
+				(int) $Data['galaxy'],
+				(int) $Data['system'],
+				(int) $Data['planet'],
+				(int) $Data['type'],
+			);
+		}
+		$db->query("UPDATE ".USERS." SET `fleet_shortcut` = '".serialize($Shortcut)."' WHERE `id` = ".$_SESSION['id'].";");
+		exit($LNG['fl_shortcut_saved']);
+	break;
 	case 'deleteplanet':
 		$password =	request_var('password', '', true);
 		if (!empty($password))
 		{
-			$IfFleets	= $db->countquery("SELECT COUNT(*) FROM ".FLEETS." WHERE (`fleet_owner` = '".$_SESSION['id']."' AND `fleet_start_id` = '".$_SESSION['planet']."') OR (`fleet_target_owner` = '".$_SESSION['id']."' AND `fleet_end_id` = '".$_SESSION['planet']."');");
+			$IfFleets	= $db->countquery("SELECT COUNT(*) FROM ".FLEETS." WHERE (`fleet_owner` = '".$_SESSION['id']."' AND (`fleet_start_id` = ".$_SESSION['PLANET']['id']." OR `fleet_start_id` = ".$_SESSION['PLANET']['id_luna'].")) OR (`fleet_target_owner` = '".$_SESSION['id']."' AND (`fleet_end_id` = '".$_SESSION['PLANET']['id']."' OR `fleet_end_id` = ".$_SESSION['PLANET']['id_luna']."));");
 			
 			if ($IfFleets > 0)
 				exit(json_encode(array('mess' => $LNG['ov_abandon_planet_not_possible'])));
@@ -169,7 +143,7 @@ switch($action)
 				$CurrUsername	= $db->uniquequery("SELECT `username`, `galaxy`, `system`, `planet` FROM ".USERS." WHERE id = '".$CurMess['message_owner']."';");
 				
 				$MessageList[$CurMess['message_id']]	= array(
-					'time'		=> date(TDFORMAT, $CurMess['message_time']),
+					'time'		=> tz_date($CurMess['message_time']),
 					'from'		=> $CurrUsername['username']." [".$CurrUsername['galaxy'].":".$CurrUsername['system'].":".$CurrUsername['planet']."]",
 					'subject'	=> $CurMess['message_subject'],
 					'type'		=> $CurMess['message_type'],
@@ -189,7 +163,7 @@ switch($action)
 		{
 			$MessageList[$CurMess['message_time']]	= array(
 				'id'		=> $CurMess['message_id'],
-				'time'		=> date(TDFORMAT, $CurMess['message_time']),
+				'time'		=> tz_date($CurMess['message_time']),
 				'from'		=> $CurMess['message_from'],
 				'subject'	=> stripslashes($CurMess['message_subject']),
 				'sender'	=> $CurMess['message_sender'],
@@ -219,17 +193,6 @@ switch($action)
 			),
 		));
 		exit;
-	break;
-	case 'updatemessages':
-		$UnRead			= request_var('count', 0);
-		$MessCategory  	= request_var('messcat', 0);
-		if($MessCategory == 50)
-			$db->multi_query("UPDATE ".USERS." SET `new_message` = GREATEST(`new_message` - `new_gmessage`, 0), `new_gmessage` = '0' WHERE `id` = '".$_SESSION['id']."';");			
-		elseif($MessCategory == 100)
-			$db->multi_query("UPDATE ".USERS." SET `new_message` = '0' WHERE `id` = '".$_SESSION['id']."';UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."';");			
-		else
-			$db->multi_query("UPDATE ".USERS." SET `new_message` = GREATEST(`new_message` - '".$UnRead."', 0) WHERE `id` = '".$_SESSION['id']."';UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."' AND `message_type` = '".$MessCategory."';");
-		header('HTTP/1.1 204 No Content');
 	break;
 	case 'deletemessages':
 		$DeleteWhat = request_var('deletemessages','');

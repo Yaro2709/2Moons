@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -90,7 +90,7 @@ function ShowBanPage()
 			$timesus		=	
 				"<tr>
 					<th>".$LNG['bo_bbb_title_5']."</th>
-					<th height=25 colspan=2>".date(TDFORMAT, $BANUSER['longer'])."</th>
+					<th height=25 colspan=2>".date($LNG['php_tdformat'], $BANUSER['longer'])."</th>
 				</tr>";
 		}
 		

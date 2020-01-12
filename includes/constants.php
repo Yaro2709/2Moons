@@ -22,14 +22,13 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
 
 //SET TIMEZONE (if Server Timezone are not correct)
-//date_default_timezone_set('Europe/Berlin');
- 
+//date_default_timezone_set('America/Chicago');
 //TEMPLATES DEFAULT SETTINGS
 define('DEFAULT_THEME'	 		  , 'gow');
 
@@ -59,8 +58,8 @@ define('FIELDS_BY_TERRAFORMER'	  , 5);
 // ADDED PLANET PRO 2 TECH LEVELS
 define('PLANETS_PER_TECH' 		  , 1);	
 
-// If ture, the calculation for Researchtime is like OGAME, if false its calculation with standart XNova Formula
-define('NEW_RESEARCH'			  , true);
+// Time of changable nick after changing nick.
+define('USERNAME_CHANGETIME'	  , 604800);
 
 // Factor for Metal/Crystal and Deuterium Storages
 define('STORAGE_FACTOR'			  , 1.0);
@@ -70,7 +69,7 @@ define('STORAGE_FACTOR'			  , 1.0);
 define('COMPARE_IP_BLOCKS'	  	  , 2);
 
 // DEBUG LOG
-define('DEBUG_EXTRA'	  	 	 , false);
+define('DEBUG_EXTRA'	  	 	  , false);
 
 // Max Round on Combats
 define('MAX_ATTACK_ROUNDS'		  , 6);
@@ -78,13 +77,11 @@ define('MAX_ATTACK_ROUNDS'		  , 6);
 // Enable the one-Click SImulation on Spy-Raports
 define('ENABLE_SIMULATOR_LINK'    , true);
 
-// Max. User Session in Seconds
-define('SESSION_LIFETIME'		  , 43200);
+// Planetrows on overview
+define('PLANET_ROWS_ON_OVERVIEW'  , 2);
 
 // Max. User Session in Seconds
-define('TIMEFORMAT'				  , 'H:i:s');
-define('DATEFORMAT'				  , 'd. M Y');
-define('TDFORMAT'				  , 'd. M Y, H:i:s');
+define('SESSION_LIFETIME'		  , 43200);
 
 // DISCLAMER INFOS
 define('DICLAMER_NAME'            , "Edit constans.php!");
@@ -94,7 +91,24 @@ define('DICLAMER_TEL'     		  , "Edit constans.php!");
 define('DICLAMER_EMAIL'    		  , "Edit constans.php!");
 
 // UTF-8 Support for Names (Requried for non-english Chars!)
-define('UTF8_SUPPORT'          	  , true);	
+define('UTF8_SUPPORT'          	  , true);
+
+// EventHandler Settings. Not in use!
+define('EH_ACTIVE_ECO' 		 	  , BETA);
+define('EH_ACTIVE_FLEETS'   	  , BETA);
+
+// Bash Settings
+define('BASH_ON'        	  	  , false);	
+define('BASH_COUNT'          	  , 6);	
+define('BASH_TIME'          	  , 86400);	
+
+// Invisible Missions for Phalanx
+// Exsample: '1','4','7','10'
+define('INV_PHALANX_MISSIONS' 	  , '');	
+
+// Root IDs
+define('ROOT_UNI'        	  	  , 1);	
+define('ROOT_USER'          	  , 1);	
 
 // AdminAuthlevels
 define('AUTH_ADM'                 , 3);
@@ -120,15 +134,17 @@ define('CONFIG'				  	  , $database['tableprefix'].'config');
 define('DIPLO'				  	  , $database['tableprefix'].'diplo');
 define('FLEETS'				  	  , $database['tableprefix'].'fleets');
 define('LOG'				  	  , $database['tableprefix'].'log');
+define('LOG_FLEETS'			  	  , $database['tableprefix'].'log_fleets');
 define('NEWS'				  	  , $database['tableprefix'].'news');
 define('NOTES'				  	  , $database['tableprefix'].'notes');
 define('MESSAGES'			  	  , $database['tableprefix'].'messages');
 define('PLANETS'	              , $database['tableprefix'].'planets');
-define('RW'			              , $database['tableprefix'].'rw');
+define('RW'			              , $database['tableprefix'].'raports');
 define('SESSION'				  , $database['tableprefix'].'session');
 define('STATPOINTS'				  , $database['tableprefix'].'statpoints');
 define('SUPP'					  , $database['tableprefix'].'supp');
 define('TOPKB'					  , $database['tableprefix'].'topkb');
+define('TOPKB_USERS'			  , $database['tableprefix'].'users_to_topkb');
 define('USERS'				  	  , $database['tableprefix'].'users');
 define('USERS_VALID'		  	  , $database['tableprefix'].'users_valid');
 

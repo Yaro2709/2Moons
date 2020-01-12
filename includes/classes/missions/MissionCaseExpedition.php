@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -72,7 +72,7 @@ class MissionCaseExpedition extends MissionFunctions
 			
 		$FleetCapacity		-= $this->_fleet['fleet_resource_metal'] + $this->_fleet['fleet_resource_crystal'] + $this->_fleet['fleet_resource_deuterium'] + $this->_fleet['fleet_resource_darkmatter'];
 					
-		$GetEvent			= mt_rand(1, 6);
+		$GetEvent			= mt_rand(1, 9);
 			
 		switch($GetEvent)
 		{
@@ -131,15 +131,15 @@ class MissionCaseExpedition extends MissionFunctions
 			default:
 				$FindSize = mt_rand(0, 100);
 				if(10 < $FindSize) {
-					$Size		= mt_rand(2, 50);
+					$Size		= mt_rand(10, 50);
 					$Message	= $LNG['sys_expe_found_ships_1_'.mt_rand(1,4)];
 					$MaxFound	= 300000;
 				} elseif(0 < $FindSize && 10 >= $FindSize) {
-					$Size		= mt_rand(51, 100);
+					$Size		= mt_rand(52, 100);
 					$Message	= $LNG['sys_expe_found_ships_2_'.mt_rand(1,2)];
 					$MaxFound	= 600000;
 				} elseif(0 == $FindSize) {
-					$Size	 	= mt_rand(101, 200);
+					$Size	 	= mt_rand(102, 200);
 					$Message	= $LNG['sys_expe_found_ships_3_'.mt_rand(1,2)];
 					$MaxFound	= 1200000;
 				}
@@ -148,9 +148,8 @@ class MissionCaseExpedition extends MissionFunctions
 					
 				$MaxPoints 		= ($StatFactor < 5000000) ? 4500 : 6000;
 					
-				$FoundShips		= max(min(round($Size * $FleetPoints), $MaxPoints), 10000);
-				$MinFound		= mt_rand(7000, 10000);
-			
+				$FoundShips		= max(round($Size * min($FleetPoints, $MaxPoints)), 10000);
+				
 				$FoundShipMess	= "";	
 				$NewFleetArray 	= "";
 
@@ -164,8 +163,11 @@ class MissionCaseExpedition extends MissionFunctions
 					$MaxFound			= floor($FoundShips / ($pricelist[$ID]['metal'] + $pricelist[$ID]['crystal']));
 					if($MaxFound <= 0) 
 						continue;
-					
+						
 					$Count				= mt_rand(0, $MaxFound);
+					if($Count <= 0) 
+						continue;
+						
 					$Found[$ID]			+= $Count;
 					$FoundShips	 		-= $Count * ($pricelist[$ID]['metal'] + $pricelist[$ID]['crystal']);
 					$FoundShipMess   	.= '<br>'.$LNG['tech'][$ID].': '.pretty_number($Count);
@@ -200,6 +202,7 @@ class MissionCaseExpedition extends MissionFunctions
 					$Rand	= array(4,3,2);
 					$DefenderFleetArray	= "205,5;215,3;213,2;";
 				}
+				$LNG			+= $LANG->GetUserLang($this->_fleet['fleet_owner'], array('L18N'));
 					
 				$FindSize = mt_rand(0, 100);
 				if(10 < $FindSize) {
@@ -279,13 +282,20 @@ class MissionCaseExpedition extends MissionFunctions
 				}
 
 				require_once('GenerateReport.php');
+				
+
+				$INFO						= $this->_fleet;
+				$INFO['steal']				= array('metal' => 0, 'crystal' => 0, 'deuterium' => 0);
+				$INFO['moon']['des']		= 0;
+				$INFO['moon']['chance'] 	= 0;
 				$raport		= GenerateReport($result, $INFO);
-				$rid		= md5(microtime(true).mt_rand(1,100));
-			
-				file_put_contents(ROOT_PATH.'raports/raport_'.$rid.'.php', '<?php'."\n".'$raport = '.$raport.';'."\n".'?>');
 					
-				$SQLQuery  = "INSERT INTO ".RW." SET `time` = '".TIMESTAMP."', `owners` = '".$this->_fleet['fleet_owner'].",0', `rid` = '". $rid ."';";	
-				$db->query($SQLQuery);
+				$SQL = "INSERT INTO ".RW." SET ";
+				$SQL .= "`raport` = '".serialize($raport)."', ";
+				$SQL .= "`time` = '".$this->_fleet['fleet_start_time']."', ";
+				$SQL .= "`rid` = '".$rid."';";
+				$db->query($SQL);
+				$rid	= $db->GetInsertID();
 				switch($result['won'])
 				{
 					case "r":
@@ -300,31 +310,42 @@ class MissionCaseExpedition extends MissionFunctions
 						$ColorDef = "red";
 					break;
 				}
-				$MessageAtt = sprintf('<a href="CombatReport.php?raport=%s" onclick="OpenPopup(\'CombatReport.php?raport=%s\', \'combat\', screen.width, screen.height);return false" target="combat"><center><font color="%s">%s %s</font></a><br><br><font color="%s">%s: %s</font> <font color="%s">%s: %s</font><br>%s %s:<font color="#adaead">%s</font> %s:<font color="#ef51ef">%s</font> %s:<font color="#f77542">%s</font><br>%s %s:<font color="#adaead">%s</font> %s:<font color="#ef51ef">%s</font><br></center>', $rid, $rid, $ColorAtt, $LNG['sys_mess_attack_report'], sprintf($LNG['sys_adress_planet'], $this->_fleet['fleet_end_galaxy'], $this->_fleet['fleet_end_system'], $this->_fleet['fleet_end_planet']), $ColorAtt, $LNG['sys_perte_attaquant'], pretty_number($result['lost']['att']), $ColorDef, $LNG['sys_perte_defenseur'], pretty_number($result['lost']['def']), $LNG['sys_gain'], $LNG['Metal'], pretty_number($steal['metal']), $LNG['Crystal'], pretty_number($steal['crystal']), $LNG['Deuterium'], pretty_number($steal['deuterium']), $LNG['sys_debris'], $LNG['Metal'], pretty_number($result['debree']['att'][0]+$result['debree']['def'][0]), $LNG['Crystal'], pretty_number($result['debree']['att'][1]+$result['debree']['def'][1]));
+				$MessageAtt = sprintf('<a href="CombatReport.php?raport=%s" target="_blank"><center><font color="%s">%s %s</font></a><br><br><font color="%s">%s: %s</font> <font color="%s">%s: %s</font><br>%s %s:<font color="#adaead">%s</font> %s:<font color="#ef51ef">%s</font> %s:<font color="#f77542">%s</font><br>%s %s:<font color="#adaead">%s</font> %s:<font color="#ef51ef">%s</font><br></center>', $rid, $ColorAtt, $LNG['sys_mess_attack_report'], sprintf($LNG['sys_adress_planet'], $this->_fleet['fleet_end_galaxy'], $this->_fleet['fleet_end_system'], $this->_fleet['fleet_end_planet']), $ColorAtt, $LNG['sys_perte_attaquant'], pretty_number($result['lost']['att']), $ColorDef, $LNG['sys_perte_defenseur'], pretty_number($result['lost']['def']), $LNG['sys_gain'], $LNG['Metal'], pretty_number($steal['metal']), $LNG['Crystal'], pretty_number($steal['crystal']), $LNG['Deuterium'], pretty_number($steal['deuterium']), $LNG['sys_debris'], $LNG['Metal'], pretty_number($result['debree']['att'][0]+$result['debree']['def'][0]), $LNG['Crystal'], pretty_number($result['debree']['att'][1]+$result['debree']['def'][1]));
 			
-				SendSimpleMessage($this->_fleet['fleet_owner'], '', $this->_fleet['fleet_start_time'], 3, $LNG['sys_mess_tower'], $LNG['sys_mess_attack_report'], $MessageAtt);
+				SendSimpleMessage($this->_fleet['fleet_owner'], 0, $this->_fleet['fleet_start_time'], 3, $LNG['sys_mess_tower'], $LNG['sys_mess_attack_report'], $MessageAtt);
 			break;
 			case 5:
 				$this->KillFleet();
 				$Message	= $LNG['sys_expe_lost_fleet_'.mt_rand(1,4)];
 			break;
-			/* Bugged :/
 			case 6:
+				# http://owiki.de/Expedition#Ver.C3.A4nderte_Flugzeit
 				$MoreTime	= mt_rand(0, 100);
+				$Wrapper	= array();
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 2;
+				$Wrapper[]	= 3;
+				$Wrapper[]	= 3;
+				$Wrapper[]	= 5;
 				if($MoreTime < 75) {
-					$this->UpdateFleet('fleet_end_time', $this->_fleet['fleet_end_time'] - TIMESTAMP * mt_rand(1, 5) + TIMESTAMP);
+					$this->UpdateFleet('fleet_end_time', ($this->_fleet['fleet_end_time'] - $this->_fleet['fleet_end_stay']) + ($this->_fleet['fleet_end_stay'] - $this->_fleet['fleet_start_time']) * $Wrapper[mt_rand(0, 9)]);
 					$Message = $LNG['sys_expe_time_slow_'.mt_rand(1,6)];
 				} else {
-					$this->UpdateFleet('fleet_end_time', round($this->_fleet['fleet_end_stay'] + ($this->_fleet['fleet_end_time'] - $this->_fleet['fleet_end_stay']) / 2));
+					$this->UpdateFleet('fleet_end_time', max(1, ($this->_fleet['fleet_end_time'] - $this->_fleet['fleet_end_stay']) - ($this->_fleet['fleet_end_stay'] - $this->_fleet['fleet_start_time']) / 3 * $Wrapper[mt_rand(0, 9)]));
 					$Message = $LNG['sys_expe_time_fast_'.mt_rand(1,3)];
 				}
-			break; */
+			break;
 			default:
 				$Message	= $LNG['sys_expe_nothing_'.mt_rand(1,8)];
 			break;
 		}
 			
-		SendSimpleMessage($this->_fleet['fleet_owner'], '', $this->_fleet['fleet_end_stay'], 15, $LNG['sys_mess_tower'], $LNG['sys_expe_report'], $Message);
+		SendSimpleMessage($this->_fleet['fleet_owner'], 0, $this->_fleet['fleet_end_stay'], 15, $LNG['sys_mess_tower'], $LNG['sys_expe_report'], $Message);
 		$this->UpdateFleet('fleet_mess', 1);
 		$this->SaveFleet();
 	}
@@ -334,7 +355,7 @@ class MissionCaseExpedition extends MissionFunctions
 		global $LANG;
 		$LNG			= $LANG->GetUserLang($this->_fleet['fleet_owner']);
 		$Message 		= sprintf($LNG['sys_expe_back_home'], $LNG['Metal'], pretty_number($this->_fleet['fleet_resource_metal']), $LNG['Crystal'], pretty_number($this->_fleet['fleet_resource_crystal']),  $LNG['Deuterium'], pretty_number($this->_fleet['fleet_resource_deuterium']), $LNG['Darkmatter'], pretty_number($this->_fleet['fleet_resource_darkmatter']));
-		SendSimpleMessage($this->_fleet['fleet_owner'], '', $this->_fleet['fleet_end_time'], 15, $LNG['sys_mess_tower'], $LNG['sys_expe_report'], $Message);
+		SendSimpleMessage($this->_fleet['fleet_owner'], 0, $this->_fleet['fleet_end_time'], 15, $LNG['sys_mess_tower'], $LNG['sys_expe_report'], $Message);
 		$this->RestoreFleet();
 	}
 }

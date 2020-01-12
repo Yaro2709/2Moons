@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -62,7 +62,7 @@ class template extends Smarty
 	
 	private function Menus()
 	{
-		global $PLANET, $LNG, $USER, $CONF, $resource;
+		global $PLANET, $LNG, $USER, $CONF, $resource, $db;
 		
 		//PlanetMenu
 		if(isset($USER['PLANETS']))
@@ -84,7 +84,7 @@ class template extends Smarty
 				foreach($QueueArray as $ListIDArray)
 				{
 					if($ListIDArray[3] > TIMESTAMP)
-						$Scripttime[$PlanetQuery['id']][]	= $ListIDArray[3];
+						$Scripttime[$PlanetQuery['id']][]	= $ListIDArray[3] - TIMESTAMP;
 				}
 			}
 			$Planetlist[$PlanetQuery['id']]	= array(
@@ -106,7 +106,7 @@ class template extends Smarty
 			$CONF['deuterium_basic_income'] = 0;
 		}
 		
-		$Messages	= $USER['new_message_0'] + $USER['new_message_1'] + $USER['new_message_2'] + $USER['new_message_3'] + $USER['new_message_4'] + $USER['new_message_5'] + $USER['new_message_15'] + $USER['new_message_50'] + $USER['new_message_99'];
+		$Messages	= $db->countquery("SELECT COUNT(*) FROM ".MESSAGES." WHERE `message_owner` = ".$USER['id']." AND `message_unread` = '1'");
 		
 		$this->assign_vars(array(	
 			'PlanetMenu' 		=> $Planetlist,
@@ -134,8 +134,8 @@ class template extends Smarty
 			'current_planet'	=> $this->phpself."&amp;cp=".$PLANET['id'],
 			'tn_vacation_mode'	=> $LNG['tn_vacation_mode'],
 			'closed'			=> !$CONF['game_disable'] ? $LNG['ov_closed'] : false,
-			'vacation'			=> $USER['urlaubs_modus'] ? date(TDFORMAT,$USER['urlaubs_until']) : false,
-			'delete'			=> $USER['db_deaktjava'] ? sprintf($LNG['tn_delete_mode'], date(TDFORMAT, strtotime("+7 day", $USER['db_deaktjava']))) : false,
+			'vacation'			=> $USER['urlaubs_modus'] ? tz_date($USER['urlaubs_until']) : false,
+			'delete'			=> $USER['db_deaktjava'] ? sprintf($LNG['tn_delete_mode'], tz_date($USER['db_deaktjava'] + ($CONF['del_user_manually'] * 86400))) : false,
 			'image'				=> $PLANET['image'],
 			'settings_tnstor'	=> $USER['settings_tnstor'],
 			'PlanetSelect'		=> $PlanetSelect,
@@ -144,6 +144,7 @@ class template extends Smarty
 			'Deuterium'			=> $LNG['Deuterium'],
 			'Darkmatter'		=> $LNG['Darkmatter'],
 			'Energy'			=> $LNG['Energy'],
+			'class'				=> 'normal',
 		));
 	}
 	
@@ -167,8 +168,11 @@ class template extends Smarty
 			'fcm_info'			=> $LNG['fcm_info'],
 			'VERSION'			=> $CONF['VERSION'],
 			'REV'				=> substr($CONF['VERSION'], -4),
-			'js_days'			=> json_encode($LNG['js_days']),
-			'js_month' 			=> json_encode($LNG['js_month']),
+			'js_tdformat'		=> $LNG['js_tdformat'],
+			'week_day'			=> json_encode($LNG['week_day']),
+			'months' 			=> json_encode($LNG['months']),
+			'TimeZone' 			=> ($USER['timezone'] + $USER['dst']) * 3600,
+			'Offset'			=> tz_diff(),
 		));
 	}
 	
@@ -217,7 +221,10 @@ class template extends Smarty
 	}
 		
 	public function isPopup()
-	{
+	{	
+		$this->assign_vars(array(
+			'class'			=> 'popup',
+		));	
 		$this->Popup		= true;
 	}
 		

@@ -1,12 +1,5 @@
 <?php
 
-setlocale(LC_ALL, 'de_DE', 'german'); // http://msdn.microsoft.com/en-us/library/39cwe7zf%28vs.71%29.aspx
-setlocale(LC_NUMERIC, 'C');
-
-//SERVER GENERALS
-
-$LNG['js_days']								= array('So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa');
-$LNG['js_month']							= array('Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez');
 
 $LNG['Metal']								= 'Metall';
 $LNG['Crystal']								= 'Kristall';
@@ -30,6 +23,10 @@ $LNG['type_mission'][8]  					= 'Abbauen';
 $LNG['type_mission'][9]  					= 'Zerstören';
 $LNG['type_mission'][11]  					= 'DM Untersuchung';
 $LNG['type_mission'][15] 					= 'Expedition';
+
+$LNG['type_planet'][1]  					= 'Planet';
+$LNG['type_planet'][2]  					= 'Trümmerfeld';
+$LNG['type_planet'][3]  					= 'Mond';
 
 $LNG['user_level'] = array (
 	'0' => 'Spieler',
@@ -134,6 +131,7 @@ $LNG['ov_teamspeak_v2']						= '<a href="teamspeak://%s:%s?nickname=%s" title="T
 $LNG['ov_teamspeak_v3']						= '<a href="ts3server://%s?port=%d&amp;nickname=%s&amp;password=%s" title="Teamspeak Connect">Connect</a>&nbsp;&bull;&nbsp;Online: %d/%d &bull; Channels: %d &bull; Traffic ges.: %s MB';
 $LNG['ov_closed']							= 'Spiel ist zurzeit deaktiviert!';
 $LNG['ov_reflink']							= 'Reflink';
+$LNG['ov_noreflink']						= 'Du hast keine User angeworben.';
 
 //----------------------------------------------------------------------------//
 //GALAXY
@@ -146,12 +144,12 @@ $LNG['gl_vacation']							= 'Urlaubsmodus';
 $LNG['gl_banned']							= 'Gesperrt';
 $LNG['gl_inactive_seven']					= '7 Tage inaktiv';
 $LNG['gl_inactive_twentyeight']				= '28 Tage inaktiv';
-$LNG['gl_s']								= 's';
-$LNG['gl_w']								= 'n';
-$LNG['gl_v']								= 'u';
-$LNG['gl_b']								= 'g';
-$LNG['gl_i']								= 'i';
-$LNG['gl_I']								= 'I';
+$LNG['gl_short_strong']						= 's';
+$LNG['gl_short_newbie']						= 'n';
+$LNG['gl_short_vacation']					= 'u';
+$LNG['gl_short_ban']						= 'g';
+$LNG['gl_short_inactive']					= 'i';
+$LNG['gl_short_long_inactive']				= 'I';
 $LNG['gl_populed_planets']					= '%d Planeten besiedelt';
 $LNG['gl_out_space']						= 'Die unendlichen Weiten des Universums';
 $LNG['gl_avaible_missiles']					= 'Interplanetarraketen';
@@ -261,22 +259,16 @@ $LNG['fl_planet']							= 'Planet';
 $LNG['fl_debris']							= 'Trümmerfeld';
 $LNG['fl_moon']								= 'Mond';
 $LNG['fl_planet_shortcut']					= '(P)';
-$LNG['fl_debris_shortcut']					= '(D)';
+$LNG['fl_debris_shortcut']					= '(T)';
 $LNG['fl_moon_shortcut']					= '(M)';
 $LNG['fl_no_shortcuts']						= 'Keine Shortcuts vorhanden';
-$LNG['fl_anonymous']						= 'Unbenannt';
-$LNG['fl_shortcut_add_title']				= 'Name [Galaxie/System/Planet]';
-$LNG['fl_shortcut_name']					= 'Name';
-$LNG['fl_shortcut_galaxy']					= 'Galaxie';
-$LNG['fl_shortcut_solar_system']			= 'System';
-$LNG['fl_clean']							= 'Zurücksetzten';
 $LNG['fl_register_shorcut']					= 'Erstellen';
 $LNG['fl_shortcuts']						= 'Shortcuts';
-$LNG['fl_reset_shortcut']					= 'Reset';
 $LNG['fl_dlte_shortcut']					= 'Löschen';
-$LNG['fl_back']								= 'Zurück';
 $LNG['fl_shortcut_add']						= 'Hinzufügen';
 $LNG['fl_shortcut_edition']					= 'Shortcut editieren';
+$LNG['fl_shortcut_save']					= 'Shortcut speichern';
+$LNG['fl_shortcut_saved']					= 'Gespeichert!';
 $LNG['fl_no_colony']						= 'Keine Kolonien vorhanden';
 $LNG['fl_send_fleet']						= 'Flotte verschicken';
 $LNG['fl_fleet_speed']						= 'Geschwindigkeit';
@@ -288,7 +280,6 @@ $LNG['fl_fuel_consumption']					= 'Treibstoffverbrauch';
 $LNG['fl_max_speed']						= 'Maximale Geschwindigkeit';
 $LNG['fl_cargo_capacity']					= 'Laderaumkapazität';
 $LNG['fl_shortcut']							= 'Shortcut';
-$LNG['fl_shortcut_add_edit']				= '(Erstellen / ändern)';
 $LNG['fl_my_planets']						= 'Meine Planeten';
 $LNG['fl_acs_title']						= 'Verbandsangriffe';
 $LNG['fl_hold_time']						= 'Haltezeit';
@@ -342,6 +333,7 @@ $LNG['fl_error_not_avalible']				= 'Auf diesen Koordinaten befinden sich kein Pl
 $LNG['fl_error_empty_derbis']				= 'Kein Trümerfeld vorhanden!';
 $LNG['fl_error_no_moon']					= 'Kein Mond vorhanden!';
 $LNG['fl_error_same_planet']				= 'Start- und Zielplanet sind identisch!';
+$LNG['fl_bash_protect']						= 'Bash-Schutz';
 
 //----------------------------------------------------------------------------//
 //BUILDINGS - RESEARCH - SHIPYARD - DEFENSES
@@ -428,10 +420,8 @@ $LNG['tr_exchange_done']					= 'Erfolgreich umgetauscht';
 $LNG['tr_call_trader']						= 'Rufe einen Händler';
 $LNG['tr_call_trader_who_buys']				= 'Rufe einen Händler, der folgendes kauft ';
 $LNG['tr_call_trader_submit']				= 'Rufe Händler';
-$LNG['tr_exchange_quota']					= 'Der Handelskurs ist 2/1/0.5';
-$LNG['tr_sell_metal']						= 'Tauschen gegen Metall';
-$LNG['tr_sell_crystal']						= 'Tauschen gegen Kristall';
-$LNG['tr_sell_deuterium']					= 'Tauschen gegen Deuterium';
+$LNG['tr_exchange_quota']					= 'Der Handelskurs ist';
+$LNG['tr_sell']								= 'Tauschen gegen';
 $LNG['tr_resource']							= 'Rohstoff';
 $LNG['tr_amount']							= 'Menge';
 $LNG['tr_quota_exchange']					= 'Handelskurs';
@@ -521,6 +511,7 @@ $LNG['mg_game_message']						= 'Game Message';
 $LNG['mg_message_send']						= 'Nachricht gesendet!';
 $LNG['mg_empty_text']						= 'Gebe ein Text ein!';
 $LNG['mg_answer_to']						= 'Antwort an:';
+$LNG['mg_write_mail_to_ops']				= 'Schreibe eine E-Mail an';
 
 //----------------------------------------------------------------------------//
 //ALLIANCE
@@ -863,7 +854,11 @@ $LNG['op_user_name_no_alphanumeric']		= 'Bitte beim Username nur alphanumerische
 $LNG['op_change_name_pro_week']				= 'Sie Können ihren Usernamen nur 1x pro Woche ändern';
 $LNG['op_change_name_exist']				= 'Der Name %s existiert bereits';
 $LNG['op_active_build_messages']			= 'Baulistennachrichten akivieren';
-$LNG['op_small_storage']					= 'Verkürzte Speicherzahlen anzeigen';
+$LNG['op_dst_mode']							= 'Sommerzeit?';
+$LNG['op_dst_mode_sel'][0]					= 'Nein';
+$LNG['op_dst_mode_sel'][1]					= 'Ja';
+$LNG['op_dst_mode_sel'][2]					= 'Automatisch';
+$LNG['op_timezone']							= 'Zeitzone';
 
 //----------------------------------------------------------------------------//
 //BANNED
@@ -1061,14 +1056,14 @@ $LNG['supp_player_answer'] 					= 'Spieler-Antwort';
 
 $LNG['rec_build']  							= 'Gebäude';
 $LNG['rec_specb']							= 'Besondere Gebäude';
-$LNG['rec_playe']  							= 'Spieler';
+$LNG['rec_players']  						= 'Spieler';
 $LNG['rec_defes']  							= 'Verteidigung';
 $LNG['rec_fleet']  							= 'Schiffe';
 $LNG['rec_techn']  							= 'Forschung';
 $LNG['rec_level']  							= 'Level';
-$LNG['rec_nbre']   							= 'Anzahl';
-$LNG['rec_rien']   							= '-';
-$LNG['rec_last_update_on']		   			= 'Letztes Update um : %s';
+$LNG['rec_count']   						= 'Anzahl';
+$LNG['rec_empty']   						= '-';
+$LNG['rec_last_update_on']		   			= 'Letztes Update um';
 
 
 //----------------------------------------------------------------------------//

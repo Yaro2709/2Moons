@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -49,15 +49,15 @@ abstract class FleetFunctions
 	{
 		global $pricelist;
 		if($pricelist[$Ship]['tech'] == 1) // Combustion
-			return $pricelist[$Ship]['speed'] * (1 + (0.1 * $Player['combustion_tech']) + $Player['factor']['shipspeed']);
+			return $pricelist[$Ship]['speed'] * (1 + (0.1 * $Player['combustion_tech']));
 		elseif($pricelist[$Ship]['tech'] == 2) // Impulse
-			return $pricelist[$Ship]['speed'] * (1 + (0.2 * $Player['impulse_motor_tech']) + $Player['factor']['shipspeed']);
+			return $pricelist[$Ship]['speed'] * (1 + (0.2 * $Player['impulse_motor_tech']));
 		elseif($pricelist[$Ship]['tech'] == 3) // Hyperspace
-			return $pricelist[$Ship]['speed'] * (1 + (0.3 * $Player['hyperspace_motor_tech']) + $Player['factor']['shipspeed']);
+			return $pricelist[$Ship]['speed'] * (1 + (0.3 * $Player['hyperspace_motor_tech']));
 		elseif($pricelist[$Ship]['tech'] == 4) // Special: Small Transporter
-			return (($Player['impulse_motor_tech'] >= 5) ? $pricelist[$Ship]['speed2'] * (1 + (0.2 * $Player['impulse_motor_tech']) + $Player['factor']['shipspeed']) : $pricelist[$Ship]['speed'] * (1 + (0.1 * $Player['combustion_tech'])) + $Player['factor']['shipspeed']);
+			return (($Player['impulse_motor_tech'] >= 5) ? $pricelist[$Ship]['speed2'] * (1 + (0.2 * $Player['impulse_motor_tech'])) : $pricelist[$Ship]['speed'] * (1 + (0.1 * $Player['combustion_tech'])));
 		elseif($pricelist[$Ship]['tech'] == 5) // Special: Battleship
-			return (($Player['hyperspace_motor_tech'] >= 8) ? $pricelist[$Ship]['speed2'] * (1 + (0.3 * $Player['hyperspace_motor_tech']) + $Player['factor']['shipspeed']) : $pricelist[$Ship]['speed'] * (1 + (0.2 * $Player['impulse_motor_tech'])) + $Player['factor']['shipspeed']);
+			return (($Player['hyperspace_motor_tech'] >= 8) ? $pricelist[$Ship]['speed2'] * (1 + (0.3 * $Player['hyperspace_motor_tech'])) : $pricelist[$Ship]['speed'] * (1 + (0.2 * $Player['impulse_motor_tech'])));
 		else
 			return 0;
 	}
@@ -89,7 +89,7 @@ abstract class FleetFunctions
 	public static function GetMissionDuration($SpeedFactor, $MaxFleetSpeed, $Distance, $GameSpeed, $CurrentUser)
 	{
 		global $resource;
-		return max(((((3500 / ($SpeedFactor * 0.1)) * pow($Distance * 10 / $MaxFleetSpeed, 0.5) + 10) * $CurrentUser['factor']['shipspeed']) / $GameSpeed), 5);
+		return max(((((3500 / ($SpeedFactor * 0.1)) * pow($Distance * 10 / $MaxFleetSpeed, 0.5) + 10)) / $GameSpeed), 5);
 	}
 
 	public static function GetGameSpeedFactor()
@@ -180,22 +180,17 @@ abstract class FleetFunctions
 		
 		
 		return array('MissionSelector' => $Missions, 'StayBlock' => $StayBlock);
-	}	
-	
+	}
 	public static function GetUserShotcut($CurrentUser)
 	{
-		if (empty($CurrentUser['fleet_shortcut']))
+		$Shoutcut 		= unserialize($CurrentUser['fleet_shortcut']);
+		if (empty($Shoutcut))
 			return array();
-
-		$Shoutcut 		= explode("\r\n", $CurrentUser['fleet_shortcut']);
+			
 		$ShortCutList	= array();
 
-		foreach ($Shoutcut as $a => $b)
-		{
-			if (empty($b)) continue;
-			
-			$ShortCutRow = explode(',', $b);
-			
+		foreach ($Shoutcut as $ShortCutRow)
+		{						
 			$ShortCutList[] = array(
 				'name'			=> $ShortCutRow[0],
 				'galaxy'		=> $ShortCutRow[1],
@@ -212,7 +207,8 @@ abstract class FleetFunctions
 		global $PLANET;
 		foreach($Colony as $CurPlanetID => $CurPlanet)
 		{
-			if ($PLANET['galaxy'] == $CurPlanet['galaxy'] && $PLANET['system'] == $CurPlanet['system'] && $PLANET['planet'] == $CurPlanet['planet'] && $PLANET['planet_type'] == $CurPlanet['planet_type']) continue;
+			if ($PLANET['id'] == $CurPlanet['id'])
+				continue;
 			
 			$ColonyList[] = array(
 				'name'			=> $CurPlanet['name'],
@@ -261,9 +257,9 @@ abstract class FleetFunctions
 
 		if($FleetRow['fleet_mission'] == 1 && $FleetRow['fleet_group'] > 0)
 		{
-			$Aks = $db->uniquequery("SELECT teilnehmer FROM ".AKS." WHERE id = '". $FleetRow['fleet_group'] ."';");
+			$Aks = $db->countquery("SELECT FIND_IN_SET('".$FleetRow['fleet_owner']."', `eingeladen`) FROM ".AKS." WHERE id = '". $FleetRow['fleet_group'] ."';");
 
-			if($Aks['teilnehmer'] == $FleetRow['fleet_owner'])
+			if($Aks != 0)
 			{
 				$db->query("DELETE FROM ".AKS." WHERE id ='". $FleetRow['fleet_group'] ."';");
 				$FleetID	= $FleetRow['fleet_group'];
@@ -271,7 +267,18 @@ abstract class FleetFunctions
 			}
 		}
 		
-		$db->query("UPDATE ".FLEETS." SET `fleet_group` = '0', `start_time` = '".TIMESTAMP."', `fleet_end_stay` = '".TIMESTAMP."', `fleet_end_time` = '".((TIMESTAMP - $FleetRow['start_time']) + TIMESTAMP)."', `fleet_mess` = '1' WHERE `".$where."` = '".$FleetID."';");
+		$db->multi_query("UPDATE ".FLEETS." SET 
+		`fleet_group` = 0, 
+		`fleet_end_stay` = ".TIMESTAMP.",
+		`fleet_end_time` = ".((TIMESTAMP - $FleetRow['start_time']) + TIMESTAMP).", 
+		`fleet_mess` = 1 
+		WHERE `".$where."` = '".$FleetID."';
+		UPDATE ".LOG_FLEETS." SET
+		`fleet_end_stay` = ".TIMESTAMP.",
+		`fleet_end_time` = ".((TIMESTAMP - $FleetRow['start_time']) + TIMESTAMP).", 
+		`fleet_mess` = 1, 
+		`fleet_state` = 2 
+		WHERE `".$where."` = '".$FleetID."';");
 	}
 	
 	public static function GetFleetShipInfo($FleetArray, $Player)
@@ -294,7 +301,7 @@ abstract class FleetFunctions
 
 	public static function GetAKSPage($CurrentUser, $CurrentPlanet, $fleetid)
 	{
-		global $resource, $pricelist, $reslist, $LNG, $db;
+		global $resource, $pricelist, $reslist, $LNG, $db, $UNI;
 
 		$addname		= request_var('addtogroup', '', UTF8_SUPPORT);
 		$aks_invited_mr	= request_var('aks_invited_mr', 0);
@@ -355,7 +362,7 @@ abstract class FleetFunctions
 
 		if(!empty($addname))
 		{
-			$member_qry_mr 		= $db->uniquequery("SELECT `id` FROM ".USERS." WHERE `username` = '".$db->sql_escape($addname)."';");
+			$member_qry_mr 		= $db->uniquequery("SELECT `id` FROM ".USERS." WHERE `username` = '".$db->sql_escape($addname)."' AND `universe` = ".$UNI.";");
 			$added_user_id_mr 	= $member_qry_mr['id'];
 			
 			foreach(explode(",", $aks['eingeladen']) as $a => $b)
@@ -450,6 +457,21 @@ abstract class FleetFunctions
 		}
 		
 		return $missiontype;
+	}
+	
+	public static function CheckBash($Target)
+	{
+		global $db, $USER;
+		if(!BASH_ON)
+			return false;
+			
+		$Count	= $db->countquery("SELECT COUNT(*) FROM `uni1_log_fleets`
+		WHERE `fleet_owner` = ".$USER['id']." 
+		AND `fleet_end_id` = ".$Target." 
+		AND `fleet_state` != 2 
+		AND `fleet_start_time` > ".(TIMESTAMP - BASH_TIME)." 
+		AND `fleet_mission` IN (1,2,9);");
+		return $Count >= BASH_COUNT;
 	}
 }
 ?>

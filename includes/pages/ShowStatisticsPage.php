@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -165,19 +165,7 @@ function ShowStatisticsPage()
 		'RangeList'				=> $RangeList,
 		'CUser_ally'			=> $USER['ally_id'],
 		'CUser_id'				=> $USER['id'],
-		'st_members'			=> $LNG['st_members'],
-		'st_per_member'			=> $LNG['st_per_member'],
-		'st_position'			=> $LNG['st_position'],
-		'st_player'				=> $LNG['st_player'],
-		'st_alliance'			=> $LNG['st_alliance'],
-		'st_write_message'		=> $LNG['st_write_message'],
-		'st_points'				=> $LNG['st_points'],
-		'st_per'				=> $LNG['st_per'],
-		'st_statistics'			=> $LNG['st_statistics'],
-		'st_updated'			=> $LNG['st_updated'],
-		'stat_date'				=> date(TDFORMAT, $CONF['stat_last_update']),
-		'st_show'				=> $LNG['st_show'],
-		'st_in_the_positions'	=> $LNG['st_in_the_positions'],
+		'stat_date'				=> tz_date($CONF['stat_last_update']),
 	));
 	
 	$template->show("stat_overview.tpl");

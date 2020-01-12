@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -31,10 +31,16 @@ if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FI
 
 function ShowInformationPage()
 {
-	global $db, $LNG, $CONF;
-	$template	= new template();
-	$template->assign_vars(array(	
-		'info_information'	=> sprintf($LNG['info_information'], 'http://2moons.cc/index.php?page=Board&boardID=5'),
+	global $db, $LNG, $CONF, $USER;
+
+	if(file_exists(ini_get('error_log')))
+		$Lines	= count(file(ini_get('error_log')));
+	else
+		$Lines	= 0;
+		
+	$template	= new template();
+	$template->assign_vars(array(
+		'info_information'	=> sprintf($LNG['info_information'], 'http://dev.2moons.cc/bugtracker'),
 		'info'				=> $_SERVER['SERVER_SOFTWARE'],
 		'vPHP'				=> PHP_VERSION,
 		'vAPI'				=> PHP_SAPI,
@@ -49,8 +55,15 @@ function ShowInformationPage()
 		'browser'			=> $_SERVER['HTTP_USER_AGENT'],
 		'safemode'			=> ini_get('safe_mode') ? 'Ja' : 'Nein',
 		'memory'			=> ini_get('memory_limit'),
+		'suhosin'			=> ini_get('suhosin.request.max_value_length') ? 'Ja' : 'Nein',
+		'log_errors'		=> ini_get('log_errors') ? 'Aktiv' : 'Inaktiv',
+		'errorlog'			=> ini_get('error_log'),
+		'errorloglines'		=> $Lines,
+		'php_tz'			=> sprintf("%01.2f", date("O") / 100),
+		'conf_tz'			=> $CONF['timezone'],
+		'user_tz'			=> $USER['timezone'],
 	));
-	
+
 	$template->show('adm/ShowInformationPage.tpl');
 }
 

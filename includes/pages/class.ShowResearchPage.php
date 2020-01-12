@@ -22,14 +22,14 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
 
 class ShowResearchPage
 {
-	private function CheckLabSettingsInQueue()
+	public function CheckLabSettingsInQueue()
 	{
 		global $PLANET, $CONF;
 		if ($PLANET['b_building'] == 0)
@@ -44,7 +44,7 @@ class ShowResearchPage
 		return true;
 	}
 	
-	private function GetRestPrice($Element)
+	public function GetRestPrice($Element)
 	{
 		global $USER, $PLANET, $pricelist, $resource, $LNG;
 
@@ -71,7 +71,7 @@ class ShowResearchPage
 		return $restprice;
 	}
 	
-	private function CancelBuildingFromQueue($PlanetRess)
+	public function CancelBuildingFromQueue($PlanetRess)
 	{
 		global $PLANET, $USER, $db, $resource;
 		$CurrentQueue  = unserialize($USER['b_tech_queue']);
@@ -99,10 +99,9 @@ class ShowResearchPage
 		$USER['b_tech_id']			= 0;
 		$USER['b_tech']      		= 0;
 		$USER['b_tech_planet']		= 0;
-	
-		$CanceledIDArray     = $CurrentQueue[0];
 
 		array_shift($CurrentQueue);
+
 		if (count($CurrentQueue) == 0) {
 			$USER['b_tech_queue']	= '';
 			$USER['b_tech_planet']	= 0;
@@ -113,7 +112,7 @@ class ShowResearchPage
 			$NewCurrentQueue	= array();
 			foreach($CurrentQueue as $ListIDArray)
 			{
-				if($Element == $ListIDArray[0])
+				if($Element == $ListIDArray[0] || empty($ListIDArray[0]))
 					continue;
 					
 				if($ListIDArray[4] != $PLANET['id'])
@@ -142,9 +141,9 @@ class ShowResearchPage
 		}
 	}
 
-	private function RemoveBuildingFromQueue($QueueID, $PlanetRess)
+	public function RemoveBuildingFromQueue($QueueID, $PlanetRess)
 	{
-		global $USER, $PLANET;
+		global $USER, $PLANET, $db;
 		
 		$CurrentQueue  = unserialize($USER['b_tech_queue']);
 		if ($QueueID <= 1 || empty($CurrentQueue))
@@ -154,6 +153,9 @@ class ShowResearchPage
 		if ($ActualCount <= 1)
 			return $this->CancelBuildingFromQueue($PlanetRess);
 
+		if(!isset($CurrentQueue[$QueueID - 2]))
+			return;
+			
 		$Element 		= $CurrentQueue[$QueueID - 2][0];
 		$BuildEndTime	= $CurrentQueue[$QueueID - 2][3];
 		unset($CurrentQueue[$QueueID - 1]);
@@ -179,11 +181,15 @@ class ShowResearchPage
 			}
 		}
 		
-		$USER['b_tech_queue'] = serialize($NewCurrentQueue);
+		if(!empty($NewCurrentQueue))
+			$USER['b_tech_queue'] = serialize($NewCurrentQueue);
+		else
+			$USER['b_tech_queue'] = "";
+			
 		FirePHP::getInstance(true)->log("Queue(Tech): ".$USER['b_tech_queue']);
 	}
 
-	private function AddBuildingToQueue($Element, $AddMode = true)
+	public function AddBuildingToQueue($Element, $AddMode = true)
 	{
 		global $PLANET, $USER, $resource, $CONF;
 			
@@ -234,7 +240,7 @@ class ShowResearchPage
 		FirePHP::getInstance(true)->log("Queue(Tech): ".$USER['b_tech_queue']);
 	}
 
-	private function ShowTechQueue()
+	public function ShowTechQueue()
 	{
 		global $LNG, $CONF, $PLANET, $USER, $db;
 		
@@ -293,7 +299,7 @@ class ShowResearchPage
 		$ListID     	= request_var('listid', 0);
 		$PLANET[$resource[31].'_inter']	= $PlanetRess->CheckAndGetLabLevel($USER, $PLANET);	
 
-		if(!empty($Element) && $bContinue && $USER['urlaubs_modus'] == 0 && ($USER[$resource[$Element]] < $pricelist[$Element]['max'] && IsTechnologieAccessible($USER, $PLANET, $Element) && in_array($Element, $reslist['tech'])) || $TheCommand == "cancel" || $TheCommand == "remove")
+		if($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($Element) && $bContinue && $USER['urlaubs_modus'] == 0 && ($USER[$resource[$Element]] < $pricelist[$Element]['max'] && IsTechnologieAccessible($USER, $PLANET, $Element) && in_array($Element, $reslist['tech'])) || $TheCommand == "cancel" || $TheCommand == "remove")
 		{
 			switch($TheCommand)
 			{
@@ -313,10 +319,6 @@ class ShowResearchPage
 		}
 		
 		$PlanetRess->SavePlanetToDB();
-		if($_SERVER['REQUEST_METHOD'] === 'POST') {
-			header('HTTP/1.0 204 No Content');
-			exit;
-		}
 		
 		$TechQueue		= $this->ShowTechQueue();
 		$ResearchList	= array();

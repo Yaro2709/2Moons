@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -57,7 +57,7 @@ class FlyingFleetsTable
 			$Bloc['Fleet']    = $this->CreateFleetPopupedFleetLink ( $CurrentFleet, $LNG['tech'][200], '' );
 			$Bloc['St_Owner'] = "[". $CurrentFleet['fleet_owner'] ."]<br>". $FleetOwner['username'];
 			$Bloc['St_Posit'] = "[".$CurrentFleet['fleet_start_galaxy'] .":". $CurrentFleet['fleet_start_system'] .":". $CurrentFleet['fleet_start_planet'] ."]<br>". ( ($CurrentFleet['fleet_start_type'] == 1) ? "[P]": (($CurrentFleet['fleet_start_type'] == 2) ? "D" : "L"  )) ."";
-			$Bloc['St_Time']  = date(TDFORMAT, $CurrentFleet['fleet_start_time']);
+			$Bloc['St_Time']  = tz_date($CurrentFleet['fleet_start_time']);
 			if (is_array($TargetOwner))
 				$Bloc['En_Owner'] = "[". $CurrentFleet['fleet_target_owner'] ."]<br>". $TargetOwner['username'];
 			else
@@ -68,7 +68,7 @@ class FlyingFleetsTable
 			if ($CurrentFleet['fleet_mission'] == 5)
 			{
 				if ($CurrentFleet['fleet_mess'] == 2)
-					$Bloc['Wa_Time']  = date(TDFORMAT, $CurrentFleet['fleet_end_stay']);
+					$Bloc['Wa_Time']  = tz_date($CurrentFleet['fleet_end_stay']);
 				elseif ($CurrentFleet['fleet_mess'] == 1)
 					$Bloc['Wa_Time']  = $LNG['cff_back'];
 				else
@@ -79,7 +79,7 @@ class FlyingFleetsTable
 				$Bloc['Wa_Time']  = "";
 			}
 
-			$Bloc['En_Time']  = date(TDFORMAT, $CurrentFleet['fleet_end_time']);
+			$Bloc['En_Time']  = tz_date($CurrentFleet['fleet_end_time']);
 			$Bloc['lock'] 	  = $CurrentFleet['fleet_busy'] == 0 ? "<a href='?page=fleets&amp;id=".$CurrentFleet['fleet_id']."&amp;lock=1'><font color='red'>".$LNG['ff_lock']."</font></a>" : "<a href='?page=fleets&amp;id=".$CurrentFleet['fleet_id']."&amp;lock=0'><font color='green'>".$LNG['ff_unlock']."</font></a>";
 			
 			$Table[]	= $Bloc;
@@ -87,8 +87,7 @@ class FlyingFleetsTable
 
 		return $Table;
 	}
-
-       
+  
 	private function CreateFleetPopupedMissionLink($FleetRow, $Texte, $FleetType)
 	{
 		global $LNG;
@@ -251,7 +250,8 @@ class FlyingFleetsTable
 			$Time	 = $FleetRow['fleet_end_time'];
 		elseif ($Status == 2)
 			$Time	 = $FleetRow['fleet_end_stay'];
-		$Rest	 = $Time - TIMESTAMP;
+		$Rest	= $Time - TIMESTAMP;
+		$time	= $time;
 		return array($Rest, $EventString, $Time);
 	}
 
@@ -281,12 +281,12 @@ class FlyingFleetsTable
 				list($Rest, $EventString, $Time) = $this->GetEventString($FleetRow, $Status, $Owner, $Label, $Record);
 				$EventString    .= '<br><br>';	
 			}
-			
-			$FleetInfo['fleet_order']	= $Label . $Record;
-			$FleetInfo['fleet_descr']	= substr($EventString, 0, -8);
-			$FleetInfo['fleet_return']	= $Time;
-	
-			return $FleetInfo;
+			return array(
+				'fleet_order'	=> $Label . $Record,
+				'fleet_descr'	=> substr($EventString, 0, -8),
+				'fleet_return'	=> $Time,
+				'fleet_rest'	=> $Rest
+			);
 		}
 		return array('fleet_order' => 0, 'fleet_descr' => '', 'fleet_return'=> 0);
 	}

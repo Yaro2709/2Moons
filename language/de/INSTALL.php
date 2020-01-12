@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -71,6 +71,7 @@ $LNG['step1_mysql_dbuser']	= 'MySQL-DB-User: <br> Bspl.: root';
 $LNG['step1_mysql_dbpass']	= 'MySQL-DB-Passwort: <br> Bspl.: 12345';
 $LNG['step1_mysql_prefix']	= 'MySQL-DB-Prefix: <br> Bspl.: uni1_';
 
+$LNG['step2_prefix_invalid']= 'Der DB-Prefix daruf nur alphanumerische Zeichen und Unterstriche enthalten.';
 $LNG['step2_db_connet_ok']	= 'Verbindung zur Datenbank erfolgreich...';
 $LNG['step2_db_create_ok']	= 'Datenbank Tabellen erfolgreich erstellt....';
 $LNG['step2_db_error']		= 'Fehler beim erstellen der Datenbank-Tabellen:\n%s';
@@ -83,7 +84,9 @@ $LNG['step3_admin_name']	= 'Administrator Username:';
 $LNG['step3_admin_pass']	= 'Administrator Passwort:';
 $LNG['step3_admin_mail']	= 'Administrator E-Mail Adresse:';
 
-
 $LNG['step4_need_fields']	= 'Sie müssen alle Felder ausfüllen!';
-		
+
+$LNG['sql_universe']		= 'Universum';
+$LNG['sql_close_reason']	= 'Game ist zurzeit geschlossen';
+$LNG['sql_welcome']			= 'Herzlich Willkommen zu ';
 ?>

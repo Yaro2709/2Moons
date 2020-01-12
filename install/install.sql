@@ -20,7 +20,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -188,7 +188,7 @@ CREATE TABLE `prefix_config` (
   `ts_login` varchar(32) NOT NULL DEFAULT '',
   `ts_password` varchar(32) NOT NULL DEFAULT '',
   `reg_closed` tinyint(1) NOT NULL DEFAULT '0',
-  `OverviewNewsFrame` tinyint(1) NOT NULL DEFAULT '0',
+  `OverviewNewsFrame` tinyint(1) NOT NULL DEFAULT '1',
   `OverviewNewsText` text NOT NULL,
   `capaktiv` tinyint(1) NOT NULL DEFAULT '0',
   `cappublic` varchar(42) NOT NULL DEFAULT '',
@@ -227,7 +227,7 @@ CREATE TABLE `prefix_config` (
   `chat_socket_chatid` tinyint(1) NOT NULL DEFAULT '1',
   `max_galaxy` tinyint(3) unsigned NOT NULL DEFAULT '9',
   `max_system` smallint(5) unsigned NOT NULL DEFAULT '400',
-  `max_planets` tinyint(3) unsigned NOT NULL DEFAULT '15',
+  `max_planets` tinyint(3) unsigned NOT NULL DEFAULT '20',
   `planet_factor` float(2,1) NOT NULL DEFAULT '1.0',
   `max_elements_build` tinyint(3) unsigned NOT NULL DEFAULT '5',
   `max_elements_tech` tinyint(3) unsigned NOT NULL DEFAULT '2',
@@ -250,7 +250,7 @@ CREATE TABLE `prefix_config` (
   `crystal_start` int(11) unsigned NOT NULL DEFAULT '500',
   `deuterium_start` int(11) unsigned NOT NULL DEFAULT '0',
   `darkmatter_start` int(11) unsigned NOT NULL DEFAULT '0',
-  `ttf_file` varchar(32) NOT NULL DEFAULT 'styles/arial.ttf',
+  `ttf_file` varchar(32) NOT NULL DEFAULT 'styles/fonts/DroidSansMono.ttf',
   `ref_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ref_bonus` int(11) unsigned NOT NULL DEFAULT '1000',
   `ref_minpoints` bigint(20) unsigned NOT NULL DEFAULT '2000',
@@ -260,8 +260,9 @@ CREATE TABLE `prefix_config` (
   `del_user_automatic` tinyint(3) unsigned NOT NULL DEFAULT '30',
   `del_user_sendmail` tinyint(3) unsigned NOT NULL DEFAULT '21',
   `sendmail_inactive` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `silo_factor` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `channel` enum('beta','dev') NOT NULL DEFAULT 'beta',
+  `silo_factor` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `timezone` float(4, 2) NOT NULL DEFAULT '0',
+  `dst` enum('0','1','2') NOT NULL DEFAULT '2',
   PRIMARY KEY (`uni`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -281,7 +282,7 @@ CREATE TABLE `prefix_diplo` (
 CREATE TABLE `prefix_fleets` (
   `fleet_id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
   `fleet_owner` int(11) unsigned NOT NULL DEFAULT '0',
-  `fleet_mission` enum('1','2','3','4','5','6','7','8','9','10','11','15') NOT NULL DEFAULT '3',
+  `fleet_mission` tinyint(3) unsigned NOT NULL DEFAULT '3',
   `fleet_amount` bigint(20) unsigned NOT NULL DEFAULT '0',
   `fleet_array` text,
   `fleet_universe` tinyint(3) unsigned NOT NULL,
@@ -290,14 +291,14 @@ CREATE TABLE `prefix_fleets` (
   `fleet_start_galaxy` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `fleet_start_system` smallint(5) unsigned NOT NULL DEFAULT '0',
   `fleet_start_planet` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `fleet_start_type` enum('1','2','3') NOT NULL DEFAULT '1',
+  `fleet_start_type` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `fleet_end_time` int(11) NOT NULL DEFAULT '0',
   `fleet_end_stay` int(11) NOT NULL DEFAULT '0',
   `fleet_end_id` int(11) unsigned NOT NULL,
   `fleet_end_galaxy` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `fleet_end_system` smallint(5) unsigned NOT NULL DEFAULT '0',
   `fleet_end_planet` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `fleet_end_type` enum('1','2','3') NOT NULL DEFAULT '1',
+  `fleet_end_type` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `fleet_target_obj` smallint(3) unsigned NOT NULL DEFAULT '0',
   `fleet_resource_metal` double(50,0) unsigned NOT NULL DEFAULT '0',
   `fleet_resource_crystal` double(50,0) unsigned NOT NULL DEFAULT '0',
@@ -305,9 +306,9 @@ CREATE TABLE `prefix_fleets` (
   `fleet_resource_darkmatter` double(50,0) unsigned NOT NULL DEFAULT '0',
   `fleet_target_owner` int(11) unsigned NOT NULL DEFAULT '0',
   `fleet_group` varchar(15) NOT NULL DEFAULT '0',
-  `fleet_mess` enum('0','1','2') NOT NULL DEFAULT '0',
+  `fleet_mess` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `start_time` int(11) DEFAULT NULL,
-  `fleet_busy` enum('0','1') NOT NULL DEFAULT '0',
+  `fleet_busy` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`fleet_id`),
   KEY `fleet_mess` (`fleet_mess`),
   KEY `fleet_target_owner` (`fleet_target_owner`),
@@ -330,6 +331,41 @@ CREATE TABLE `prefix_log` (
   PRIMARY KEY (`id`),
   KEY `mode` (`mode`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `uni1_log_fleets` (
+ `fleet_id` bigint(11) unsigned NOT NULL,
+ `fleet_owner` int(11) unsigned NOT NULL DEFAULT '0',
+ `fleet_mission` tinyint(3) unsigned NOT NULL DEFAULT '3',
+ `fleet_amount` bigint(20) unsigned NOT NULL DEFAULT '0',
+ `fleet_array` text,
+ `fleet_universe` tinyint(3) unsigned NOT NULL,
+ `fleet_start_time` int(11) NOT NULL DEFAULT '0',
+ `fleet_start_id` int(11) unsigned NOT NULL,
+ `fleet_start_galaxy` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_start_system` smallint(5) unsigned NOT NULL DEFAULT '0',
+ `fleet_start_planet` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_start_type` tinyint(3) unsigned NOT NULL DEFAULT '1',
+ `fleet_end_time` int(11) NOT NULL DEFAULT '0',
+ `fleet_end_stay` int(11) NOT NULL DEFAULT '0',
+ `fleet_end_id` int(11) unsigned NOT NULL,
+ `fleet_end_galaxy` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_end_system` smallint(5) unsigned NOT NULL DEFAULT '0',
+ `fleet_end_planet` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_end_type` tinyint(3) unsigned NOT NULL DEFAULT '1',
+ `fleet_target_obj` smallint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_resource_metal` double(50,0) unsigned NOT NULL DEFAULT '0',
+ `fleet_resource_crystal` double(50,0) unsigned NOT NULL DEFAULT '0',
+ `fleet_resource_deuterium` double(50,0) unsigned NOT NULL DEFAULT '0',
+ `fleet_resource_darkmatter` double(50,0) unsigned NOT NULL DEFAULT '0',
+ `fleet_target_owner` int(11) unsigned NOT NULL DEFAULT '0',
+ `fleet_group` varchar(15) NOT NULL DEFAULT '0',
+ `fleet_mess` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `start_time` int(11) DEFAULT NULL,
+ `fleet_busy` tinyint(3) unsigned NOT NULL DEFAULT '0',
+ `fleet_state` tinyint(3) unsigned NOT NULL,
+ PRIMARY KEY (`fleet_id`),
+ KEY `BashRule` (`fleet_owner`,`fleet_end_id`,`fleet_start_time`,`fleet_mission`,`fleet_state`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `prefix_messages` (
   `message_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -390,15 +426,16 @@ CREATE TABLE `prefix_planets` (
   `field_max` smallint(5) unsigned NOT NULL DEFAULT '163',
   `temp_min` int(3) NOT NULL DEFAULT '-17',
   `temp_max` int(3) NOT NULL DEFAULT '23',
-  `metal` double(50,0) unsigned NOT NULL DEFAULT '0',
-  `metal_perhour` double(50,0) unsigned NOT NULL DEFAULT '0',
+  `eco_hash` varchar(32) NOT NULL DEFAULT '',
+  `metal` double(50,6) unsigned NOT NULL DEFAULT '0',
+  `metal_perhour` double(50,6) unsigned NOT NULL DEFAULT '0',
   `metal_max` double(50,0) unsigned DEFAULT '100000',
-  `crystal` double(50,0) unsigned NOT NULL DEFAULT '0',
-  `crystal_perhour` double(50,0) unsigned NOT NULL DEFAULT '0',
+  `crystal` double(50,6) unsigned NOT NULL DEFAULT '0',
+  `crystal_perhour` double(50,6) unsigned NOT NULL DEFAULT '0',
   `crystal_max` double(50,0) unsigned DEFAULT '100000',
-  `deuterium` double(50,0) unsigned NOT NULL DEFAULT '0',
+  `deuterium` double(50,6) unsigned NOT NULL DEFAULT '0',
   `deuterium_used` int(11) unsigned NOT NULL DEFAULT '0',
-  `deuterium_perhour` double(50,0) unsigned NOT NULL DEFAULT '0',
+  `deuterium_perhour` double(50,6) unsigned NOT NULL DEFAULT '0',
   `deuterium_max` double(50,0) unsigned DEFAULT '100000',
   `energy_used` double(50,0) NOT NULL DEFAULT '0',
   `energy_max` double(50,0) unsigned NOT NULL DEFAULT '0',
@@ -470,11 +507,12 @@ CREATE TABLE `prefix_planets` (
   KEY `universe` (`universe`,`galaxy`,`system`,`planet`,`planet_type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `prefix_rw` (
-  `owners` varchar(255) NOT NULL,
-  `rid` varchar(32) NOT NULL,
-  `time` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`rid`)
+CREATE TABLE `prefix_raports` (
+  `rid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `raport` text NOT NULL,
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`rid`),
+  KEY `time` (`time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `prefix_session` (
@@ -530,18 +568,21 @@ CREATE TABLE `prefix_supp` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `prefix_topkb` (
-  `id_owner1` int(11) unsigned NOT NULL,
-  `angreifer` varchar(64) NOT NULL DEFAULT '',
-  `id_owner2` int(11) unsigned NOT NULL,
-  `defender` varchar(64) NOT NULL DEFAULT '',
-  `gesamtunits` double(50,0) unsigned NOT NULL,
-  `rid` varchar(32) NOT NULL,
-  `fleetresult` enum('r','a','w') NOT NULL,
-  `time` int(11) unsigned NOT NULL DEFAULT '0',
+  `rid` int(11) unsigned NOT NULL,
+  `units` double(50,0) unsigned NOT NULL,
+  `result` varchar(1) NOT NULL,
+  `time` int(11) NOT NULL,
   `universe` tinyint(3) unsigned NOT NULL,
-  PRIMARY KEY (`rid`),
-  KEY `universe` (`universe`,`gesamtunits`)
+  KEY `time` (`universe`, `rid`, `time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `prefix_users_to_topkb` (
+ `rid` int(11) NOT NULL,
+ `uid` int(11) NOT NULL,
+ `role` tinyint(1) NOT NULL,
+ KEY `rid` (`rid`,`role`)
+) ENGINE=MyISAM;
+
 
 CREATE TABLE `prefix_users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -563,16 +604,9 @@ CREATE TABLE `prefix_users` (
   `ip_at_reg` varchar(40) NOT NULL DEFAULT '',
   `register_time` int(11) NOT NULL DEFAULT '0',
   `onlinetime` int(11) NOT NULL DEFAULT '0',
-  `new_message_0` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_1` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_2` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_3` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_4` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_5` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_15` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_50` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `new_message_99` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `dpath` varchar(20) NOT NULL DEFAULT 'gow',
+  `timezone` float(4, 2) NOT NULL DEFAULT '0',
+  `dst` enum('0', '1', '2') NOT NULL DEFAULT '2',
   `design` tinyint(1) NOT NULL DEFAULT '1',
   `noipcheck` tinyint(1) NOT NULL DEFAULT '1',
   `planet_sort` tinyint(1) NOT NULL DEFAULT '0',
@@ -681,7 +715,7 @@ CREATE TABLE `prefix_users_valid` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `prefix_config` (`uni`, `VERSION`, `uni_name`, `game_name`, `close_reason`, `OverviewNewsText`, `moduls`) VALUES
-(1, '1.4.1913', 'Universum 1', '2Moons', 'Game ist zurzeit geschlossen', 'Herzlich Willkommen bei 2Moons v1.3.5!', '1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1');
+(1, '1.5.2051', '[LANG]universum[/LANG] 1', '2Moons', '[LANG]close_reason[/LANG]', '[LANG]welcome[/LANG] 2Moons v1.5!', '1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1');
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

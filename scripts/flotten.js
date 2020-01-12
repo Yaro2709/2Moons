@@ -4,7 +4,7 @@ function updateVars()
 	duration = GetDuration();
 	consumption = GetConsumption();
 	cargoSpace = storage();
-
+	duration = duration * data.fleetspeedfactor
 	refreshFormData();
 }
 
@@ -29,7 +29,7 @@ function GetDistance() {
 
 function GetDuration() {
 	var sp = document.getElementsByName("speed")[0].value;
-	return Math.max(Math.round((3500 / (sp * 0.1) * Math.pow(distance * 10 / data.maxspeed, 0.5) + 10) * data.fleetspeedfactor / data.gamespeed), 5);
+	return Math.max(Math.round((3500 / (sp * 0.1) * Math.pow(distance * 10 / data.maxspeed, 0.5) + 10) / data.gamespeed), 5);
 }
 
 function GetConsumption() {
@@ -83,8 +83,8 @@ function FleetTime(){
 	var Sekunden = serverTime.getSeconds();
     var add = duration;
     serverTime.setSeconds(Sekunden+0.5);
-	$("#arrival").html(getFormatedDate(serverTime.getTime()+1000*add, '[d].[m].[y] [G]:[i]:[s]'));
-	$("#return").html(getFormatedDate(serverTime.getTime()+1000*2*add, '[d].[m].[y] [G]:[i]:[s]'));
+	$("#arrival").html(getFormatedDate(serverTime.getTime()+1000*add, tdformat));
+	$("#return").html(getFormatedDate(serverTime.getTime()+1000*2*add, tdformat));
 }
 
 function setResource(id, val) {
@@ -195,4 +195,44 @@ function CheckTarget()
 		}
 	});
 	return false;
+}
+
+function EditShortcuts() {
+	$(".shoutcut-link").hide();
+	$(".shoutcut-edit:not(.shoutcut-new)").show();
+	if($('.shoutcut-none').length === 1 || $('.shoutcut:last > td:first').html() === "&nbsp;")
+		AddShortcuts();
+}
+
+function AddShortcuts() {
+	var HTML	= $('.shoutcut-new td:first').clone().children();
+	HTML.find('input, select').attr('name', function(i, old) {
+		return old.replace("shoutcut[]", "shoutcut["+($('.shoutcut-link').length - 1)+"]");
+	});
+	
+	if($('.shoutcut-none').length === 1) {
+		$('.shoutcut-none').attr("class", "shoutcut").children().removeAttr('colspan').html(HTML).after($("<td>").html("&nbsp;"));
+	} else if($('.shoutcut:last > td:first').html() === "&nbsp;") {
+		$('.shoutcut:last').attr("class", "shoutcut").children(':first').html(HTML);
+	} else if($('.shoutcut:last > td:last').html() === "&nbsp;") {
+		$('.shoutcut:last > td:last').empty().append(HTML);
+	} else {
+		$('.shoutcut:last').clone().children(':last').html("&nbsp;").prev().html(HTML).parent().insertAfter('.shoutcut:last');
+	}
+}
+
+function SaveShortcuts() {
+	$.get('ajax.php?action=saveshotcut&'+$('.shoutcut').find("input, select").serialize(), function(res) {
+		$(".shoutcut-link").show();
+		$(".shoutcut-edit").hide();
+		NotifyBox(res);
+		$(".shoutcut > td > .shoutcut-link").html(function() {
+			if($(this).nextAll().find('[name*=name]').val() === "") {
+				$(this).parent().html("&nbsp;");
+				return false;
+			}
+			var Data	= $(this).nextAll();
+			return '<a href="javascript:setTarget('+Data.find('[name*=galaxy]').val()+','+Data.find('[name*=system]').val()+','+Data.find('[name*=planet]').val()+','+Data.find('[name*=type]').val()+');updateVars();">'+Data.find('[name*=name]').val()+'('+Data.nextAll().find('[name*=type] option:selected').text()[0]+') ['+Data.find('[name*=galaxy]').val()+':'+Data.find('[name*=system]').val()+':'+Data.find('[name*=planet]').val()+']</a>';
+		});
+	});
 }

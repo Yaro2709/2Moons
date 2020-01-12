@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -35,12 +35,6 @@ function ShowOverviewPage()
 
 	if ($USER['authlevel'] >= AUTH_ADM)
 	{
-		if(file_exists(ROOT_PATH.'install.php'))
-			$Message[]	= sprintf($LNG['ow_file_detected'], 'install.php');
-			
-		if(file_exists(ROOT_PATH.'install.sql'))
-			$Message[]	= sprintf($LNG['ow_file_detected'], 'install.sql');
-			
 		if(file_exists(ROOT_PATH.'update.php'))
 			$Message[]	= sprintf($LNG['ow_file_detected'], 'update.php');
 			
@@ -52,9 +46,6 @@ function ShowOverviewPage()
 			
 		if(!is_writable(ROOT_PATH.'includes'))
 			$Message[]	= sprintf($LNG['ow_dir_not_writable'], 'includes');
-			
-		if(!is_writable(ROOT_PATH.'raports'))
-			$Message[]	= sprintf($LNG['ow_dir_not_writable'], 'raports');
 	}
 	
 	$template	= new template();

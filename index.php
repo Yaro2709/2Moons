@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -57,7 +57,7 @@ switch ($page) {
 		if($CONF['mail_active'] == 0)
 			redirectTo("index.php");
 
-		$Username = request_var('username', '');
+		$Username = request_var('username', '', UTF8_SUPPORT);
 		$Usermail = request_var('email', '');
 		
 		if(empty($Username) || empty($Usermail) || !ValidateAddress($Usermail)) {
@@ -65,14 +65,18 @@ switch ($page) {
 			exit;
 		}
 			
-		$UserID 	= $db->countquery("SELECT `id` FROM ".USERS." WHERE `universe` = '".$UNI."' AND `username` = '".$Username."' AND (`email` = '".$db->sql_escape($Usermail)."' OR `email_2` = '".$db->sql_escape($Usermail)."');");
+		$UserID 	= $db->countquery("SELECT `id` FROM ".USERS." 
+		WHERE `universe` = '".$UNI."' 
+		AND `username` = '".$db->sql_escape($Username)."' 
+		AND (`email` = '".$db->sql_escape($Usermail)."' 
+		OR `email_2` = '".$db->sql_escape($Usermail)."');");
 		
 		if (!isset($UserID)) {
 			echo json_encode(array('message' => $LNG['lost_not_exists'], 'error' => true));
 			exit;
 		} else {
 			$NewPass		= uniqid();
-			$MailRAW		= file_get_contents('./language/'.$LANG->getUser().'/email/email_lost_password.txt');
+			$MailRAW		= $LANG->getMail('email_lost_password');
 			$MailContent	= sprintf($MailRAW, $Usermail, $CONF['game_name'], $NewPass, "http://".$_SERVER['SERVER_NAME'].$_SERVER["PHP_SELF"]);			
 		
 			$Mail			= MailSend($Usermail, $Username, $LNG['mail_title'], $MailContent);
@@ -148,7 +152,7 @@ switch ($page) {
 				if($UserPass != $UserPass2)
 					$errors[]	= array('password_2', $LNG['different_passwords']);
 					
-				if($ExistsMail != 0)
+				if($ExistsMails != 0)
 					$errors[]	= array('email', $LNG['mail_already_exists']);
 					
 				if(!ValidateAddress($UserEmail))
@@ -213,7 +217,7 @@ switch ($page) {
 					redirectTo("index.php?uni=".$UNI."&page=reg&action=valid&clef=".$clef);
 				} else {
 					$MailSubject 	= $LNG['reg_mail_message_pass'];
-					$MailRAW		= file_get_contents("./language/".$UserLang."/email/email_vaild_reg.txt");
+					$MailRAW		= $LANG->getMail('email_vaild_reg');
 					$MailContent	= sprintf($MailRAW, $UserName, $CONF['game_name'].' - '.$CONF['uni_name'], "http://".$_SERVER['SERVER_NAME'].$_SERVER["PHP_SELF"], $clef, $UserPass, $CONF['smtp_sendmail'], $UNI);
 			
 					MailSend($UserEmail, $UserName, $MailSubject, $MailContent);
@@ -241,7 +245,7 @@ switch ($page) {
 				
 				if($CONF['mail_active'] == 1) {
 					$MailSubject	= sprintf($LNG['reg_mail_reg_done'], $CONF['game_name']);	
-					$MailRAW		= file_get_contents("./language/".$UserLang."/email/email_reg_done.txt");
+					$MailRAW		= $LANG->getMail('email_reg_done');
 					$MailContent	= sprintf($MailRAW, $UserName, $CONF['game_name'].' - '.$CONF['uni_name']);	
 					MailSend($UserMail, $UserName, $MailSubject, $MailContent);
 				}
@@ -260,6 +264,7 @@ switch ($page) {
 				$SQL .= "`dpath` = '".DEFAULT_THEME."', ";
 				$SQL .= "`darkmatter` = '".$CONF['darkmatter_start']."', ";
 				$SQL .= "`ref_id` = '".$UserRID."', ";
+				$SQL .= "`timezone` = '".$CONF['timezone']."', ";
 				if($UserRID != 0)
 					$SQL .= "`ref_bonus` = '1', ";
 				$SQL .= "`fb_id` = '".$UserFID."', ";
@@ -331,21 +336,12 @@ switch ($page) {
 			break;
 		}
 		break;
-	case 'agb' :
-		$template->assign_vars(array(
-			'contentbox'		=> true,
-			'agb'				=> $LNG['agb'],
-			'agb_overview'		=> $LNG['agb_overview'],
-		));
-		$template->show('index_agb.tpl');
-		break;
 	case 'rules' :
 		$template->assign_vars(array(
 			'contentbox'		=> true,
-			'rules'				=> $LNG['rules'],
+			'rules'				=> $LANG->getExtra('rules'),
 			'rules_overview'	=> $LNG['rules_overview'],
 			'rules_info1'		=> sprintf($LNG['rules_info1'], $CONF['forum_url']),
-			'rules_info2'		=> $LNG['rules_info2'],
 		));
 		$template->show('index_rules.tpl');
 		break;
@@ -357,17 +353,28 @@ switch ($page) {
 		$template->show('index_screens.tpl');
 		break;
 	case 'top100' :
-		$top = $db->query("SELECT * FROM ".TOPKB." WHERE `universe` = '".$UNI."' ORDER BY gesamtunits DESC LIMIT 100;");
+		$top = $db->query("SELECT *, (
+			SELECT DISTINCT
+			GROUP_CONCAT(username SEPARATOR ' & ') as attacker
+			FROM ".TOPKB_USERS." INNER JOIN ".USERS." ON uid = id AND `role` = 1
+			WHERE ".TOPKB_USERS.".`rid` = ".TOPKB.".`rid`
+		) as `attacker`,
+		(
+			SELECT DISTINCT
+			GROUP_CONCAT(username SEPARATOR ' & ') as attacker
+			FROM ".TOPKB_USERS." INNER JOIN ".USERS." ON uid = id AND `role` = 2
+			WHERE ".TOPKB_USERS.".`rid` = ".TOPKB.".`rid`
+		) as `defender`  
+		FROM ".TOPKB." WHERE `universe` = '".$UNI."' ORDER BY units DESC LIMIT 100;");
 		$TopKBList	= array();
 		while($data = $db->fetch_array($top)) {
 			$TopKBList[]	= array(
-				'result'	=> $data['fleetresult'],
+				'result'	=> $data['result'],
 				'time'		=> date("D d M H:i:s", $data['time']),
-				'units'		=> pretty_number($data['gesamtunits']),
+				'units'		=> pretty_number($data['units']),
 				'rid'		=> $data['rid'],
-				'attacker'	=> $data['angreifer'],
+				'attacker'	=> $data['attacker'],
 				'defender'	=> $data['defender'],
-				'result'	=> $data['fleetresult'],
 			);
 		}
 		

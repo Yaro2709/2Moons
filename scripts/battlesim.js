@@ -1,7 +1,7 @@
 function add(){
-	$("#battlesim").attr('action', '?page=battlesim&action=moreslots');
-	$("#battlesim").attr('method', 'POST');
-	$("#battlesim").submit();
+	$("#form").attr('action', '?page=battlesim&action=moreslots');
+	$("#form").attr('method', 'POST');
+	$("#form").submit();
 	return true;
 }
 
@@ -9,9 +9,9 @@ function check(){
 	var kb = window.open('about:blank', 'kb', 'scrollbars=yes,statusbar=no,toolbar=no,location=no,directories=no,resizable=no,menubar=no,width='+screen.width+',height='+screen.height+', screenX=0, screenY=0, top=0, left=0');
 	$("#submit:visible").removeAttr('style').hide().fadeOut();
 	$("#wait:hidden").removeAttr('style').hide().fadeIn();
-	$.post('?page=battlesim&action=send', $('#battlesim').serialize(), function(data){
+	$.post('?page=battlesim&action=send', $('#form').serialize(), function(data){
 		data	= $.trim(data);
-		if(data.length == 32) {
+		if(data == parseInt(data)) {
 			kb.focus();
 			kb.location.href = 'CombatReport.php?raport='+data;
 		} else {

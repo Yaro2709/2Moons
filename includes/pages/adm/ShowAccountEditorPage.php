@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -41,9 +41,9 @@ function ShowAccountEditorPage()
 		case 'resources':
 			$id         = request_var('id', 0);
 			$id_dark    = request_var('id_dark', 0);
-			$metal      = floattostring(round(abs(request_var('metal', 0.0)), 0));
-			$cristal    = floattostring(round(abs(request_var('cristal', 0.0)), 0));
-			$deut       = floattostring(round(abs(request_var('deut', 0.0)), 0));
+			$metal      = request_outofint('metal');
+			$cristal    = request_outofint('cristal');
+			$deut       = request_outofint('deut');
 			$dark		= request_var('dark', 0);
 
 			if ($_POST)
@@ -155,8 +155,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['fleet'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = $before[$ID] + floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".request_outofint($resource[$ID])."'";
+						$after[$ID] = $before[$ID] + request_outofint($resource[$ID]);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -168,8 +168,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['fleet'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = max($before[$ID] - floattostring(round(abs(request_var($resource[$ID], 0.0)), 0)),0);
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".request_outofint($resource[$ID])."'";
+						$after[$ID] = max($before[$ID] - request_outofint($resource[$ID]),0);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -231,8 +231,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['defense'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = $before[$ID] + floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".request_outofint($resource[$ID])."'";
+						$after[$ID] = $before[$ID] + request_outofint($resource[$ID]);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -244,8 +244,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['defense'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = max($before[$ID] - floattostring(round(abs(request_var($resource[$ID], 0.0)), 0)),0);
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".request_outofint($resource[$ID])."'";
+						$after[$ID] = max($before[$ID] - request_outofint($resource[$ID]),0);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -313,7 +313,7 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['allow'][$PlanetData['planet_type']] as $ID)
 					{
-						$Count			= floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$Count			= request_outofint($resource[$ID]);
 						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".$Count."'";
 						$after[$ID] 	= $before[$ID] + $Count;
 						$Fields			+= $Count;
@@ -330,7 +330,7 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".PLANETS." SET ";
 					foreach($reslist['allow'][$PlanetData['planet_type']] as $ID)
 					{
-						$Count			= floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$Count			= request_outofint($resource[$ID]);
 						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".$Count."'";
 						$after[$ID]		= max($before[$ID] - $Count,0);
 						$Fields			+= $Count;
@@ -395,8 +395,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".USERS." SET ";
 					foreach($reslist['tech'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = $before[$ID] + floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".request_outofint($resource[$ID])."'";
+						$after[$ID] = $before[$ID] + request_outofint($resource[$ID]);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -408,8 +408,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".USERS." SET ";
 					foreach($reslist['tech'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = max($before[$ID] - floattostring(round(abs(request_var($resource[$ID], 0.0)), 0)),0);
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".request_outofint($resource[$ID])."'";
+						$after[$ID] = max($before[$ID] - request_outofint($resource[$ID]),0);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -469,22 +469,22 @@ function ShowAccountEditorPage()
 				
 				$PersonalQuery    =    "UPDATE ".USERS." SET ";
 
-				if(!empty($username) && $id != 1) {
+				if(!empty($username) && $id != ROOT_USER) {
 					$PersonalQuery    .= "`username` = '".$db->sql_escape($username)."', ";
 					$after['username'] = $username;
 				}
 				
-				if(!empty($email) && $id != 1) {
+				if(!empty($email) && $id != ROOT_USER) {
 					$PersonalQuery    .= "`email` = '".$db->sql_escape($email)."', ";
 					$after['email'] = $email;
 				}
 				
-				if(!empty($email_2) && $id != 1) {
+				if(!empty($email_2) && $id != ROOT_USER) {
 					$PersonalQuery    .= "`email_2` = '".$db->sql_escape($email_2)."', ";
 					$after['email_2'] = $email_2;
 				}
 
-				if(!empty($password) && $id != 1) {
+				if(!empty($password) && $id != ROOT_USER) {
 					$PersonalQuery    .= "`password` = '".$db->sql_escape(md5($password))."', ";
 					$after['password'] = (md5($password) != $before['password']) ? 'CHANGED' : '';
 				}
@@ -550,8 +550,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".USERS." SET ";
 					foreach($reslist['officier'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = $before[$ID] + floattostring(round(abs(request_var($resource[$ID], 0.0)), 0));
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` + '".request_outofint($resource[$ID])."'";
+						$after[$ID] = $before[$ID] + request_outofint($resource[$ID]);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";
@@ -563,8 +563,8 @@ function ShowAccountEditorPage()
 					$SQL  = "UPDATE ".USERS." SET ";
 					foreach($reslist['officier'] as $ID)
 					{
-						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".floattostring(round(abs(request_var($resource[$ID], 0.0)), 0))."'";
-						$after[$ID] = max($before[$ID] - floattostring(round(abs(request_var($resource[$ID], 0.0)), 0)),0);
+						$QryUpdate[]	= "`".$resource[$ID]."` = `".$resource[$ID]."` - '".request_outofint($resource[$ID])."'";
+						$after[$ID] = max($before[$ID] - request_outofint($resource[$ID]),0);
 					}
 					$SQL .= implode(", ", $QryUpdate);
 					$SQL .= "WHERE ";

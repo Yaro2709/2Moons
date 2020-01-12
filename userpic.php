@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -43,7 +43,7 @@ $id = request_var('id', 0);
 if(CheckModule(37) || $id == 0) exit();
 
 $LANG->GetLangFromBrowser();
-$LANG->includeLang(array('BANNER'));
+$LANG->includeLang(array('L18N', 'BANNER'));
 
 require_once(ROOT_PATH."includes/classes/class.StatBanner.php");
 
@@ -59,9 +59,7 @@ if(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $E
 	header('HTTP/1.0 304 Not Modified');
 	exit;
 }
-if(in_array($LANG->getUser(), array('ru'))) //Find a Way to fix Chinese now.
-	$banner->CreateUTF8Banner($Data);
-else
-	$banner->CreateBanner($Data);
+
+$banner->CreateUTF8Banner($Data);
 
 ?>

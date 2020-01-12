@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -39,7 +39,7 @@ class MissionCaseSpy extends MissionFunctions
 	{
 		global $db, $pricelist, $LANG;		
 		$CurrentUser         = $db->uniquequery("SELECT `lang`, `spy_tech`, `rpg_espion` FROM ".USERS." WHERE `id` = '".$this->_fleet['fleet_owner']."';");
-		$LNG			     = $LANG->GetUserLang($CurrentUser['lang'], array('FLEET', 'TECH'));
+		$LNG			     = $LANG->GetUserLang($CurrentUser['lang'], array('L18N', 'FLEET', 'TECH'));
 		$CurrentUserID       = $this->_fleet['fleet_owner'];
 		$TargetPlanet        = $db->uniquequery("SELECT * FROM ".PLANETS." WHERE `id` = ".$this->_fleet['fleet_end_id'].";");
 		$TargetUserID        = $TargetPlanet['id_owner'];
@@ -51,8 +51,11 @@ class MissionCaseSpy extends MissionFunctions
 			
 		require_once(ROOT_PATH.'includes/classes/class.PlanetRessUpdate.php');	
 		$PlanetRess = new ResourceUpdate();
-		list($TargetUser['factor'], $TargetPlanet['factor'])    = getFactors($USER, $CPLANET);
+		
+		$TargetUser['factor']				= getFactors($TargetUser, 'basic', $this->_fleet['fleet_start_time']);
+		$PlanetRess 						= new ResourceUpdate();
 		list($TargetUser, $TargetPlanet)	= $PlanetRess->CalcResource($TargetUser, $TargetPlanet, true, $this->_fleet['fleet_start_time']);
+		
 		foreach ($fleet as $a => $b)
 		{
 			if (empty($b))
@@ -125,7 +128,7 @@ class MissionCaseSpy extends MissionFunctions
 		$MessageEnd  = "<center>".$DestProba."<br>".((ENABLE_SIMULATOR_LINK == true && !CheckModule(39)) ? "<a href=\"game.php?page=battlesim".$string."\">".$LNG['fl_simulate']."</a>":"")."</center>";
 			
 		$SpyMessage = "<br>".$GetSB."<br>".$AttackLink.$MessageEnd;
-		SendSimpleMessage($CurrentUserID, '', $this->_fleet['fleet_start_time'], 0, $LNG['sys_mess_qg'], $LNG['sys_mess_spy_report'], $SpyMessage);
+		SendSimpleMessage($CurrentUserID, 0, $this->_fleet['fleet_start_time'], 0, $LNG['sys_mess_qg'], $LNG['sys_mess_spy_report'], $SpyMessage);
 		
 		$LNG		    = $LANG->GetUserLang($TargetUser['lang']);
 		$TargetMessage  = $LNG['sys_mess_spy_ennemyfleet'] ." ". $CurrentPlanet['name'];
@@ -138,7 +141,7 @@ class MissionCaseSpy extends MissionFunctions
 		$TargetMessage .= $LNG['sys_mess_spy_seen_at'] ." ". $TargetPlanet['name'];
 		$TargetMessage .= " [". $TargetPlanet["galaxy"] .":". $TargetPlanet["system"] .":". $TargetPlanet["planet"] ."] ". $LNG['sys_mess_spy_seen_at2'] .".";
 
-		SendSimpleMessage($TargetUserID, '', $this->_fleet['fleet_start_time'], 0, $LNG['sys_mess_spy_control'], $LNG['sys_mess_spy_activity'], $TargetMessage);
+		SendSimpleMessage($TargetUserID, 0, $this->_fleet['fleet_start_time'], 0, $LNG['sys_mess_spy_control'], $LNG['sys_mess_spy_activity'], $TargetMessage);
 
 		if ($TargetChances >= $SpyerChances)
 		{
@@ -179,7 +182,7 @@ class MissionCaseSpy extends MissionFunctions
 				$String  = '
 				<table style="width:100%;"><tr><th colspan="5">
 				<a href="game.php?page=galaxy&mode=3&galaxy='. $TargetPlanet['galaxy'] .'&system='. $TargetPlanet['system']. '">
-				'.sprintf($TitleString, $TargetPlanet['name'], $TargetPlanet['galaxy'], $TargetPlanet['system'], $TargetPlanet['planet'], date(TDFORMAT, $this->_fleet['fleet_end_time'])) .'</th>
+				'.sprintf($TitleString, $TargetPlanet['name'], $TargetPlanet['galaxy'], $TargetPlanet['system'], $TargetPlanet['planet'], tz_date($this->_fleet['fleet_end_time'], $LNG['php_tdformat'], $LNG)) .'</th>
                 </tr><tr>
                 <td style="width:25%;" class="left transparent">'. $LNG['Metal'] .'</td><td style="width:25%;" class="left transparent">'. pretty_number($TargetPlanet['metal']) .'</td><td class="transparent">&nbsp;</td>
                 <td style="width:25%;" class="left transparent">'. $LNG['Crystal']   .'</td><td style="width:25%;" class="left transparent">'. pretty_number($TargetPlanet['crystal'])    .'</td>

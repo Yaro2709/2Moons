@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -37,7 +37,7 @@ function ShowModulePage()
 		update_config(array('moduls' => implode(";", $CONF['moduls'])));
 		$CONF['moduls']		= explode(";", $CONF['moduls']);
 	}
-	$IDs	= range(0, 40);
+	$IDs	= range(0, 41);
 	foreach($IDs as $ID => $Name) {
 		$Modules[$ID]	= array(
 			'name'	=> $LNG['modul'][$ID], 

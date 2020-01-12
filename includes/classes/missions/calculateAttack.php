@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -77,7 +77,7 @@ function calculateAttack(&$attackers, &$defenders, $FleetTF, $DefTF)
 		}
 	}
 	
-	for ($ROUNDC = 0; $ROUNDC < MAX_ATTACK_ROUNDS; $ROUNDC++) 
+	for ($ROUNDC = 0; $ROUNDC <= MAX_ATTACK_ROUNDS; $ROUNDC++) 
 	{
 		$attackDamage  = array('total' => 0);
 		$attackShield  = array('total' => 0);
@@ -146,7 +146,7 @@ function calculateAttack(&$attackers, &$defenders, $FleetTF, $DefTF)
 
 		$ROUND[$ROUNDC] = array('attackers' => $attackers, 'defenders' => $defenders, 'attackA' => $attackAmount, 'defenseA' => $defenseAmount, 'infoA' => $attArray, 'infoD' => $defArray);
 
-		if ($defenseAmount['total'] <= 0 || $attackAmount['total'] <= 0) {
+		if ($ROUNDC >= MAX_ATTACK_ROUNDS || $defenseAmount['total'] <= 0 || $attackAmount['total'] <= 0) {
 			break;
 		}
 
@@ -269,7 +269,6 @@ function calculateAttack(&$attackers, &$defenders, $FleetTF, $DefTF)
 		$won = "a"; // attacker
 	} else {
 		$won = "w"; // draw
-		$ROUND[count($ROUND)] = array('attackers' => $attackers, 'defenders' => $defenders, 'attack' => $attackDamage, 'defense' => $defenseDamage, 'attackA' => $attackAmount, 'defenseA' => $defenseAmount);
 	}
 
 	// CDR

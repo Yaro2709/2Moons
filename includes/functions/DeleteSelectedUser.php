@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -31,6 +31,9 @@ function DeleteSelectedUser($UserID)
 {
 	global $db ,$CONF;
 	
+	if(ROOT_USER == $UserId)
+		return false;
+		
 	$TheUser = $db->uniquequery("SELECT universe, ally_id FROM ".USERS." WHERE `id` = '".$UserID."';");
 	$SQL 	 = "";
 	
@@ -50,13 +53,13 @@ function DeleteSelectedUser($UserID)
 		}
 	}
 
-	$SQL .= "DELETE FROM ".BUDDY." WHERE `owner` = '".$UserID."' OR `sender` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".FLEETS." WHERE `fleet_owner` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".MESSAGES." WHERE `message_owner` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".NOTES." WHERE `owner` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".PLANETS." WHERE `id_owner` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".USERS." WHERE `id` = '".$UserID."';";
-	$SQL .= "DELETE FROM ".STATPOINTS." WHERE `stat_type` = '1' AND `id_owner` = '".$UserID."';";
+	$SQL .= "DELETE FROM ".BUDDY." WHERE `owner` = ".$UserID." OR `sender` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".FLEETS." WHERE `fleet_owner` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".MESSAGES." WHERE `message_owner` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".NOTES." WHERE `owner` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".PLANETS." WHERE `id_owner` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".USERS." WHERE `id` = ".$UserID.";";
+	$SQL .= "DELETE FROM ".STATPOINTS." WHERE `stat_type` = '1' AND `id_owner` = ".$UserID.";";
 	$db->multi_query($SQL);
 	
 	$SQL	= $db->query("SELECT fleet_id FROM ".FLEETS." WHERE `fleet_target_owner` = '".$UserID."';");

@@ -96,6 +96,12 @@ header {
     padding-top: 4px;
 }
 
+#rules {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
 #lang li{
 	float:right;
     padding-right: 0;
@@ -480,11 +486,17 @@ header {
 .fr {
 	background: url(../images/login/flags/fr.png);
 }
+.it {
+	background: url(../images/login/flags/it.png);
+}
 .pt {
 	background: url(../images/login/flags/pt.png);
 }
 .ru {
 	background: url(../images/login/flags/ru.png);
+}
+.si {
+	background: url(../images/login/flags/si.png);
 }
 
 /** FOOTER **/

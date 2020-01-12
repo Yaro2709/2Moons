@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -328,6 +328,8 @@ $LNG['ow_database_errors']			= 'Es sind Fehler vorhanden!';
 $LNG['ow_smtp_errors']				= 'Überprüfe deine SMTP-Einstellungen! - Momentan können keine Mails gesendet werden!';
 $LNG['ow_dir_not_writable']			= './%s ist nicht beschreibar!';
 $LNG['ow_none']						= 'Keine Warnungen';
+$LNG['ow_news']						= 'News';
+$LNG['ow_updates']					= 'Letzte Updates';
 
 //###########################################################//
 
@@ -485,7 +487,7 @@ $LNG['se_del_oldstuff_info']			= 'Löscht Nachrichten/Kampfberichte nach X Tagen
 $LNG['se_del_user_manually']			= 'Userlöschung nach';
 $LNG['se_del_user_manually_info']		= 'Löscht User, die ihre Accountlöschung aktiv haben nach X Tagen.';
 $LNG['se_del_user_automatic']			= 'Inaktive löschen nach';
-$LNG['se_del_user_automatic_info']		= 'Löscht User, die die sich nach X Tagen nicht eingeloggt haben.';
+$LNG['se_del_user_automatic_info']		= 'Löscht User, die die sich nach X Tagen nicht eingeloggt haben. (0 = Deaktiviert)';
 $LNG['se_del_user_sendmail']			= 'Sende Erinnerungsmal nach';
 $LNG['se_del_user_sendmail_info']		= 'Sendet eine Erinnerungs Mail an den User nach X Tagen nicht mehr eingeloggt haben';
 $LNG['se_sendmail_inactive']			= 'Aktiviere Erinnerungsmails';
@@ -500,6 +502,11 @@ $LNG['se_ref_max_referals']				= 'Maximale Referal';
 $LNG['se_ref_max_referals_info']		= 'Maximale Anzahl, der der User an Spielern werben kann';
 $LNG['se_silo_factor']					= 'Raketensilogröße';
 $LNG['se_silo_factor_info']				= 'Faktor für die größe des Silos';
+$LNG['se_timzone']						= 'Zeitzone des Unis';
+$LNG['se_dst_mode']							= 'Sommerzeit?';
+$LNG['se_dst_sel'][0]					= 'Nein';
+$LNG['se_dst_sel'][1]					= 'Ja';
+$LNG['se_dst_sel'][2]					= 'Automatisch';
 //###########################################################//
 
 
@@ -606,8 +613,14 @@ $LNG['mu_ts_options'] 				= 'Teamspeak Optionen';
 $LNG['mu_game_info'] 				= 'Informationen';
 $LNG['mu_vaild_users']				= 'Aktivire User'; 
 $LNG['mu_news']						= 'News'; 
-$LNG['mu_multiip']					= 'MultiIP'; 
+$LNG['mu_multiip_page']				= 'MultiIP'; 
 $LNG['mu_clear_cache']				= 'Lösche Cache'; 
+$LNG['mu_vertify']					= 'Vertify Game Content'; 
+$LNG['mu_logs']						= 'Admin-Log';
+
+$LNG['vt_error']					= 'HashFile ist nicht verfügbar! - Update durchführen!';
+$LNG['vt_fail']						= 'Geänderte Dateien';
+$LNG['vt_info']						= 'Diese Liste enthält die Dateien, die modifziert worden und nicht dem orginal entsprechen.<br>Wenn Sie selbst nichts am Spiel geändert haben, sollte Sie die Dateien mit dem Orginalen ersetzten.';
 
 //###########################################################//
 
@@ -1003,7 +1016,7 @@ $LNG['modul'][7]						= 'Chat';
 $LNG['modul'][8]						= 'DM-Bank';
 $LNG['modul'][9]						= 'Flotte';
 $LNG['modul'][10]						= 'Flotte - Handler';
-$LNG['modul'][40]						= 'Flotten Shourtcuts';
+$LNG['modul'][41]						= 'Flotten Shourtcuts';
 $LNG['modul'][11]						= 'Galaxie';
 $LNG['modul'][12]						= 'Hall of Fame';
 $LNG['modul'][13]						= 'Händler';
@@ -1106,7 +1119,7 @@ $LNG['up_edit']							= 'Edit:';
 $LNG['up_del']							= 'Del:';
 $LNG['up_submit']						= 'Absenden';
 $LNG['up_version']						= 'Version';
-$LNG['up_chmod_error']					= "Keine Schreibrechte für Ordner:\n\n%s";
+$LNG['up_chmod_error']					= "Keine Schreibrechte für Ordner:\n\n";
 $LNG['up_need_curl']					= 'Fehler: cURL nicht vorhanden.<br />Das UpdateSystem von 2Moons benötigt cURL, um die aktuellen Dateien herunter zu laden.';
 
 //Chat Page

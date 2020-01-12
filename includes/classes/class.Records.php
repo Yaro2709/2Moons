@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -61,7 +61,7 @@ class records
 	function BuildRecordCache() 
 	{
 		$Elements	= array_merge($GLOBALS['reslist']['build'], $GLOBALS['reslist']['tech'], $GLOBALS['reslist']['fleet'], $GLOBALS['reslist']['defense']);
-		$PHP		= "<?php \n//The File is created on ".date(TDFORMAT, TIMESTAMP)."\n$"."RecordsArray = array(\n";
+		$PHP		= "<?php \n//The File is created on ".date('d. M Y, H:i:s', TIMESTAMP)."\n$"."RecordsArray = array(\n";
 		foreach($this->maxinfos as $Uni	=> $Records) {
 			$PHP	.= "\t".$Uni." => array(\n";
 			foreach($Elements as $ElementID) {

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -120,7 +120,7 @@ function ShowMessageListPage()
 			'to'		=> ($Selected != 50) ? $row['username'].' '.$LNG['input_id'].':'.$row['message_owner'] : 'Universe',
 			'subject'	=> $row['message_subject'],
 			'text'		=> $row['message_text'],
-			'time'		=> str_replace(' ', '&nbsp;', date(TDFORMAT, $row['message_time'])),
+			'time'		=> str_replace(' ', '&nbsp;', tz_date($row['message_time'])),
 		);
 	}	
 

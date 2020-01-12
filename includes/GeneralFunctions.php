@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -42,9 +42,9 @@ function getUniverse()
 			$UNI	= explode('.', $_SERVER['HTTP_HOST']);
 			$UNI	= substr($UNI[0], 3);
 			if(!is_numeric($UNI))
-				$UNI	= 1;
+				$UNI	= ROOT_UNI;
 		} else {
-			$UNI	= 1;
+			$UNI	= ROOT_UNI;
 		}
 	}
 	
@@ -58,11 +58,11 @@ function getFactors($USER, $Type = 'basic', $TIME = 0) {
 		
 	if($Type == 'basic') {
 		return array(
-			'shipspeed'		=> 1 - DMExtra($USER[$resource[706]], $TIME, $pricelist[701]['add'], 0),
+			'shipspeed'		=> $USER[$resource[613]] * $pricelist[613]['info'] + DMExtra($USER[$resource[706]], $TIME, $pricelist[706]['add'], 0),
 			'bulidspeed'	=> 1 - $USER[$resource[605]] * $pricelist[605]['info'] - DMExtra($USER[$resource[702]], $TIME, $pricelist[702]['add'], 0),
 			'techspeed'		=> 1 - $USER[$resource[606]] * $pricelist[606]['info'] - DMExtra($USER[$resource[705]], $TIME, $pricelist[705]['add'], 0),
-			'fleetspeed'	=> 1 - $USER[$resource[613]] * $pricelist[613]['info'] - $USER[$resource[604]] * $pricelist[604]['info'],
-			'defspeed'		=> 1 - $USER[$resource[613]] * $pricelist[613]['info'] - $USER[$resource[608]] * $pricelist[608]['info'],
+			'fleetspeed'	=> 1 - $USER[$resource[604]] * $pricelist[604]['info'],
+			'defspeed'		=> 1 - $USER[$resource[608]] * $pricelist[608]['info'],
 			'metal'			=> 1 + ($USER[$resource[601]] * $pricelist[601]['info']) + ($USER[$resource[131]] * 0.02) + DMExtra($USER[$resource[703]], $TIME, $pricelist[703]['add'], 0),
 			'crystal'		=> 1 + ($USER[$resource[601]] * $pricelist[601]['info']) + ($USER[$resource[132]] * 0.02) + DMExtra($USER[$resource[703]], $TIME, $pricelist[703]['add'], 0),
 			'deuterium'		=> 1 + ($USER[$resource[601]] * $pricelist[601]['info']) + ($USER[$resource[133]] * 0.02) + DMExtra($USER[$resource[703]], $TIME, $pricelist[703]['add'], 0),
@@ -104,6 +104,53 @@ function getPlanets($USER)
 
 	$db->free_result($PlanetRAW);
 	return $Planets;
+}
+
+function tz_dst($timezone) {
+	if($timezone == $GLOBALS['CONF']['timezone'])
+		return (int) date("I");
+	
+	$OLD	= date_default_timezone_get();
+	$DST	= (int) date("I");
+	return $DST;
+}
+
+function tz_getlist() {
+	return array('-12', '-11', '-10', '-9.5', '-9', '-8', '-7', '-6', '-5', '-4.5', '-4', '-3.5', '-3', '-2', '-1', '0', '1', '2', '3', '3.5', '4', '4.5', '5', '5.5', '5.75', '6', '6.5', '7', '8', '8.75', '9', '9.5', '10', '10.5', '11', '11.5', '12', '12.75', '13', '14');
+}
+
+function tz_diff() {
+	$UTC		=  (int) date("Z");
+
+	if(isset($GLOBALS['USER'])) {
+		$timezone	= (float) $GLOBALS['USER']['timezone'];
+		$DST		= $GLOBALS['USER']['dst'];
+	} elseif(isset($_SESSION['USER'])) {
+		$timezone	= (float) $_SESSION['USER']['timezone'];
+		$DST		= $_SESSION['USER']['dst'];
+	}
+	if($DST == 2)
+		$DST		= tz_dst($timezone);
+	
+	return (($timezone + $DST) * 3600) - $UTC;
+}
+
+function tz_date($time, $Dateformat = '', $LNG = array(), $ToGMT = false) {
+	if(!$ToGMT)
+		$time		= $time + tz_diff();
+	else
+		$time		= $time + (int) date("Z") - (int) date("I");
+	
+	if(empty($LNG))
+		$LNG		= $GLOBALS['LNG'];
+			
+	if(empty($Dateformat))
+		$Dateformat	= $LNG['php_tdformat'];
+	
+	$Dateformat	= str_replace(array('D', 'M'), array("XXX", "YYY"), $Dateformat);
+	$Dateformat	= str_replace(array("XXX", "YYY"), array(addcslashes($LNG['week_day'][(date('w', $time))], 'A..z'), addcslashes($LNG['months'][(date('n', $time) - 1)], 'A..z')), $Dateformat);
+
+	return date($Dateformat, $time);
 }
 
 function update_config($Values, $UNI = 0)
@@ -341,7 +388,7 @@ function CheckNoobProtec($OwnerPlayer, $TargetPlayer, $Player)
 		return array('NoobPlayer' => false, 'StrongPlayer' => false);
 		
 	return array(
-		'NoobPlayer' => $OwnerPlayer['total_points'] * (1 / $CONF['noobprotectionmulti']) > $TargetPlayer['total_points'],
+		'NoobPlayer' => $OwnerPlayer['total_points'] > $TargetPlayer['total_points'] * $CONF['noobprotectionmulti'],
 		'StrongPlayer' => $OwnerPlayer['total_points'] * $CONF['noobprotectionmulti'] < $TargetPlayer['total_points']
 	);
 }
@@ -398,10 +445,18 @@ function SendSimpleMessage($Owner, $Sender, $Time, $Type, $From, $Subject, $Mess
 {
 	global $db;
 		
-	$SQL	= "UPDATE ".USERS." SET `new_message_".$Type."` = `new_message_".$Type."` + '1' WHERE `id` = '".$Owner."';
-	INSERT INTO ".MESSAGES." SET `message_owner` = '".$Owner."', `message_sender` = '".(int)$Sender."', `message_time` = '".$Time."', `message_type` = '".$Type."', `message_from` = '". $db->sql_escape($From) ."', `message_subject` = '". $db->sql_escape($Subject) ."', `message_text` = '".$db->sql_escape($Message)."', `message_unread` = '1', `message_universe` = '".$GLOBALS['UNI']."';";
+	$SQL	= "INSERT INTO ".MESSAGES." SET 
+	`message_owner` = ".(int) $Owner.", 
+	`message_sender` = ".(int) $Sender.", 
+	`message_time` = ".(int) $Time.", 
+	`message_type` = ".(int) $Type.", 
+	`message_from` = '".$db->sql_escape($From) ."', 
+	`message_subject` = '". $db->sql_escape($Subject) ."', 
+	`message_text` = '".$db->sql_escape($Message)."', 
+	`message_unread` = '1', 
+	`message_universe` = ".$GLOBALS['UNI'].";";
 
-	$db->multi_query($SQL);
+	$db->query($SQL);
 }
 
 function shortly_number($number)

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -43,7 +43,7 @@ function ShowRightsPage()
 			{
 				$id			= request_var('id_1', 0);
 				
-				if($USER['id'] != 1 && $id == 1) {
+				if($USER['id'] != ROOT_USER && $id == ROOT_USER) {
 					$template->message($LNG['ad_authlevel_error_3'], '?page=rights&mode=rights&sid='.session_id());
 					exit;
 				}
@@ -121,7 +121,7 @@ function ShowRightsPage()
 				if($id == 0)
 					$id	= request_var('id_2', 0);
 					
-				if($USER['id'] != 1 && $id == 1) {
+				if($USER['id'] != ROOT_USER && $id == ROOT_USER) {
 					$template->message($LNG['ad_authlevel_error_3'], '?page=rights&mode=users&sid='.session_id());
 					exit;
 				}	

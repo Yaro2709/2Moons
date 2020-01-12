@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -47,7 +47,7 @@ function ShowSearchPage()
 	$SearchFile		= request_var('search', '');
 	$SearchFor		= request_var('search_in', '');
 	$SearchMethod	= request_var('fuki', '');
-	$SearchKey		= request_var('key_user', '');
+	$SearchKey		= request_var('key_user', '', UTF8_SUPPORT);
 	$Page 			= request_var('side', 0);
 	$Order			= request_var('key_order', '');
 	$OrderBY		= request_var('key_acc', '');
@@ -363,8 +363,8 @@ function MyCrazyLittleSearch($SpecifyItems, $WhereItem, $SpecifyWhere, $SpecialS
 		{
 			$Search['LIST']	 .=	"<tr>";
 			if ($Table == "users"){				
-				$WhileResult[3] = $_GET['search'] == "online" ? pretty_time( TIMESTAMP - $WhileResult[3] ) : date(TDFORMAT, $WhileResult[3] );
-				$WhileResult[4]	=	date(TDFORMAT, $WhileResult[4]);
+				$WhileResult[3] = $_GET['search'] == "online" ? pretty_time( TIMESTAMP - $WhileResult[3] ) : tz_date($WhileResult[3] );
+				$WhileResult[4]	=	tz_date($WhileResult[4]);
 				
 				$WhileResult[6]	=	$LNG['rank'][$WhileResult[6]];
 				(($WhileResult[7] == '1')	? $WhileResult[7] = "<font color=lime>".$LNG['one_is_yes'][1]."</font>" : $WhileResult[7] = $LNG['one_is_yes'][0]);
@@ -372,12 +372,12 @@ function MyCrazyLittleSearch($SpecifyItems, $WhereItem, $SpecifyWhere, $SpecialS
 			}
 			
 			if ($Table == "banned"){
-				$WhileResult[2]	=	date(TDFORMAT, $WhileResult[2]);
-				$WhileResult[3]	=	date(TDFORMAT, $WhileResult[3]);
+				$WhileResult[2]	=	tz_date($WhileResult[2]);
+				$WhileResult[3]	=	tz_date($WhileResult[3]);
 			}
 			
 			if ($Table == "alliance")
-				$WhileResult[4]	=	date(TDFORMAT, $WhileResult[4]);
+				$WhileResult[4]	=	tz_date($WhileResult[4]);
 				
 			if ($Table == "planets") {
 				$WhileResult[3]	=	pretty_time(TIMESTAMP - $WhileResult[3]);
@@ -394,7 +394,7 @@ function MyCrazyLittleSearch($SpecifyItems, $WhereItem, $SpecifyWhere, $SpecialS
 			
 				if ($USER['authlevel'] == AUTH_ADM)
 				{
-					$DELETEBUTTON = $WhileResult[0] != $USER['id'] || $WhileResult[0] != 1 ? "<a href=\"?page=search&amp;delete=user&amp;user=".$WhileResult[0]."\" border=\"0\" onclick=\"return confirm('".$LNG['ul_sure_you_want_dlte']." ".$WhileResult[1]."?');\"><img src=\"./styles/images/r1.png\" title=".$WhileResult[1]."></a>" : "-";
+					$DELETEBUTTON = $WhileResult[0] != $USER['id'] || $WhileResult[0] != ROOT_USER ? "<a href=\"?page=search&amp;delete=user&amp;user=".$WhileResult[0]."\" border=\"0\" onclick=\"return confirm('".$LNG['ul_sure_you_want_dlte']." ".$WhileResult[1]."?');\"><img src=\"./styles/images/r1.png\" title=".$WhileResult[1]."></a>" : "-";
 					
 					$Search['LIST']	.=	"<td>".$DELETEBUTTON."</td>";
 				}

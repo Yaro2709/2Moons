@@ -1,6 +1,6 @@
 <?php
 
-// Translated into Russian by InquisitorEA. All rights reserved © 2010-2011
+// Translated into Russian by InquisitorEA (SporeEA@yandex.ru). All rights reserved © 2010-2011
 
 // Общее
 $LNG['adm_login']                      = 'Логин';
@@ -276,6 +276,8 @@ $LNG['ow_database_errors']             = 'В Вашей базе данных е
 $LNG['ow_smtp_errors']                 = 'Проверьте свои SMTP настройки! - В данный момент сообщения отправлять не могут!';
 $LNG['ow_dir_not_writable']            = './%s не имеет права на запись!';
 $LNG['ow_none']                        = 'Нет замечаний';
+$LNG['ow_news']                        = 'Новости';
+$LNG['ow_updates']                     = 'Последние обновления';
 
 // Параметры сервера
 $LNG['se_server_parameters']           = 'Параметры сервера';
@@ -429,7 +431,7 @@ $LNG['se_del_oldstuff_info']           = 'Удалять сообщения/ло
 $LNG['se_del_user_manually']           = 'Удалять аккаунты после';
 $LNG['se_del_user_manually_info']      = 'Удаление аккаунта игрока после Х дней при включенной им соответствующей опции в настройках.';
 $LNG['se_del_user_automatic']          = 'Удалять неактивных игроков после';
-$LNG['se_del_user_automatic_info']     = 'Удаление аккаунта игрока после Х дней неактивности.';
+$LNG['se_del_user_automatic_info']     = 'Удаление аккаунта игрока после Х дней неактивности (0 - отключение).';
 $LNG['se_del_user_sendmail']           = 'Отправлять напоминание после';
 $LNG['se_del_user_sendmail_info']      = 'Отправка напоминания о неактивности по электронной почте.';
 $LNG['se_sendmail_inactive']           = 'Включить отправку напоминания';
@@ -444,6 +446,11 @@ $LNG['se_ref_max_referals']            = 'Макс. рефералов';
 $LNG['se_ref_max_referals_info']       = 'Максимальное количество привлечённых игроков, за которых игрок будет получать награду.';
 $LNG['se_silo_factor']                 = 'Фактор вместимости ракетной шахты';
 $LNG['se_silo_factor_info']            = 'Фактор, влияющий на вместимость ракетной шахты.';
+$LNG['se_timzone']                     = 'Часовой пояс';
+$LNG['se_dst_mode']                    = 'Переход на летнее время';
+$LNG['se_dst_sel'][0]                  = 'Нет';
+$LNG['se_dst_sel'][1]                  = 'Да';
+$LNG['se_dst_sel'][2]                  = 'Автоматически';
 
 // Полномочия
 $LNG['mod_title']                      = 'Полномочия администрации';
@@ -500,7 +507,7 @@ $LNG['sb_sql_counts']                  = 'SQL-запросов: %d';
 $LNG['ul_sure_you_want_dlte']          = 'Вы действительно хотите удалить?';
 
 // Меню
-$LNG['mu_general']                     = 'Общие';
+$LNG['mu_general']                     = 'Общее';
 $LNG['mu_connected']                   = 'Онлайн';
 $LNG['mu_settings']                    = 'Параметры сервера';
 $LNG['mu_unisettings']                 = 'Параметры вселенной';
@@ -538,8 +545,14 @@ $LNG['mu_ts_options']                  = 'Teamspeak';
 $LNG['mu_game_info']                   = 'Информация';
 $LNG['mu_vaild_users']                 = 'Активация игроков';
 $LNG['mu_news']                        = 'Новости';
-$LNG['mu_multiip']                     = 'Мультиаккаунты';
+$LNG['mu_multiip_page']                = 'Мультиаккаунты';
 $LNG['mu_clear_cache']				   = 'Очистить кэш';
+$LNG['mu_vertify']                     = 'Сверить хэши файлов';
+$LNG['mu_logs']                        = 'Логи';
+
+$LNG['vt_error']                       = 'Хэш файл не доступен. Выполните обновление.';
+$LNG['vt_fail']                        = 'Измененные файлы';
+$LNG['vt_info']                        = 'Этот список содержит файлы, которые были изменения, и не соответствуют оригиналу.<br>Если вы не меняли содержимое файлов, рекомендуется заменить файлы оригинальными.';
 
 // Кэш
 $LNG['cc_cache_clear']				   = 'Кэш очищен';
@@ -855,8 +868,8 @@ $LNG['po_delete_moon']                 = 'Удалить луну';
 $LNG['sp_admin_answer']                = '%s (Админ) ответил %s<br><br><font color="red">%s</font>';
 $LNG['sp_answer_message_title']        = 'Заявка #%d';
 $LNG['sp_answer_message']              = 'На Вашу заявку #%d был дан ответ. Ответ смотрите в меню Тех. поддержка.';
-$LNG['sp_admin_closed']                = '%s (Админ) открыл заявку %s!';
-$LNG['sp_admin_open']                  = '%s (Админ) закрыл заявку %s!';
+$LNG['sp_admin_closed']                = '%s (Админ) закрыл заявку %s!';
+$LNG['sp_admin_open']                  = '%s (Админ) открыл заявку %s!';
 
 // Быстрый редактор
 $LNG['qe_send']                        = 'Отправить';
@@ -918,7 +931,7 @@ $LNG['modul'][7]                       = 'Чат';
 $LNG['modul'][8]                       = 'Инновационнные разработки';
 $LNG['modul'][9]                       = 'Флот';
 $LNG['modul'][10]                      = 'Флот - Обработчик';
-$LNG['modul'][40]                      = 'Цель (координаты) для флота';
+$LNG['modul'][41]                      = 'Цель (координаты) для флота';
 $LNG['modul'][11]                      = 'Галактика';
 $LNG['modul'][12]                      = 'Зал славы';
 $LNG['modul'][13]                      = 'Скупщик ресурсов';
@@ -1018,7 +1031,7 @@ $LNG['up_edit']                        = 'Изменить:';
 $LNG['up_del']                         = 'Удалить';
 $LNG['up_submit']                      = 'Обновить';
 $LNG['up_version']                     = 'Версия';
-$LNG['up_chmod_error']                 = "Нет прав на запись (CHMOD 777) для папок:\n\n%s";
+$LNG['up_chmod_error']                 = "Нет прав на запись (CHMOD 777) для папок:\n\n";
 $LNG['up_need_curl']                   = 'Ошибка: cURL не доступен.<br />Система обновления 2Moons требует cURL для загрузки файлов обновления.';
 
 // Редактор чата
@@ -1085,5 +1098,4 @@ $LNG['log_chatsettings']               = 'Настройки чата';
 $LNG['log_tssettings']                 = 'Настройки Teamspeak';
 $LNG['log_uni_short']                  = 'Вселенная';
 $LNG['log_universe']                   = 'Вселенная';
-
 ?>

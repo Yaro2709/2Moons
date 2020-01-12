@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -186,9 +186,9 @@ switch($page)
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowLogPage.php');
 		ShowLog();
 	break;
-	case 'vars':
-		include_once(ROOT_PATH . 'includes/pages/adm/ShowVarsEditor.php');
-		ShowVarsEditor();
+	case 'vertify':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowVertify.php');
+		ShowVertify();
 	break;
 	default:
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowIndexPage.php');

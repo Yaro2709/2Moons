@@ -3,6 +3,7 @@
 <html lang="{$lang}">
 <head>
 <link rel="stylesheet" type="text/css" href="styles/css/login.css?v={$REV}">
+<link rel="stylesheet" type="text/css" href="styles/css/jquery.fancybox.css?v={$REV}">
 <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 <title>{block name="title"} - {$servername}{/block}</title>
 <meta name="generator" content="2Moons {$VERSION}">
@@ -28,7 +29,6 @@
 				<li><a href="{$forum_url}" target="board">{$forum}</a></li>
 				<li><a href="index.php?page=news">{$menu_news}</a></li>
 				<li><a href="index.php?page=rules">{$menu_rules}</a></li>
-				<li><a href="index.php?page=agb">{$menu_agb}</a></li>
 				<li><a href="index.php?page=top100">{$menu_top100}</a></li>
 				<li><a href="index.php?page=pranger">{$menu_pranger}</a></li>
 				<li><a href="index.php?page=disclamer">{$menu_disclamer}</a></li>
@@ -81,15 +81,16 @@
 		</section>
 	{/if}</div>
 	<footer>
-		<a href="index.php?page=disclamer">{$menu_disclamer}</a><br>{$servername} powered by <a href="http://2moons.cc" title="2Moons" target="copy">2Moons</a>
+		<a href="index.php?page=disclamer">{$menu_disclamer}</a><br>2009-2011 <a href="http://2moons.cc" title="2Moons" target="copy">2Moons</a>
 	</footer>
 </div>
 <div id="dialog" style="display:none;"></div>
 <script type="text/javascript" src="scripts/jQuery.js?v={$REV}"></script>
+<script type="text/javascript" src="scripts/jquery.fancybox.js?v={$REV}"></script>
 <script type="text/javascript" src="scripts/login.js?v={$REV}"></script>
 <script type="text/javascript">
 var CONF			= {
-	RegClosedUnis	: {$RegClosedUnis},
+	RegClosedUnis	: {if isset($RegClosedUnis)}{$RegClosedUnis}{else}[]{/if},
 	IsCaptchaActive : {$game_captcha},
 	ref_active		: {$ref_active},
 	cappublic		: "{$cappublic}",
@@ -135,5 +136,6 @@ var pageTracker = _gat._getTracker("{$ga_key}");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 {/if}
+{block name="script"}{/block}
 </body>
 </html>

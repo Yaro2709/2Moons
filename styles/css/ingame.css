@@ -1,21 +1,30 @@
 html, body {
-	height:100%;
-	width:100%;
+	min-height:100%;
+	min-width:100%;
     margin: 0;
     padding: 0;
 }
 
 body {
 	line-height:14px;
+	padding-bottom:21px;
 }
 
-body,input,select,textarea,a,td,th,tr,table {
+body.popup {
+	min-width:0px;
+}
+
+body,input,button,select,textarea,a,td,th,tr,table,button {
 	font-family:Verdana;
 	font-size:10px;
 }
 
 a:focus {
 	outline:none
+}
+
+button:hover {
+	cursor:pointer;
 }
 
 table,td,th {
@@ -34,7 +43,7 @@ td {
 	padding-right:3px;
 }
 
-input {
+input,button {
 	margin:2px;
 }
 
@@ -69,12 +78,39 @@ textarea {
 	width:569px !important
 }
 
+.build_submit {
+    max-width: 100px;
+	padding:0;
+    word-wrap: break-word;
+	white-space: normal;
+}
+
+.build_form {
+	display:inline;
+}
+
+.onlist {
+    max-width: 100%;
+}
+
+.onlist:hover {
+	text-decoration:underline;
+}
+
+.shoutcut-edit {
+	display:none;
+}
+
+.clear {
+	clear:both;
+}
 /** HEADER **/
 #header {
 	padding:5px 10px;
-	margin-left:210px;
+	margin-left:10px;
 	margin-right:10px;
 	height:90px;
+	min-width:915px;
 }
 
 #planetselect {
@@ -96,27 +132,36 @@ textarea {
 	margin:20px 0;
 }
 
-#resources{
-	margin-left:215px;
-	margin-right:215px;
-    padding: 5px 0;
-	width:700px;
-}
-
-#resources > div{
-	margin:0 5px;
-	padding:0;
-	float:left;
-	height:auto;
-	max-width:130px;
-	width:100%;
-}
-
-#resources p{
+#resourcesdiv{
+	height:90px;
+	text-align:center;
 	margin:0;
 }
 
-#resources img {
+#resourcestable{
+	height:85px;
+	width:700px;
+	margin:0 auto;
+    padding:5px 0 0;
+	list-style:none;
+}
+
+.ie8 #resourcesdiv {
+	margin:0 215px 0 215px;
+}
+
+.resourceinfo{
+	margin:0 5px;
+	padding:0;
+	float:left;
+	width:130px;
+}
+
+#resourcesdiv p{
+	margin:0;
+}
+
+#resourcesdiv img {
     display: block;
     height: 22px;
     margin: 0 auto;
@@ -125,7 +170,6 @@ textarea {
 /** MENU **/
 
 #leftmenu {
-	padding-bottom:21px;
 	width:200px;
 	float:left;
 }
@@ -149,7 +193,6 @@ textarea {
 
 .menu-head {
 	height:78px;
-	cursor:pointer;
 }
 
 .menucat1-head, .menucat2-head, .menucat3-head, .menu-footer{
@@ -199,13 +242,19 @@ textarea {
 	padding:5px;
 }
 
-
+#options select {
+	max-width:170px;
+}
 /* CONTENT */
 
+#page {
+	margin-left:200px;
+	padding:0;
+}
+
 #content {
-	margin-left:210px;
-	margin-right:10px;
-	padding:10px 10px 26px 10px;
+	margin:10px 10px 0 ;
+	padding:10px 10px 5px 10px;
 }
 
 #content > table, form > table {
@@ -233,6 +282,22 @@ textarea {
 
 .tooltip, .tooltip_sticky {
 	cursor: pointer;
+}
+
+div#trader {
+	margin:14px auto;
+	height:55px;
+	width:330px;
+}
+
+div#trader + div {
+	clear:both;
+}
+
+.trader_col {
+	margin:0 5px;
+	float:left;
+	width:100px;
 }
 
 .tip {
@@ -290,3 +355,27 @@ textarea {
 .usize:hover{background-position:-300px -25px}
 .dsize{background-position:-325px 0}
 .dsize:hover{background-position:-325px -25px}
+
+
+@media screen and (max-width: 1380px) {
+	#resourcesdiv {
+		margin:0 215px 0 215px;
+	}
+}
+@media screen and (max-width: 1165px) {
+	body {
+		min-width: 0;
+	}
+	
+	#resourcestable {
+		width: 550px;
+	}
+		
+	#header {
+		min-width:765px;
+	}
+	
+	.resourceinfo {
+		width: 100px;
+	}
+}

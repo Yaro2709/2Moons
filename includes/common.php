@@ -22,13 +22,16 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
 
 if(!defined('IN_ADMIN') || !defined('IN_CRON'))
 	define("STARTTIME",	microtime(true));
+
+	
+define("BETA", file_exists(ROOT_PATH.'BETA_GAME'));
 
 ignore_user_abort(true);
 error_reporting(E_ALL ^ E_NOTICE);
@@ -55,7 +58,7 @@ ini_set('session.gc_divisor', '1000');
 ini_set('session.bug_compat_warn', '0');
 ini_set('session.bug_compat_42', '0');
 ini_set('session.cookie_httponly', true);
-ini_set('error_log', ROOT_PATH.'/includes/error.log');
+ini_set('error_log', ROOT_PATH.'includes/error.log');
 
 if(!defined('LOGIN'))
 	session_start();
@@ -89,7 +92,6 @@ else
 	
 $CONF	= getConfig($UNI);
 $LANG->setDefault($CONF['lang']);
-	
 require(ROOT_PATH.'includes/libs/FirePHP/FirePHP.class.php');
 require(ROOT_PATH.'includes/libs/FirePHP/fb.php');
 $FirePHP	= FirePHP::getInstance(true);
@@ -125,7 +127,7 @@ if (!defined('CLI') && !defined('LOGIN') && !defined('IN_CRON') && !defined('AJA
 	}
 	
 	$LANG->setUser($USER['lang']);	
-	$LANG->includeLang(array('INGAME', 'TECH'));
+	$LANG->includeLang(array('L18N', 'INGAME', 'TECH'));
 	$THEME->setUserTheme($USER['dpath']);
 	if($USER['bana'] == 1)
 	{
@@ -148,6 +150,22 @@ if (!defined('CLI') && !defined('LOGIN') && !defined('IN_CRON') && !defined('AJA
 		$USER['factor']		= getFactors($USER);
 		$USER['PLANETS']	= getPlanets($USER);
 		$FirePHP->log("Load Planet: ".$PLANET['id']);
+		
+		
+		if(empty($PLANET['b_hanger_id']) && !empty($PLANET['b_hanger']))
+		{
+			$_SESSION['messtoken'] = md5($USER['id'].'|1');
+			$db->query("UPDATE ".PLANETS." SET `b_hanger` = 0 WHERE `id` = '".$_SESSION['planet']."';");
+			message("<h1>Bug ahead!</h1><p>Please give Informations about your last steps!</p><textarea style=\"width:100%\" cols=\"5\" id=\"message\"></textarea><button onclick=\"$.post('game.php?page=messages&mode=send&id=1&ajax=1&subjectAutomatic bugraport!&text='+$('#message').val(), function(){document.location.href='game.php'});\">Send</button></form>");
+			exit;
+		}
+		if(empty($PLANET['b_building_id']) && !empty($PLANET['b_building']))
+		{
+			$_SESSION['messtoken'] = md5($USER['id'].'|1');
+			$db->query("UPDATE ".PLANETS." SET `b_building` = 0 WHERE `id` = '".$_SESSION['planet']."';");
+			message("<h1>Bug ahead!</h1><p>Please give Informations about your last steps!</p><textarea style=\"width:100%\" cols=\"5\" id=\"message\"></textarea><button onclick=\"$.post('game.php?page=messages&mode=send&id=1&ajax=1&subject=Automatic bugraport!&text='+$('#message').val(), function(){document.location.href='game.php'});\">Send</button></form>");
+			exit;
+		}
 	} else {
 		$USER['rights']	= unserialize($USER['rights']);
 		$LANG->includeLang(array('ADMIN'));
@@ -160,5 +178,5 @@ if (!defined('CLI') && !defined('LOGIN') && !defined('IN_CRON') && !defined('AJA
 
 if (!defined('AJAX') && !defined('CLI'))
 	require_once(ROOT_PATH.'includes/classes/class.template.php');
-
+	
 ?>

@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -68,7 +68,11 @@ function ShowPhalanxPage()
 		exit;	
 	}
 	
-	$FleetToTarget  = $db->query("SELECT * FROM ".FLEETS." WHERE `fleet_start_id` = '".$TargetInfo['id']."' OR `fleet_end_id` = '".$TargetInfo['id']."' ORDER BY `fleet_start_time`;");
+	$ExcludeMissions	= "";
+	if(INV_PHALANX_MISSIONS != "")
+		$ExcludeMissions	= " AND fleet_mission NOT IN(".INV_PHALANX_MISSIONS.")";
+		
+	$FleetToTarget  = $db->query("SELECT * FROM ".FLEETS." WHERE (`fleet_start_id` = '".$TargetInfo['id']."' OR `fleet_end_id` = '".$TargetInfo['id']."')".$ExcludeMissions." ORDER BY `fleet_start_time`;");
 	$fpage		= array();
 	$FleetData	= array();
 	$_SESSION['USER']['spy_tech']	= 8;

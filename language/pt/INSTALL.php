@@ -1,7 +1,7 @@
 <?php
 
 // Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2011
-
+// Está presente o ACORDO ORTOGRÁFICO DE PORTUGAL PARA 2011 . Mais informações em : http://www.priberam.pt/
 // 2Moons - Copyright (C) 2011  Slaver
  
 $LNG['title_install']			= "Instalador";
@@ -48,6 +48,7 @@ $LNG['step1_mysql_dbuser']		= "MySQL-Utilizador da Base de Dados: <br> Ex.: root
 $LNG['step1_mysql_dbpass']		= "MySQL-Password da Base de Dados: <br> Ex.: 12345";
 $LNG['step1_mysql_prefix']		= "MySQL-Prefixo da Base de Dados: <br> Ex.: uni1_";
 
+$LNG['step2_prefix_invalid']    = 'O prefixo da base de dados so pode conter caractéres Alfanuméricos';
 $LNG['step2_db_error']			= "Erro ao criar a tabela(s) da base de dados: %s";
 $LNG['step2_db_con_fail']		= "Não há conexão à base de dados<br> %s";
 $LNG['step2_conf_op_fail']		= "config.php não esta configurado em CHMOD 777!";
@@ -62,5 +63,7 @@ $LNG['step3_admin_mail']		= "Email do Admin:";
 
 $LNG['step4_need_fields']		= "Precisa de completar todos os espaços!";
 
-
+$LNG['sql_universe']         = 'Universo';
+$LNG['sql_close_reason']     = 'O Servidor está indisponível no momento';
+$LNG['sql_welcome']          = 'Bem-vindo';
 ?>

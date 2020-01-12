@@ -22,12 +22,12 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
 
-if ($USER['id'] != 1 || $_GET['sid'] != session_id()) exit;
+if ($USER['id'] != ROOT_USER || $_GET['sid'] != session_id()) exit;
 
 function ShowResetPage()
 {
@@ -117,17 +117,8 @@ function ShowResetPage()
 		if ($_POST['notes']	==	'on')
 			$db->query("DELETE FROM ".NOTES." WHERE `universe` = '".$_SESSION['adminuni']."';");
 
-		if ($_POST['rw']	==	'on'){
-			$TKBRW			= $db->query("SELECT `rid` FROM ".TOPKB." WHERE `universe` = '".$_SESSION['adminuni']."';");
-		
-			if(isset($TKBRW))
-			{
-				while($RID = $db->fetch_array($TKBRW)) {
-					@unlink(ROOT_PATH.'raports/topkb_'.$RID['rid'].'.php');
-				}
-				$db->query("DELETE FROM ".TOPKB." WHERE `universe` = '".$_SESSION['adminuni']."';");		
-			}
-		}
+		if ($_POST['rw']	==	'on')
+			$db->query("DELETE FROM ".TOPKB." WHERE `universe` = '".$_SESSION['adminuni']."';");
 
 		if ($_POST['friends']	==	'on')
 			$db->query("DELETE FROM ".BUDDY." WHERE `universe` = '".$_SESSION['adminuni']."';");

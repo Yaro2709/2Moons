@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -103,11 +103,11 @@ class ShowFleetPages extends FleetFunctions
 				'start_galaxy'	=> $CurrentFleetsRow['fleet_start_galaxy'],
 				'start_system'	=> $CurrentFleetsRow['fleet_start_system'],
 				'start_planet'	=> $CurrentFleetsRow['fleet_start_planet'],
-				'start_time'	=> date(TDFORMAT, $CurrentFleetsRow['fleet_start_time']),
+				'start_time'	=> tz_date($CurrentFleetsRow['fleet_start_time']),
 				'end_galaxy'	=> $CurrentFleetsRow['fleet_end_galaxy'],
 				'end_system'	=> $CurrentFleetsRow['fleet_end_system'],
 				'end_planet'	=> $CurrentFleetsRow['fleet_end_planet'],
-				'end_time'		=> date(TDFORMAT, $CurrentFleetsRow['fleet_end_time']),
+				'end_time'		=> tz_date($CurrentFleetsRow['fleet_end_time']),
 				'amount'		=> pretty_number($CurrentFleetsRow['fleet_amount']),
 				'backin'		=> pretty_time(floor($CurrentFleetsRow['fleet_end_time'] - TIMESTAMP)),
 				'FleetList'		=> $FleetList[$CurrentFleetsRow['fleet_id']],
@@ -181,12 +181,12 @@ class ShowFleetPages extends FleetFunctions
 			'maxexpeditions'		=> $EnvoiMaxExpedition,
 			'slots_available'		=> ($MaxFlottes <= $MaxFlyingFleets - $MaxFlyingRaks) ? false : true,
 			'AKSPage'				=> $AKSPage,
-			'bonus_attack'			=> $USER[$resource[109]] * 10 + ($USER['factor']['attack'] * 100),
-			'bonus_defensive'		=> $USER[$resource[110]] * 10 + ($USER['factor']['defensive'] * 100),
-			'bonus_shield'			=> $USER[$resource[111]] * 10 + ($USER['factor']['shield'] * 100),
-			'bonus_combustion'		=> $USER[$resource[115]] * 10 + ($USER['factor']['shipspeed'] * 100) - 100,
-			'bonus_impulse'			=> $USER[$resource[117]] * 20 + ($USER['factor']['shipspeed'] * 100) - 100,
-			'bonus_hyperspace'		=> $USER[$resource[118]] * 30 + ($USER['factor']['shipspeed'] * 100) - 100,
+			'bonus_attack'			=> $USER[$resource[109]] * 10 + $USER['factor']['attack'] * 100,
+			'bonus_defensive'		=> $USER[$resource[110]] * 10 + $USER['factor']['defensive'] * 100,
+			'bonus_shield'			=> $USER[$resource[111]] * 10 + $USER['factor']['shield'] * 100,
+			'bonus_combustion'		=> $USER[$resource[115]] * 10 + (1 + $USER['factor']['shipspeed']) * 100 - 100,
+			'bonus_impulse'			=> $USER[$resource[117]] * 20 + (1 + $USER['factor']['shipspeed']) * 100 - 100,
+			'bonus_hyperspace'		=> $USER[$resource[118]] * 30 + (1 + $USER['factor']['shipspeed']) * 100 - 100,
 		));
 		$template->show('fleet_table.tpl');
 	}
@@ -220,7 +220,7 @@ class ShowFleetPages extends FleetFunctions
 		$FleetData	= array(
 			'fleetroom'			=> floattostring($FleetRoom),
 			'gamespeed'			=> parent::GetGameSpeedFactor(),
-			'fleetspeedfactor'	=> $USER['factor']['shipspeed'],
+			'fleetspeedfactor'	=> 1 - $USER['factor']['shipspeed'],
 			'planet'			=> array('galaxy' => $PLANET['galaxy'], 'system' => $PLANET['system'], 'planet' => $PLANET['planet'], 'planet_type' => $PLANET['planet_type']),
 			'maxspeed'			=> parent::GetFleetMaxSpeed($Fleet, $USER),
 			'ships'				=> parent::GetFleetShipInfo($Fleet, $USER),
@@ -241,28 +241,8 @@ class ShowFleetPages extends FleetFunctions
 			'system_post' 			=> $TargetSystem,
 			'planet_post' 			=> $TargetPlanet,
 			'fleetdata'				=> json_encode($FleetData),
-			'options_selector'    	=> array(1 => $LNG['fl_planet'], 2 => $LNG['fl_debris'], 3 => $LNG['fl_moon']),
+			'options_selector'    	=> array(1 => $LNG['type_planet'][1], 2 => $LNG['type_planet'][2], 3 => $LNG['type_planet'][3]),
 			'options'				=> $TargetPlanettype,
-			'fl_send_fleet'			=> $LNG['fl_send_fleet'],
-			'fl_destiny'			=> $LNG['fl_destiny'],
-			'fl_fleet_speed'		=> $LNG['fl_fleet_speed'],
-			'fl_distance'			=> $LNG['fl_distance'],
-			'fl_flying_time'		=> $LNG['fl_flying_time'],
-			'fl_fuel_consumption'	=> $LNG['fl_fuel_consumption'],
-			'fl_max_speed'			=> $LNG['fl_max_speed'],
-			'fl_cargo_capacity'		=> $LNG['fl_cargo_capacity'],
-			'fl_shortcut'			=> $LNG['fl_shortcut'],
-			'fl_shortcut_add_edit'	=> $LNG['fl_shortcut_add_edit'],
-			'fl_no_shortcuts'		=> $LNG['fl_no_shortcuts'],
-			'fl_planet_shortcut'	=> $LNG['fl_planet_shortcut'],
-			'fl_debris_shortcut'	=> $LNG['fl_debris_shortcut'],
-			'fl_moon_shortcut'		=> $LNG['fl_moon_shortcut'],
-			'fl_my_planets'			=> $LNG['fl_my_planets'],
-			'fl_acs_title'			=> $LNG['fl_acs_title'],
-			'fl_continue'			=> $LNG['fl_continue'],
-			'fl_no_colony'			=> $LNG['fl_no_colony'],
-			'fl_flying_arrival'		=> $LNG['fl_flying_arrival'],
-			'fl_flying_return'		=> $LNG['fl_flying_return'],
 		));
 		
 		$template->show('fleet1_table.tpl');
@@ -321,6 +301,7 @@ class ShowFleetPages extends FleetFunctions
 		$distance      				= parent::GetTargetDistance($PLANET['galaxy'], $TargetGalaxy, $PLANET['system'], $TargetSystem, $PLANET['planet'], $TargetPlanet);
 		$duration      				= parent::GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $GameSpeedFactor, $USER);
 		$consumption				= parent::GetFleetConsumption($FleetArray, $duration, $distance, $MaxFleetSpeed, $USER, $GameSpeedFactor);
+		$duration					= $duration * (1 - $USER['factor']['shipspeed']);
  		
 		if($consumption > $PLANET['deuterium'])
 		{
@@ -520,6 +501,11 @@ class ShowFleetPages extends FleetFunctions
 			exit;
 		}
 		
+		if(!$YourPlanet && ($mission == 1 || $mission == 2 || $mission == 9) && parent::CheckBash($TargetPlanet['id']))
+		{
+			$template->message("<font color=\"red\"><b>".$LNG['fl_bash_protect']."</b></font>", "game.php?page=fleet", 2);
+			exit;
+		}
 		if(!$YourPlanet && ($mission == 1 || $mission == 2 || $mission == 5 || $mission == 6 || $mission == 9))
 		{
 			if($CONF['adm_attack'] == 1 && $UsedPlanet['authattack'] > $USER['authlevel'])
@@ -554,9 +540,13 @@ class ShowFleetPages extends FleetFunctions
 				exit;
 			}
 			
-			$buddy	= $db->uniquequery("SELECT COUNT(*) as state FROM ".BUDDY." WHERE `active` = '1' AND (`owner` = '".$HeDBRec['id']."' AND `sender` = '".$MyDBRec['id']."') OR (`owner` = '".$MyDBRec['id']."' AND `sender` = '".$HeDBRec['id']."');");
+			$buddy	= $db->countquery("
+				SELECT COUNT(*) FROM ".BUDDY." 
+				WHERE `id` NOT IN (SELECT `id` FROM ".BUDDY_REQUEST." WHERE ".BUDDY_REQUEST.".`id` = ".BUDDY.".`id`) AND 
+				(`owner` = ".$HeDBRec['id']." AND `sender` = ".$MyDBRec['id'].") OR
+				(`owner` = ".$MyDBRec['id']." AND `sender` = ".$HeDBRec['id'].");");
 						
-			if($HeDBRec['ally_id'] != $MyDBRec['ally_id'] && $buddy['state'] == 0)
+			if($HeDBRec['ally_id'] != $MyDBRec['ally_id'] && $buddy == 0)
 			{
 				$template->message("<font color=\"red\"><b>".$LNG['fl_no_same_alliance']."</b></font>", "game.php?page=fleet", 2);
 				exit;
@@ -571,7 +561,8 @@ class ShowFleetPages extends FleetFunctions
 		$distance      	= parent::GetTargetDistance($PLANET['galaxy'], $galaxy, $PLANET['system'], $system, $PLANET['planet'], $planet);
 		$duration      	= parent::GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor, $USER);
 		$consumption   	= parent::GetFleetConsumption($FleetArray, $duration, $distance, $MaxFleetSpeed, $USER, $SpeedFactor);
-			
+		$duration		= $duration * (1 - $USER['factor']['shipspeed']);
+		
 		$fleet['start_time'] = $duration + TIMESTAMP;
 		
 		if ($mission == 15)
@@ -659,7 +650,7 @@ class ShowFleetPages extends FleetFunctions
 			}
 		}
 		
-		$QryInsertFleet  = "LOCK TABLE ".FLEETS." WRITE, ".PLANETS." WRITE;
+		$QryInsertFleet  = "LOCK TABLE ".LOG_FLEETS." WRITE, ".FLEETS." WRITE, ".PLANETS." WRITE;
 							INSERT INTO ".FLEETS." SET 
 							`fleet_owner` = '".$USER['id']."', 
 							`fleet_mission` = '".$mission."',
@@ -674,7 +665,33 @@ class ShowFleetPages extends FleetFunctions
 							`fleet_start_type` = '".$PLANET['planet_type']."',
 							`fleet_end_time` = '".$fleet['end_time']."',
 							`fleet_end_stay` = '".$StayTime."',
-							`fleet_end_id` = '".(int)$TargetPlanet['id']."',
+							`fleet_end_id` = '".(int) $TargetPlanet['id']."',
+							`fleet_end_galaxy` = '".$galaxy."',
+							`fleet_end_system` = '".$system."',
+							`fleet_end_planet` = '".$planet."',
+							`fleet_end_type` = '".$planettype."',
+							`fleet_resource_metal` = '".floattostring($TransportMetal)."',
+							`fleet_resource_crystal` = '".floattostring($TransportCrystal)."',
+							`fleet_resource_deuterium` = '".floattostring($TransportDeuterium)."',
+							`fleet_target_owner` = '".(($planettype == 2) ? 0 : (int)$TargetPlanet['id_owner'])."',
+							`fleet_group` = '".$fleet_group_mr."',
+							`start_time` = '".TIMESTAMP."';
+							INSERT INTO ".LOG_FLEETS." SET 
+							`fleet_id` = (SELECT MAX(`fleet_id`) FROM ".FLEETS."), 
+							`fleet_owner` = '".$USER['id']."', 
+							`fleet_mission` = '".$mission."',
+							`fleet_amount` = '".$FleetShipCount."',
+						    `fleet_array` = '".$fleet_array."',
+						    `fleet_universe` = '".$UNI."',
+							`fleet_start_time` = '".$fleet['start_time']."',
+							`fleet_start_id` = '".$PLANET['id']."',
+							`fleet_start_galaxy` = '".$PLANET['galaxy']."',
+							`fleet_start_system` = '".$PLANET['system']."',
+							`fleet_start_planet` = '".$PLANET['planet']."',
+							`fleet_start_type` = '".$PLANET['planet_type']."',
+							`fleet_end_time` = '".$fleet['end_time']."',
+							`fleet_end_stay` = '".$StayTime."',
+							`fleet_end_id` = '".(int) $TargetPlanet['id']."',
 							`fleet_end_galaxy` = '".$galaxy."',
 							`fleet_end_system` = '".$system."',
 							`fleet_end_planet` = '".$planet."',
@@ -705,8 +722,8 @@ class ShowFleetPages extends FleetFunctions
 			'consumption' 			=> pretty_number($consumption),
 			'from' 					=> $PLANET['galaxy'] .":". $PLANET['system']. ":". $PLANET['planet'],
 			'destination'			=> $galaxy .":". $system .":". $planet,
-			'start_time' 			=> date(TDFORMAT, $fleet['start_time']),
-			'end_time' 				=> date(TDFORMAT, $fleet['end_time']),
+			'start_time' 			=> tz_date($fleet['start_time']),
+			'end_time' 				=> tz_date($fleet['end_time']),
 			'speedallsmin'		 	=> $MaxFleetSpeed,
 			'FleetList'				=> $FleetList,
 			'fl_fleet_sended'		=> $LNG['fl_fleet_sended'],
@@ -900,6 +917,7 @@ class ShowFleetPages extends FleetFunctions
 		$SpeedAllMin 		 = parent::GetFleetMaxSpeed($FleetArray, $USER);
 		$Duration    		 = parent::GetMissionDuration(10, $SpeedAllMin, $Distance, $SpeedFactor, $USER);
 		$consumption   		 = parent::GetFleetConsumption($FleetArray, $Duration, $Distance, $SpeedAllMin, $USER, $SpeedFactor);
+		$duration		= $duration * (1 - $USER['factor']['shipspeed']);
 
 		$UserDeuterium   	-= $consumption;
 
@@ -934,8 +952,29 @@ class ShowFleetPages extends FleetFunctions
 		
 		$Message['slots']++;
 		
-		$SQL  = "LOCK TABLE ".FLEETS." WRITE, ".PLANETS." WRITE;";
+		$SQL  = "LOCK TABLE ".LOG_FLEETS." WRITE, ".FLEETS." WRITE, ".PLANETS." WRITE;";
 		$SQL .= "INSERT INTO ".FLEETS." SET ";
+		$SQL .= "`fleet_owner` = '".$USER['id']."', ";
+		$SQL .= "`fleet_mission` = '".$mission."', ";
+		$SQL .= "`fleet_amount` = '".$FleetShipCount."', ";
+		$SQL .= "`fleet_array` = '".$FleetDBArray."', ";
+		$SQL .= "`fleet_universe` = '".$UNI."', ";
+		$SQL .= "`fleet_start_time` = '".$fleet['start_time']. "', ";
+		$SQL .= "`fleet_start_id` = '".$PLANET['id']."', ";
+		$SQL .= "`fleet_start_galaxy` = '".$PLANET['galaxy']."', ";
+		$SQL .= "`fleet_start_system` = '".$PLANET['system']."', ";
+		$SQL .= "`fleet_start_planet` = '".$PLANET['planet']."', ";
+		$SQL .= "`fleet_start_type` = '".$PLANET['planet_type']."', ";
+		$SQL .= "`fleet_end_time` = '".$fleet['end_time']."', ";
+		$SQL .= "`fleet_end_id` = '".$TargetRow['id']."', ";
+		$SQL .= "`fleet_end_galaxy` = '".$galaxy."', ";
+		$SQL .= "`fleet_end_system` = '".$system."', ";
+		$SQL .= "`fleet_end_planet` = '".$planet."', ";
+		$SQL .= "`fleet_end_type` = '".$planettype."', ";
+		$SQL .= "`fleet_target_owner` = '".$TargetRow['id_owner']."', ";
+		$SQL .= "`start_time` = '".TIMESTAMP."';";
+		$SQL .= "INSERT INTO ".LOG_FLEETS." SET ";
+		$SQL .= "`fleet_id` = (SELECT MAX(`fleet_id`) FROM ".FLEETS."), ";
 		$SQL .= "`fleet_owner` = '".$USER['id']."', ";
 		$SQL .= "`fleet_mission` = '".$mission."', ";
 		$SQL .= "`fleet_amount` = '".$FleetShipCount."', ";
@@ -968,7 +1007,7 @@ class ShowFleetPages extends FleetFunctions
 		$db->multi_query($SQL);
 
 		$Message['code']	= 600;
-		$Message['mess']	= $LNG['fa_sending']." ".$FleetShipCount." ". $LNG['tech'][$Ship] ." ".$LNG['gl_to']." ". $galaxy .":". $system .":". $planet ."...";
+		$Message['mess']	= $LNG['fa_sending']." ".pretty_number($FleetShipCount)." ". $LNG['tech'][$Ship] ." ".$LNG['gl_to']." ". $galaxy .":". $system .":". $planet ."...";
 		exit(json_encode($Message));
 	}
 
@@ -982,11 +1021,12 @@ class ShowFleetPages extends FleetFunctions
 		$TargetGalaxy 		= request_var('galaxy',0);
 		$TargetSystem 		= request_var('system',0);
 		$TargetPlanet 		= request_var('planet',0);
+		$TargetType 		= request_var('type', 0);
 		$anz 				= min(request_var('SendMI',0), $iraks);
 		$pziel 				= request_var('Target',"");
 		
 		$PlanetRess 		= new ResourceUpdate($USER, $PLANET);
-		$Target 			= $db->uniquequery("SELECT `id`, `id_owner` FROM ".PLANETS." WHERE `universe` = '".$UNI."' AND  `galaxy` = '".$TargetGalaxy."' AND `system` = '".$TargetSystem."' AND `planet` = '".$TargetPlanet."' AND `planet_type` = '1';");
+		$Target 			= $db->uniquequery("SELECT `id`, `id_owner` FROM ".PLANETS." WHERE `universe` = '".$UNI."' AND  `galaxy` = '".$TargetGalaxy."' AND `system` = '".$TargetSystem."' AND `planet` = '".$TargetPlanet."' AND `planet_type` = ".$TargetType.";");
 		
 		$Distance			= abs($TargetSystem - $PLANET['system']);
 		
@@ -1040,7 +1080,7 @@ class ShowFleetPages extends FleetFunctions
 		
 		if(connection_aborted())
 			exit;
-			
+				
 		$sql = "INSERT INTO ".FLEETS." SET
 				fleet_owner = '".$USER['id']."',
 				fleet_mission = '10',
@@ -1059,7 +1099,7 @@ class ShowFleetPages extends FleetFunctions
 				fleet_end_galaxy = '".$TargetGalaxy."',
 				fleet_end_system = '".$TargetSystem."',
 				fleet_end_planet = '".$TargetPlanet."',
-				fleet_end_type = '1',
+				fleet_end_type = '".$TargetType."',
 				fleet_target_obj = '".$db->sql_escape($pziel)."',
 				fleet_resource_metal = '0',
 				fleet_resource_crystal = '0',
@@ -1067,6 +1107,33 @@ class ShowFleetPages extends FleetFunctions
 				fleet_target_owner = '".$Target['id_owner']."',
 				fleet_group = '0',
 				fleet_mess = '0',
+				start_time = ".TIMESTAMP.";
+				INSERT INTO ".LOG_FLEETS." SET
+				fleet_id = (SELECT MAX(`fleet_id`) FROM ".FLEETS."), 
+				fleet_owner = '".$USER['id']."',
+				fleet_mission = '10',
+				fleet_amount = '".$anz."',
+				fleet_array = '503,".$anz."',
+				fleet_universe = '".$UNI."',
+				fleet_start_time = '".(TIMESTAMP + $Duration)."',
+				fleet_start_id = '".$PLANET['id']."',
+				fleet_start_galaxy = '".$PLANET['galaxy']."',
+				fleet_start_system = '".$PLANET['system']."',
+				fleet_start_planet ='".$PLANET['planet']."',
+				fleet_start_type = '1',
+				fleet_end_time = '".(TIMESTAMP + $Duration + 50)."',
+				fleet_end_stay = '0',
+				fleet_end_id = '".$Target['id']."',
+				fleet_end_galaxy = '".$TargetGalaxy."',
+				fleet_end_system = '".$TargetSystem."',
+				fleet_end_planet = '".$TargetPlanet."',
+				fleet_end_type = '".$TargetType."',
+				fleet_target_obj = '".$db->sql_escape($pziel)."',
+				fleet_resource_metal = '0',
+				fleet_resource_crystal = '0',
+				fleet_resource_deuterium = '0',
+				fleet_target_owner = '".$Target['id_owner']."',
+				fleet_group = '0',
 				start_time = ".TIMESTAMP.";
 				UPDATE ".PLANETS." SET 
 				interplanetary_misil = (interplanetary_misil - ".$anz.") WHERE id = '".$PLANET['id']."';";

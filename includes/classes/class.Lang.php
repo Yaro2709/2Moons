@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -140,6 +140,22 @@ class Language
 		}
 	}
 	
+	function getExtra($File)
+	{
+		if(file_exists(ROOT_PATH."language/".$this->User."/extra/".$File.".txt"))
+			return file_get_contents(ROOT_PATH."language/".$this->User."/extra/".$File.".txt");
+		
+		return "";
+	}
+	
+	function getMail($File)
+	{
+		if(file_exists(ROOT_PATH."language/".$this->User."/email/".$File.".txt"))
+			return file_get_contents(ROOT_PATH."language/".$this->User."/email/".$File.".txt");
+		
+		return "";
+	}
+	
 	function GetUserLang($ID, $Files = array())
 	{
 		global $db, $CONF;	
@@ -149,7 +165,7 @@ class Language
 			$LANGUAGE	= $this->Default;
 	
 		if(empty($Files))
-			$Files	= array('FLEET');
+			$Files	= array('L18N', 'FLEET');
 	
 		while (list(,$File) = each($Files)){
 			require(ROOT_PATH . "language/".$LANGUAGE."/".$File.'.php');

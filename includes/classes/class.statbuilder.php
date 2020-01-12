@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -33,9 +33,15 @@ class statbuilder extends records
 {
 	function __construct()
 	{
+		global $db, $CONF;
 		$this->starttime   	= microtime(true);
 		$this->memory		= array(round(memory_get_usage() / 1024,1),round(memory_get_usage(1) / 1024,1));
 		$this->time   		= TIMESTAMP;
+		
+		$this->Unis			= array($CONF['uni']);
+		$Query				= $db->query("SELECT `uni` FROM ".CONFIG." WHERE `uni` != '".$CONF['uni']."' ORDER BY `uni` ASC;");
+		while($Uni	= $db->fetch_array($Query))
+			$this->Unis[]	= $Uni['uni'];
 	}
 
 	private function SomeStatsInfos()
@@ -67,7 +73,7 @@ class statbuilder extends records
 	{
 		global $db, $CONF;
 
-		$db->query("LOCK TABLES ".ALLIANCE." WRITE, ".BUDDY." WRITE, ".CONFIG." WRITE, ".FLEETS." WRITE, ".NOTES." WRITE, ".MESSAGES." WRITE, ".PLANETS." WRITE, ".RW." WRITE, ".SESSION." WRITE,  ".SUPP." WRITE, ".STATPOINTS." WRITE, ".TOPKB." WRITE, ".USERS." WRITE;");
+		$db->query("LOCK TABLES ".ALLIANCE." WRITE, ".BUDDY." WRITE, ".CONFIG." WRITE, ".FLEETS." WRITE, ".NOTES." WRITE, ".MESSAGES." WRITE, ".PLANETS." WRITE, ".RW." WRITE, ".SESSION." WRITE,  ".SUPP." WRITE, ".STATPOINTS." WRITE, ".TOPKB." WRITE, ".TOPKB_USERS." WRITE, ".USERS." WRITE;");
 	
 		//Delete old messages
 		$del_before 	= TIMESTAMP - ($CONF['del_oldstuff'] * 86400);
@@ -76,7 +82,7 @@ class statbuilder extends records
 
 		$db->multi_query("DELETE FROM `".MESSAGES."` WHERE `message_time` < '". $del_before ."';DELETE FROM ".SUPP." WHERE `time` < '".$del_before."' AND `status` = 0;DELETE FROM ".ALLIANCE." WHERE `ally_members` = '0';DELETE FROM ".PLANETS." WHERE `destruyed` < ".TIMESTAMP." AND `destruyed` != 0;UPDATE ".USERS." SET `email_2` = `email` WHERE `setmail` < '".TIMESTAMP."';DELETE FROM ".SESSION." WHERE `user_lastactivity` < '".(TIMESTAMP - SESSION_LIFETIME)."';UPDATE ".USERS." SET `banaday` = '0', `bana` = '0' WHERE `banaday` <= '".TIMESTAMP."';");
 
-		$ChooseToDelete = $db->query("SELECT `id` FROM `".USERS."` WHERE `authlevel` = '".AUTH_USR."' AND ((`db_deaktjava` != 0 AND `db_deaktjava` < '".$del_deleted."') OR `onlinetime` < '".$del_inactive."');");
+		$ChooseToDelete = $db->query("SELECT `id` FROM `".USERS."` WHERE `authlevel` = '".AUTH_USR."' AND ((`db_deaktjava` != 0 AND `db_deaktjava` < '".$del_deleted."')".($del_inactive == TIMESTAMP ? "" : " OR `onlinetime` < '".$del_inactive."'").");");
 
 		if(isset($ChooseToDelete))
 		{
@@ -88,39 +94,15 @@ class statbuilder extends records
 		}
 		
 		$db->free_result($ChooseToDelete);
-
-		$DelRW	= $db->query("SELECT `rid` FROM ".RW." WHERE `time` < '". $del_before ."';");
 		
-		if($db->num_rows($DelRW) !== 0)
+		foreach($this->Unis as $Uni)
 		{
-			while($RID = $db->fetch_array($DelRW))
-			{
-				if(file_exists(ROOT_PATH.'raports/raport_'.$RID['rid'].'.php'))
-					unlink(ROOT_PATH.'raports/raport_'.$RID['rid'].'.php');
-			}	
-			$db->query("DELETE FROM ".RW." WHERE `time` < '". $del_before ."';");
+			$TopKBLow		= $db->countquery("SELECT units FROM ".TOPKB." WHERE `universe` = ".$Uni." ORDER BY units DESC LIMIT 99,1;");
+			if(isset($TopKBLow))
+				$db->query("DELETE ".TOPKB.", ".TOPKB_USERS." FROM ".TOPKB." INNER JOIN ".TOPKB_USERS." USING (rid) WHERE `universe` = ".$Uni." AND `units` < ".$TopKBLow.";");
 		}
-		$db->free_result($DelRW);
-		
-		$TKBRW			= $db->query("SELECT `rid` FROM ".TOPKB." ORDER BY `gesamtunits` LIMIT 100,1000;");	
 
-		if($db->num_rows($TKBRW) !== 0)
-		{
-			$RID	= array();
-			while($RID = $db->fetch_array($TKBRW))
-			{
-				if(file_exists(ROOT_PATH.'raports/topkb_'.$RID['rid'].'.php'))
-					unlink(ROOT_PATH.'raports/topkb_'.$RID['rid'].'.php');
-				
-				$RID[]	= $RID['rid'];
-			}
-			
-			if(!empty($RID))
-				$db->query("DELETE FROM ".TOPKB." WHERE `rid` IN (".implode(",", $RID).");");
-		}
-		
-		$db->free_result($TKBRW);
-		
+		$db->query("DELETE FROM ".RW." WHERE `time` < ". $del_before ." AND `rid` NOT IN (SELECT `rid` FROM ".TOPKB.");");
 		$db->query("UNLOCK TABLES;");
 	}
 	
@@ -265,16 +247,10 @@ class statbuilder extends records
 	
 	private function SetNewRanks()
 	{
-		global $db, $CONF;
-		$Unis	= array($CONF['uni']);
-		$Query	= $db->query("SELECT `uni` FROM ".CONFIG." WHERE `uni` != '".$CONF['uni']."' ORDER BY `uni` ASC;");
-		while($Uni	= $db->fetch_array($Query)) {
-			$Unis[]	= $Uni['uni'];
-		}
-		
+		global $db, $CONF;	
 		
 		$QryUpdateStats = "";
-		foreach($Unis as $Uni)
+		foreach($this->Unis as $Uni)
 		{
 			$tech			= array();
 			$Rank           = 1;

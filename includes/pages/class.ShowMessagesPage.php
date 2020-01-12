@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -41,7 +41,7 @@ class ShowMessagesPage
 	
 	function getMessages()
 	{
-		global $db, $THEME;
+		global $db, $THEME, $LNG;
 		$MessCategory  	= request_var('messcat', 100);
 		$MessageList	= array();
 		if($MessCategory == 999) 
@@ -51,16 +51,16 @@ class ShowMessagesPage
 			$UsrMess = $db->query("SELECT `message_id`, `message_time`, `message_from`, `message_subject`, `message_sender`, `message_type`, `message_unread`, `message_text` FROM ".MESSAGES." WHERE `message_owner` = '".$_SESSION['id']."'".($MessCategory != 100 ? " AND `message_type` = ".$MessCategory:"")." ORDER BY `message_time` DESC;");
 
 			if($MessCategory == 100)
-				$db->multi_query("UPDATE ".USERS." SET `new_message_0` = 0, `new_message_1` = 0, `new_message_2` = 0, `new_message_3` = 0, `new_message_4` = 0, `new_message_5` = 0, `new_message_15` = 0, `new_message_50` = 0, `new_message_99` = 0 WHERE `id` = '".$_SESSION['id']."';UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."';");			
+				$db->query("UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."';");			
 			else
-				$db->multi_query("UPDATE ".USERS." SET `new_message_".$MessCategory."` = 0 WHERE `id` = '".$_SESSION['id']."';UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."' AND `message_type` = '".$MessCategory."';");
+				$db->query("UPDATE ".MESSAGES." SET `message_unread` = '0' WHERE `message_owner` = '".$_SESSION['id']."' AND `message_type` = '".$MessCategory."';");
 		}
 
 		while ($CurMess = $db->fetch_array($UsrMess))
 		{
 			$MessageList[]	= array(
 				'id'		=> $CurMess['message_id'],
-				'time'		=> date(TDFORMAT, $CurMess['message_time']),
+				'time'		=> tz_date($CurMess['message_time']),
 				'from'		=> $CurMess['message_from'],
 				'subject'	=> $CurMess['message_subject'],
 				'sender'	=> $CurMess['message_sender'],
@@ -98,14 +98,14 @@ class ShowMessagesPage
 		switch($DeleteWhat)
 		{
 			case 'deleteall':
-				$db->multi_query("DELETE FROM ".MESSAGES." WHERE `message_owner` = '".$_SESSION['id']."';UPDATE ".USERS." SET `new_message_0` = 0, `new_message_1` = 0, `new_message_2` = 0, `new_message_3` = 0, `new_message_4` = 0, `new_message_5` = 0, `new_message_15` = 0, `new_message_50` = 0, `new_message_99` = 0 WHERE `id` = '".$_SESSION['id']."';");
+				$db->query("DELETE FROM ".MESSAGES." WHERE `message_owner` = '".$_SESSION['id']."';");
 			break;
 			case 'deletetypeall':
-				$db->multi_query("DELETE FROM ".MESSAGES." WHERE `message_owner` = '".$_SESSION['id']."' AND `message_type` = '".$MessCategory."';");
+				$db->query("DELETE FROM ".MESSAGES." WHERE `message_owner` = '".$_SESSION['id']."' AND `message_type` = '".$MessCategory."';");
 			case 'deletemarked':
 				$SQLWhere = array();
 				if(empty($_REQUEST['delmes']) || !is_array($_REQUEST['delmes']))
-					exit;
+					redirectTo('game.php?page=messages');
 					
 				foreach($_REQUEST['delmes'] as $MessID => $b)
 				{
@@ -199,10 +199,10 @@ class ShowMessagesPage
 		}
 		$db->free_result($GameOps);
 
-		$UsrMess 	= $db->query("SELECT `message_type`, COUNT(`message_unread`) as count FROM ".MESSAGES." WHERE `message_owner` = '".$USER['id']."' GROUP BY `message_type`;");	
+		$UsrMess 	= $db->query("SELECT `message_type`, SUM(`message_unread` - 1) as message_unread, COUNT(*) as count FROM ".MESSAGES." WHERE `message_owner` = '".$USER['id']."' GROUP BY `message_type`;");	
 		while ($CurMess = $db->fetch_array($UsrMess))
 		{
-			$UnRead[$CurMess['message_type']]		= $USER['new_message_'.$CurMess['message_type']];
+			$UnRead[$CurMess['message_type']]		= $CurMess['message_unread'];
 			$TotalMess[$CurMess['message_type']]	= $CurMess['count'];
 		}
 		

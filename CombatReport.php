@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -39,19 +39,44 @@ if(isset($_SESSION['USER']))
 else
 	$LANG->GetLangFromBrowser();
 	
-$LANG->includeLang(array('FLEET', 'TECH'));
+$LANG->includeLang(array('L18N', 'FLEET', 'TECH'));
 	
-$RID	= request_var('raport', '');
-
-if(file_exists(ROOT_PATH.'raports/raport_'.$RID.'.php'))
-	require_once(ROOT_PATH.'raports/raport_'.$RID.'.php');
+$RID		= request_var('raport', 0);
+$Fame		= request_var('fame', 0);
+if($Fame == 1) {
+	$Raport		= $db->uniquequery("SELECT 
+									`raport`, `time`,
+									(
+										SELECT 
+										GROUP_CONCAT(username SEPARATOR ' & ') as attacker
+										FROM ".USERS." 
+										WHERE `id` IN (SELECT `uid` FROM ".TOPKB_USERS." WHERE ".TOPKB_USERS.".`rid` = ".RW.".`rid` AND `role` = 1)
+									) as `attacker`,
+									(
+										SELECT 
+										GROUP_CONCAT(username SEPARATOR ' & ') as defender
+										FROM ".USERS." 
+										WHERE `id` IN (SELECT `uid` FROM ".TOPKB_USERS." WHERE ".TOPKB_USERS.".`rid` = ".RW.".`rid` AND `role` = 2)
+									) as `defender`
+									FROM ".RW."
+									WHERE `rid` = ".$RID.";");
+	$Info		= array($Raport["attacker"], $Raport["defender"]);
+} else {
+	$Raport		= $db->uniquequery("SELECT `raport` FROM ".RW." WHERE `rid` = ".$RID.";");
+	$Info		= array();
+}
 
 $template	= new template();
-
+if(!isset($Raport)) {
+	$template->message($LNG['sys_raport_not_found'], 0, false, true);
+	exit;
+}
 $template->isPopup(true);
-
-
-$template->assign_vars(array('raport' => $raport));
-$template->show('raport.tpl');
+$template->assign_vars(array(
+	'Raport'	=> unserialize($Raport["raport"]),
+	'Info'		=> $Info,
+	'fame'		=> $Fame
+));
+$template->show('CombatRaport.tpl');
 
 ?>

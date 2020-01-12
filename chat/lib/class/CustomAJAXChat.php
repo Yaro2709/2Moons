@@ -22,7 +22,7 @@
  * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
  * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.4 (2011-07-10)
+ * @version 1.5 (2011-07-31)
  * @info $Id$
  * @link http://code.google.com/p/2moons/
  */
@@ -45,6 +45,8 @@ class CustomAJAXChat extends AJAXChat {
 		$this->setConfig('allowPrivateMessages', false, (bool) $CONF['chat_allowmes']);
 		$this->setConfig('defaultChannelName', false, $CONF['chat_channelname']);
 		$this->setConfig('showChannelMessages', false, (bool) $CONF['chat_logmessage']);
+		$this->setConfig('langAvailable', false, Language::getAllowedLangs());
+		$this->setConfig('langNames', false, Language::getAllowedLangs(false));
 	}
 
 	function initCustomRequestVars() {
