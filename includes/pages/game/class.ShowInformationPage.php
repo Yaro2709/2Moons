@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.0 (2013-01-17)
+ * @version 1.7.1 (2013-01-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -55,7 +55,7 @@ class ShowInformationPage extends AbstractPage
 			$this->sendJSON(array('message' => $LNG['in_jump_gate_already_used'].' '.pretty_time($NextJumpTime - TIMESTAMP), 'error' => true));
 		}
 		
-		$TargetPlanet = HTTP::_GP('jmpto', $PLANET['id']);
+		$TargetPlanet = HTTP::_GP('jmpto', (int) $PLANET['id']);
 		$TargetGate   = $GLOBALS['DATABASE']->getFirstRow("SELECT id, last_jump_time FROM ".PLANETS." WHERE id = ".$TargetPlanet." AND id_owner = ".$USER['id']." AND sprungtor > 0;");
 
 		if (!isset($TargetGate) || $TargetPlanet == $PLANET['id']) {

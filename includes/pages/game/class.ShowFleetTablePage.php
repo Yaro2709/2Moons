@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.0 (2013-01-17)
+ * @version 1.7.1 (2013-01-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -192,10 +192,10 @@ class ShowFleetTablePage extends AbstractPage
 
 		$maxFleetSlots	= FleetFunctions::GetMaxFleetSlots($USER);
 
-		$targetGalaxy	= HTTP::_GP('galaxy', $PLANET['galaxy']);
-		$targetSystem	= HTTP::_GP('system', $PLANET['system']);
-		$targetPlanet	= HTTP::_GP('planet', $PLANET['planet']);
-		$targetType		= HTTP::_GP('planettype', $PLANET['planet_type']);
+		$targetGalaxy	= HTTP::_GP('galaxy', (int) $PLANET['galaxy']);
+		$targetSystem	= HTTP::_GP('system', (int) $PLANET['system']);
+		$targetPlanet	= HTTP::_GP('planet', (int) $PLANET['planet']);
+		$targetType		= HTTP::_GP('planettype', (int) $PLANET['planet_type']);
 		$targetMission	= HTTP::_GP('target_mission', 0);
 		
 		$fleetResult 		= $GLOBALS['DATABASE']->query("SELECT * FROM ".FLEETS." WHERE fleet_owner = ".$USER['id']." AND fleet_mission <> 10 ORDER BY fleet_end_time ASC;");
