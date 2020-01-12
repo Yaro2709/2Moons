@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__)) || $_GET['sid'] != session_id()) exit;
 function ShowRightsPage()
 {
-	global $LNG, $CONF, $db, $USER;
-	$mode	= request_var('mode', '');
+	global $LNG, $CONF, $USER;
+	$mode	= HTTP::_GP('mode', '');
 	switch($mode)
 	{
 		case 'rights':
@@ -41,20 +40,25 @@ function ShowRightsPage()
 			
 			if ($_POST)
 			{
-				$id			= request_var('id_1', 0);
+				$id			= HTTP::_GP('id_1', 0);
 				
 				if($USER['id'] != ROOT_USER && $id == ROOT_USER) {
 					$template->message($LNG['ad_authlevel_error_3'], '?page=rights&mode=rights&sid='.session_id());
 					exit;
 				}
 				
-				if($_POST['action'] == 'send') {
-					$db->query("UPDATE ".USERS." SET `rights` = '".serialize(array_map('intval', $_POST['rights']))."' WHERE `id` = '".$id."';");
+				if(!isset($_POST['rights'])) {
+					$_POST['rights']	= array();
 				}
 				
-				$Rights	= $db->uniquequery("SELECT rights FROM ".USERS." WHERE `id` = '".$id."';");
-				if(($Rights['rights'] = unserialize($Rights['rights'])) === false)
+				if($_POST['action'] == 'send') {
+					$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET `rights` = '".serialize(array_map('intval', $_POST['rights']))."' WHERE `id` = '".$id."';");
+				}
+				
+				$Rights	= $GLOBALS['DATABASE']->getFirstRow("SELECT rights FROM ".USERS." WHERE `id` = '".$id."';");
+				if(($Rights['rights'] = unserialize($Rights['rights'])) === false) {
 					$Rights['rights']	= array();
+				}
 				
 				$Files	= array_map('prepare', array_diff(scandir(ROOT_PATH.'includes/pages/adm/'), array('.', '..', '.svn', 'index.html', '.htaccess', 'ShowIndexPage.php', 'ShowOverviewPage.php', 'ShowMenuPage.php', 'ShowTopnavPage.php')));
 				
@@ -68,7 +72,7 @@ function ShowRightsPage()
 					'sid'						=> session_id(), 
 				));
 				
-				$template->show('adm/ModerrationRightsPostPage.tpl');		
+				$template->show('ModerrationRightsPostPage.tpl');		
 				exit;
 			}
 							
@@ -82,10 +86,10 @@ function ShowRightsPage()
 				$WHEREUSERS	=	"AND `authlevel` = '".AUTH_USR."'";			
 				
 				
-			$QueryUsers	=	$db->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
+			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
 				
 			$UserList	= "";
-			while ($List = $db->fetch_array($QueryUsers)) {
+			while ($List = $GLOBALS['DATABASE']->fetch_array($QueryUsers)) {
 				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank'][$List['authlevel']].')</option>';
 			}	
 
@@ -107,7 +111,7 @@ function ShowRightsPage()
 				'sid'						=> session_id(), 
 			));
 	
-			$template->show('adm/ModerrationRightsPage.tpl');
+			$template->show('ModerrationRightsPage.tpl');
 		break;
 		case 'users':
 			$template	= new template();
@@ -115,18 +119,18 @@ function ShowRightsPage()
 			
 			if ($_POST)
 			{
-				$id			= request_var('id_1', 0);
-				$authlevel	= request_var('authlevel', 0);
+				$id			= HTTP::_GP('id_1', 0);
+				$authlevel	= HTTP::_GP('authlevel', 0);
 				
 				if($id == 0)
-					$id	= request_var('id_2', 0);
+					$id	= HTTP::_GP('id_2', 0);
 					
 				if($USER['id'] != ROOT_USER && $id == ROOT_USER) {
 					$template->message($LNG['ad_authlevel_error_3'], '?page=rights&mode=users&sid='.session_id());
 					exit;
 				}	
 				
-				$db->multi_query("UPDATE ".USERS." SET `authlevel` = '".request_var('authlevel', 0)."' WHERE `id` = '".$id."';");
+				$GLOBALS['DATABASE']->multi_query("UPDATE ".USERS." SET `authlevel` = '".HTTP::_GP('authlevel', 0)."' WHERE `id` = '".$id."';");
 				$template->message($LNG['ad_authlevel_succes'], '?page=rights&mode=users&sid='.session_id());
 				exit;
 			}
@@ -140,10 +144,10 @@ function ShowRightsPage()
 			elseif ($_GET['get'] == 'pla')
 				$WHEREUSERS	=	"AND `authlevel` = '".AUTH_USR."'";	
 				
-			$QueryUsers	=	$db->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
+			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
 				
 			$UserList	= "";
-			while ($List = $db->fetch_array($QueryUsers)) {
+			while ($List = $GLOBALS['DATABASE']->fetch_array($QueryUsers)) {
 				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank'][$List['authlevel']].')</option>';
 			}	
 
@@ -165,7 +169,7 @@ function ShowRightsPage()
 				'sid'						=> session_id(), 
 			));
 	
-			$template->show('adm/ModerrationUsersPage.tpl');
+			$template->show('ModerrationUsersPage.tpl');
 		break;
 	}
 }
@@ -174,4 +178,3 @@ function prepare($val)
 {
 	return str_replace('.php', '', $val);
 }
-?>

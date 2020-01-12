@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,59 +18,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-function calculateMIPAttack($TargetDefTech, $OwnerAttTech, $ipm, $TargetDefensive, $pri_target, $adm)
+function calculateMIPAttack($TargetDefTech, $OwnerAttTech, $missiles, $targetDefensive, $firstTarget, $defenseMissles)
 {
-	global $pricelist, $reslist, $CombatCaps;
-	// Based on http://websim.speedsim.net/ JS-IRak Simulation
-	unset($TargetDefensive[503]);
-	$GetTargetKeys	= array_keys($TargetDefensive);
+	global $pricelist, $CombatCaps;
 	
-	$life_fac		= $TargetDefTech / 10 + 1;
-	$life_fac_a 	= $CombatCaps[503]['attack'] * ($OwnerAttTech / 10 + 1);
+	$destroyShips		= array();
+	$countMissles 		= $missiles - $defenseMissles;
 	
-	$ipm -= $adm;
-	$adm = 0;
-	$max_dam = $ipm * $life_fac_a;
-	$i = 0;	
-
-	$ship_res = array();
-	foreach($TargetDefensive as $Element => $Count)
+	if($countMissles == 0)
 	{
-		if($i == 0)
-			$target = $pri_target;
-		elseif($Element <= $pri_target)
-			$target = $Element - 1;
-		else
-			$target = $Element;
+		return $destroyShips;
+	}
+
+	$totalAttack 		= $countMissles * $CombatCaps[503]['attack'] * (1 +  0.1 * $OwnerAttTech);
+	
+	// Select primary target, if exists
+	if(isset($targetDefensive[$firstTarget]))
+	{
+		$firstTargetData	= array($firstTarget => $targetDefensive[$firstTarget]);
+		unset($targetDefensive[$firstTarget]);
+		$targetDefensive	= array_merge($firstTargetData, $targetDefensive);
+	}
+	
+	foreach($targetDefensive as $element => $count)
+	{
+		$elementStructurePoints = ($pricelist[$element]['cost'][901] + $pricelist[$element]['cost'][902]) * (1 + 0.1 * $TargetDefTech) / 10;
+		$destroyCount           = floor($totalAttack / $elementStructurePoints);
+		$destroyCount           = min($destroyCount, $count);
+		$totalAttack  	       -= $destroyCount * $elementStructurePoints;
 		
-		
-		$Dam = $max_dam - ($pricelist[$target]['metal'] + $pricelist[$target]['crystal']) / 10 * $TargetDefensive[$target] * $life_fac;
-			
-		if($Dam > 0)
+		$destroyShips[$element]	= $destroyCount;
+		if($totalAttack <= 0)
 		{
-			$dest = $TargetDefensive[$target];
-			$ship_res[$target] = $dest;
+			return $destroyShips;
 		}
-		else
-		{
-			// not enough damage for all items
-			$dest = floor($max_dam / (($pricelist[$target]['metal'] + $pricelist[$target]['crystal']) / 10 * $life_fac));
-			$ship_res[$target] = $dest;
-		}
-		$max_dam -= $dest * round(($pricelist[$target]['metal'] + $pricelist[$target]['crystal']) / 10 * $life_fac);
-		$i++;
 	}
 		
-	return $ship_res;
+	return $destroyShips;
 }
-	
-?>

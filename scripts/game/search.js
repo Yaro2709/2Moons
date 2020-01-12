@@ -1,48 +1,53 @@
 function instant(event){
-	if (event.keyCode == '13') {
+	if (event.keyCode == $.ui.keyCode.ENTER) {
 		event.preventDefault();
 	}
-
-	if($('#searchtext').val().length < 3) {
-		$('#result').html('');
+	
+	if ($.inArray(event.keyCode, [
+		91, // WINDOWS
+		18, // ALT
+		20, // CAPS_LOCK
+		188, // COMMA
+		91, // COMMAND
+		91, // COMMAND_LEFT
+		93, // COMMAND_RIGHT
+		17, // CONTROL
+		40, // DOWN
+		35, // END
+		13, // ENTER
+		27, // ESCAPE
+		36, // HOME
+		45, // INSERT
+		37, // LEFT
+		93, // MENU
+		107, // NUMPAD_ADD
+		110, // NUMPAD_DECIMAL
+		111, // NUMPAD_DIVIDE
+		108, // NUMPAD_ENTER
+		106, // NUMPAD_MULTIPLY
+		109, // NUMPAD_SUBTRACT
+		34, // PAGE_DOWN
+		33, // PAGE_UP
+		190, // PERIOD
+		39, // RIGHT
+		16, // SHIFT
+		32, // SPACE
+		9, // TAB
+		38, // UP
+		91 // WINDOWS
+	]) !== -1) {
 		return;
 	}
-	$.getJSON('game.php?page=search&type='+$('#type').val()+'&searchtext='+$('#searchtext').val(), function(data){
-		if($('#type').val() == 'playername' || $('#type').val() == 'planetname') {
-			var HTML	= '<table style="width:50%"><tr><th>'+LNG['sh_name']+'</th><th>&nbsp;</th><th>'+LNG['sh_alliance']+'</th><th>'+LNG['sh_planet']+'</th><th>'+LNG['sh_coords']+'</th><th>'+LNG['sh_position']+'</th></tr>'
-			$.each(data, function(i, row){
-				HTML	+= '<tr>';
-				HTML	+= '<td><a href="#" onclick="return Dialog.Playercard('+row.userid+', \''+row.username+'\');">'+row.username+'</a></td>';
-				HTML	+= '<td><a href="#" onclick="return Dialog.PM('+row.userid+');" title="'+LNG['sh_write_message']+'"><img src="'+Skin+'img/m.gif"/></a>&nbsp;<a href="javascript:OpenPopup(\'game.php?page=buddy&amp;mode=2&amp;u='+row.userid+'\',\'\', 720, 300);" title="'+LNG['sh_buddy_request']+'"><img src="'+Skin+'img/b.gif" border="0"></a></td>';
-				HTML	+= '<td>';
-				if (row.allyname)
-					HTML	+= '<a href="game.php?page=alliance&amp;mode=ainfo&amp;a='+row.allyid+'">'+row.allyname+'</a>';
-				else
-					HTML	+= '-';
-					
-				HTML	+= '</td>';
-				HTML	+= '<td>'+row.planetname+'</td>';
-				HTML	+= '<td><a href="game.php?page=galaxy&amp;mode=3&amp;galaxy='+row.galaxy+'&amp;system='+row.system+'">['+row.galaxy+':'+row.system+':'+row.planet+']</a></td>';
-				HTML	+= '<td>'+row.rank+'</td>';
-				HTML	+= '</tr>';
-			});
-			HTML	+= '</table>';
-		} else {
-			var HTML	= '<table style="width:50%"><tr><th>'+LNG['sh_tag']+'</th><th>'+LNG['sh_name']+'</th><th>'+LNG['sh_members']+'</th><th>'+LNG['sh_points']+'</th></tr>';
-			$.each(data, function(i, row){			
-				HTML	+= '<tr>';
-				HTML	+= '<td><a href="game.php?page=alliance&amp;mode=ainfo&amp;tag='+row.allytag+'">'+row.allytag+'</a></td>';
-				HTML	+= '<td>'+row.allyname+'</td>';
-				HTML	+= '<td>'+row.allymembers+'</td>';
-				HTML	+= '<td>'+row.allypoints+'</td>';
-				HTML	+= '</tr>';
-			});
-			HTML	+= '</table>';
-		}
-		$('#result').html(HTML);	
+	
+	$('#loading').show();
+	$.get('game.php?page=search&mode=result&type='+$('#type').val()+'&search='+$('#searchtext').val()+'&ajax=1', function(data) {
+		$('#resulttable').remove();
+		$('#content > table').after(data);	
+		$('#loading').hide();
 	});
 }
+
 $(document).ready(function() {
-	$('#searchtext').keyup(instant);
-	$('#type').change(instant);
+	$('#searchtext').on('keyup', instant);
+	$('#type').on('change', instant);
 });

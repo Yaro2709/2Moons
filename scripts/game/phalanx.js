@@ -1,10 +1,15 @@
+$(document).ready(function(){
+	FleetTime();
+});
+
 function FleetTime() {
-	$.each(Fleets, function(id, time) {
-		var s		= (time - (serverTime.getTime() / 1000));
+	$('.fleets').each(function() {
+		var s		= $(this).data('fleet-time') - (serverTime.getTime() - startTime) / 1000;
 		if(s <= 0) {
-			$('#fleettime_'+id).text('-');
+			$(this).text('-');
 		} else {
-			$('#fleettime_'+id).text(GetRestTimeFormat(s));
+			$(this).text(GetRestTimeFormat(s));
 		}
 	});
+	window.setTimeout('FleetTime()', 1000);
 }

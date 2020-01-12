@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,91 +18,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
 class StatBanner {
 
-	private $textcolor = "FFFFFF";
-	private $source = "styles/images/banner.jpg";
+	private $source = "styles/resource/images/banner.jpg";
 	
 	// Function to center text in the created banner
-	private function CenterTextBanner($z,$y,$zone) {
-		$a = strlen($z);
-		$b = imagefontwidth($y);
-		$c = $a*$b;
-		$d = $zone-$c;
-		$e = $d/2;
-		return $e;
+	private function CenterTextBanner($X, $String, $Font, $Size) {
+		
+		$boxSize	= imagettfbbox($Size, 0, $Font, $String);
+		
+		$minX 		= min(array($boxSize[0], $boxSize[2], $boxSize[4], $boxSize[6])); 
+		$maxX 		= max(array($boxSize[0], $boxSize[2], $boxSize[4], $boxSize[6])); 
+		
+		$boxWidth	= $maxX - $minX;
+		return $X - ($boxWidth * 0.7);
 	}
 
 	public function GetData($id)
 	{
-		global $db;
-		return $db->uniquequery("SELECT a.username, b.build_points, b.fleet_points, b.defs_points, b.tech_points, b.total_points, b.total_rank, c.name, c.galaxy, c.system, c.planet, d.game_name, d.users_amount, d.ttf_file FROM ".USERS." as a, ".STATPOINTS." as b, ".PLANETS." as c ,".CONFIG." as d WHERE a.id = '".$id."' AND b.stat_type = '1' AND b.id_owner = '".$id."' AND c.id = a.id_planet AND d.uni = a.universe;");
+		return $GLOBALS['DATABASE']->getFirstRow("SELECT a.username, a.wons, a.loos, a.draws, b.total_points, b.total_rank, c.name, c.galaxy, c.system, c.planet, d.game_name, d.users_amount, d.ttf_file FROM ".USERS." as a, ".STATPOINTS." as b, ".PLANETS." as c ,".CONFIG." as d WHERE a.id = '".$id."' AND b.stat_type = '1' AND b.id_owner = '".$id."' AND c.id = a.id_planet AND d.uni = a.universe;");
 	}
 	
-	public function CreateUTF8Banner($Query) {
-		global $LNG, $LANG;
+	public function CreateUTF8Banner($data) {
+		global $LNG;
 		$image  	= imagecreatefromjpeg($this->source);
-		$date  		= date($LNG['php_dateformat'], TIMESTAMP);
+		$date  		= _date($LNG['php_dateformat'], TIMESTAMP);
 
-		$Font		= $Query['ttf_file'];
+		$Font		= $data['ttf_file'];
 		if(!file_exists($Font))
 			$this->BannerError('TTF Font missing!');
 			
-		// Variables
-		$b_univ   = $Query['game_name'];
-		$b_user   = $Query['username'];
-		$b_planet = $Query['name'];
-		$b_xyz    = "[".$Query['galaxy'].":".$Query['system'].":".$Query['planet']."]";
-		$b_lvl    = $Query['total_rank']  ."/".$Query['users_amount'];
-		$b_build  = $LNG['ub_buildings'] .": ".shortly_number($Query['build_points']);
-		$b_fleet  = $LNG['ub_fleets'] .": ".shortly_number($Query['fleet_points']);
-		$b_def    = $LNG['ub_defenses'] .": ".shortly_number($Query['defs_points']);
-		$b_search = $LNG['ub_researh'] .": ".shortly_number($Query['tech_points']);
-		$b_total  = $LNG['ub_points'] .": ".shortly_number($Query['total_points']);
-
-
-		// Colors
-		$red    = hexdec(substr($this->textcolor,0,2));
-		$green  = hexdec(substr($this->textcolor,2,4));
-		$blue   = hexdec(substr($this->textcolor,4,6));
-		$select = imagecolorallocate($image,$red,$green,$blue);
-
-		// Display
-        // Univers name
-        imagettftext($image, 7, 0, $this->CenterTextBanner($b_univ, 1, 630), 65, $select, $Font, $b_univ);
-        // Today date
-        imagettftext($image, 7, 0, $this->CenterTextBanner($date, 1, 630), 75, $select, $Font, $date);
-        // Player name
-        imagettftext($image, 10, 0, 15, 18, $select, $Font, $b_user);
-        // Player b_planet
-        imagettftext($image, 10, 0, 150, 18, $select, $Font, $b_planet." ".$b_xyz);
-        // Player level
-        imagettftext($image, 14, 0, $this->CenterTextBanner($b_lvl,10,795), 46, $select, $Font, $b_lvl);
-        // Player stats
-        imagettftext($image, 10, 0, 15,  36, $select, $Font, $b_build);
-        imagettftext($image, 10, 0, 15,  51, $select, $Font, $b_fleet);
-        imagettftext($image, 10, 0, 230, 36, $select, $Font, $b_search);
-        imagettftext($image, 10, 0, 230, 51, $select, $Font, $b_def);
-        imagettftext($image, 10, 0, 15,  66, $select, $Font, $b_total);
+		// Colors		
+		$color	= imagecolorallocate($image, 255, 255, 225);
+		$shadow = imagecolorallocate($image, 33, 33, 33);
+		
+		$total	= $data['wons'] + $data['loos'] + $data['draws'];
+		
+		$quote	= $total != 0 ? $data['wons'] / $total * 100 : 0;
+		
+		// Username
+		imagettftext($image, 20, 0, 20, 31, $shadow, $Font, $data['username']);
+		imagettftext($image, 20, 0, 20, 30, $color, $Font, $data['username']);
+		
+		imagettftext($image, 16, 0, 250, 31, $shadow, $Font, $data['game_name']);
+		imagettftext($image, 16, 0, 250, 30, $color, $Font, $data['game_name']);
+		
+		imagettftext($image, 11, 0, 20, 60, $shadow, $Font, $LNG['ub_rank'].': '.$data['total_rank']);
+		imagettftext($image, 11, 0, 20, 59, $color, $Font, $LNG['ub_rank'].': '.$data['total_rank']);
+		
+		imagettftext($image, 11, 0, 20, 81, $shadow, $Font, $LNG['ub_points'].': '.html_entity_decode(shortly_number($data['total_points'])));
+		imagettftext($image, 11, 0, 20, 80, $color, $Font, $LNG['ub_points'].': '.html_entity_decode(shortly_number($data['total_points'])));
+		
+		imagettftext($image, 11, 0, 250, 60, $shadow, $Font, $LNG['ub_fights'].': '.html_entity_decode(shortly_number($total, 0)));
+		imagettftext($image, 11, 0, 250, 59, $color, $Font, $LNG['ub_fights'].': '.html_entity_decode(shortly_number($total, 0)));
+		
+		imagettftext($image, 11, 0, 250, 81, $shadow, $Font, $LNG['ub_quote'].': '.html_entity_decode(shortly_number($quote, 2)).'%');
+		imagettftext($image, 11, 0, 250, 80, $color, $Font, $LNG['ub_quote'].': '.html_entity_decode(shortly_number($quote, 2)).'%');
 				
 		if(!isset($_GET['debug']))
-			header("Content-type: image/jpg");
+			HTTP::sendHeader('Content-type', 'image/jpg');
 			
 		ImageJPEG($image);
 		imagedestroy($image);
 	}
 	
 	function BannerError($Message) {
-		header("Content-type: image/jpg");
+		HTTP::sendHeader('Content-type', 'image/jpg');
 		$im	 = ImageCreate(450, 80);
 		$background_color = ImageColorAllocate ($im, 255, 255, 255);
 		$text_color = ImageColorAllocate($im, 233, 14, 91);
@@ -112,4 +101,3 @@ class StatBanner {
 		exit;
 	}
 }
-?>

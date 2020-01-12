@@ -1,4 +1,4 @@
-{include file="adm/overall_header.tpl"}
+{include file="overall_header.tpl"}
 <form action="" method="post" onsubmit="return confirm('{$re_reset_universe_confirmation}');">
 <table width="40%">
 <tr><th colspan="2">{$re_player_and_planets}</th></tr>
@@ -36,9 +36,9 @@
 <tr><td style="text-align:left">{$re_reset_messages}</td><td style="text-align:right"><input type="checkbox" name="messages"></td></tr>
 <tr><td style="text-align:left">{$re_reset_statpoints}</td><td style="text-align:right"><input type="checkbox" name="statpoints"></td></tr>
 
-<tr><th style="text-align:left;">{$re_reset_all}</th><th style="text-align:right;margin-right:2px;padding-right:5px;width:10px;"><input type="checkbox" name="resetall" onclick="$('input').attr('checked', 'checked');"></th></tr>
+<tr><th style="text-align:left;">{$re_reset_all}</th><th style="text-align:right;margin-right:2px;padding-right:5px;width:10px;"><input type="checkbox" name="resetall" onclick="$('input').attr('checked', this.checked ? 'checked' : false)"></th></tr>
 
 
 <tr><td colspan="2" height="60"><input type="submit" value="{$button_submit}"></td></tr>
 </table>
-{include file="adm/overall_footer.tpl"}
+{include file="overall_footer.tpl"}

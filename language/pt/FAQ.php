@@ -1,33 +1,126 @@
 <?php
 
-// Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2011
+// Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2012
 // Texto escrito conforme o Acordo Ortográfico a ser inserido em 2011 pelo Ministério da Educação de Portugal - convertido pelo Lince.         
 
-// 2Moons - Copyright (C) 2011  Slaver// 2Moons - Copyright (C) 2011  Slaver
+// 2Moons - Copyright (C) 2012  Jan Kröpke
+
 
 $LNG['faq_overview']	= "FAQ";
+ 
+$LNG['questions']					= array();
+$LNG['questions'][1]['category']	= 'Dicas para Iniciantes';
+$LNG['questions'][1][1]['title']	= 'Passo 1';
+$LNG['questions'][1][1]['body']		= <<<BODY
+<p>Nesta parte do Tutorial, é descrito os edificios principais do jogo. Este explica como estes devem ser construidos no inicio e o que é necessário para construir um império de sucesso.</p>
+<h3>Planta de Energia Solar:</h3>
+<p>A fim de produzir os recursos que precisas, precisas de construir a Planta de Energia Solar, que é necessário para uma produção positiva de recursos, de modo que a produção não fique negativa ou que tenhas os recursos produzidos por completo</p>
+<h3>Mina de Metal:</h3>
+<p>O metal é um dos três recursos que estarão disponíveis no jogo. O metal é usado para quase qualquer coisa que podes construir ou de pesquisas. Portanto, uma boa expansão desta mina é aconselhável.</p>
+<h3>Mina de Cristal e Sintetizador de Deutério:</h3>
+<p>O Cristal é um recurso importante para edifícios, naves, e de pesquisas. É produzido em menor extensão do que o metal, o que torna assim mais caro.No decorrer do jogo, tu verás o quão o cristal é necessário. O deutério é uma fonte de energia, é a base de combustível de recursos e de uma pesquisa importante (laboratório de pesquisa).</p>
+BODY;
+$LNG['questions'][1][2]['title']	= 'Passo 2';
+$LNG['questions'][1][2]['body']		= <<<BODY
+<p>Para expandir o teu império e competires com outros jogadores ou precisares interagir com outros edifícios. Através da pesquisa e da construção de um Hangar começa a construção da tua frota e da defesa planetária. Detalhes podem ser encontrados aqui:</p>
+<h3>O Hangar:</h3>
+<p>Aqui estão todas as naves que tu tens disponível neste jogo. Algumas naves serão necessárias uma elevada quantidade de requesitos de modo a que estes possam ser construidos. Uma visão geral das naves ou da defesa que tem requisitos técnicos, podem ser encontrados sob o título "Tecnologia", no menu. Quanto maior o Hangar, mais rápido pode ser construída.</p>
+<h3>O Laboratório de Pesquisas:</h3>
+<p>Estes são utilizados para construir novos edifícios, naves e defesa. Também as pesquisas podem ser usadas para conseguir alguns bonus. A pesquisa pode ser acelerada através da expansão do Laboratório de Pesquisas</p>
+<h3>Fábrica de Robots:</h3>
+<p>A fábrica de robots é um componente essencial. Através da sua expansão, o tempo de produção de sondas pode ser reduzido, bem como a construção de edifícios.</p>
+BODY;
+$LNG['questions'][1][3]['title']	= 'Passo 3';
+$LNG['questions'][1][3]['body']		= <<<BODY
+<p>Esta parte do tutorial é dedicada à defesa do planeta, como as primeiras ações com a tua própria frota.</p>
+<h3>A Galáxia:</h3>
+<p>É usado para localizar os outros jogadores. Tu encontrarás informações detalhadas sobre os outros planetas, e também pode enviar um pouco da tua frota diretamente a partir deste ponto de vista. Além disso, tu podes verificar neste ponto de vista também, o contacto com outros jogadores, ou espiar em outro planeta, se possuires as Sondas de Espionagem</p>
+<h3>Envio de Frotas:</h3>
+<p>As Frotas pode visualizar a galáxia, ou estão além do ponto "frota" enviado. Primeiro, seleciona o número de navess de um certo tipo de nave está programado para voar. Ele deve ser definido o alvo (coordenadas, que são obtidos na vista galáxia), bem como a velocidade com que esta deve ser feita. Além disso, o tipo de missão como "Atacar", "Colonizar", "Transferir", "Destruir" ou "Manter Posições" é determinado.</p>
+<h3>A Defesa:</h3>
+<p>Para ser capaz de proteger o teu próprio planeta com a construção do Hangar, é também a construção de defesa. Estes oferecem alguma proteção contra os inimigos com a tua própria frota no momento do ataque dos teus adervesários. Em contraste com a frota, 70% da defesa continua existente no planeta</p>
+BODY;
 
-$LNG['faq']			= array(
-"Como posso ter mais de um planeta?" => "Para teres mais planetas precisa da nave de colonização, para colonizar precisas de ter a nave de colonizaão desbluqueada, para as desbloquear pprocura no Botão Tecnologias quais os itens que precisas de evoluir. A tecnologia de astrofísica que por cada 2 tecnologias pesquisadas poderás colonizar mais um planeta, podes ter até 9 planetas.",
-"O que é um Reciclador de Batalha?" => "O Reciclador de Batalha é um reciclador reforçado com um poder de carga suprior ao normal, poderás transportar com ele até 250 K em vez dos normais 20 K do reciclador normal.",
-"Estou a ser atacado como posso salvar os meus recursos e a minha frota ?" => "Existem várias maneiras de poderes salvar os teus recursos. Para poderes salvar a tua frota e os teus recursos terás de faser fleet-save a frota e aos recursos, esta é a maneira mais facil.",
-"O que é a Rede Intergaláctica de Pesquisas?" => "Com a Rede Intergaláctica de Pesquisas, é possível fazer pesquisas mais rapidamente. Os laboratórios são ligados entre si, se tiveres um laboratório a nível 12 e outro a nível 6 e a Rede Intergaláctica de Pesquisas a nível 2 estarás a fazer as pesquisas como se tivesses o laboratório a nível 18. Isto aplicasse a velocidade de pesquisa, cada nivel da Rede Intergaláctica de Pesquisas ligarás mais um planeta entre si.",
-"O que é Matéria Negra?" => "A Matéria Negra é um recurso muito raro de encontrar, com este recurso poderás contratar oficiais que te ajudarão a evóluir mais rapidamente, poderás ter mais velocídade de construção ou mais produção nas minas. Para saberes mais consulta a página dos ofíciais.",
-"Como obter Matéria Negra?" => "Há tres possibilidades.A primeira é enviar explorações para o slot 16 , a segunda possiblidade é a análize de MN, para isso precisas de uma lua e da nave Inter.MN-Slamer, e por fim a terceira e o método de compra que poderás encontrar as formas de pagamento na pagina dos ofíciais.",
-"O que é o terraformador?" => "O Terraformador fornece campos adicionais no planeta. Cada nível fornece 5 novos campos. Na prática, porém, podes usar somente 4 campos, porque o próprio Terraformador também precisa de um campo.",
-"Porque é que as luas so têem 1 campo?" => "As luas só têem 1 campo porque precisas de construir lá a Base-Lunar esta te dará por cada nível construido 3 campos, que na prática so tens desponivel 2 porque a propria base-lunar precisa de 1 campo.",
-"O que são mísseis interplanetários e de intercessão?" => "Os mísseis Interplanetários podem ser lançados aos planetas inimigos para destruir defesa, no entanto so parte da defesa e destruida dependendo do número de mísseis que enviares. Os mísseis de Intercessão servem para des truir os Interplanetários , assim evitando que a tua defesa seja destruida. Para enviares misseis Interplanetários podes fazelo atavez da vista da Galáxia.",
-"Aonde encontro os planetas com mais campos desponiveis?" => "Poderás explorar esta tabela de ajuda:<center><table border=\"2\" cellspacing=\"0\" cellpadding=\"4\" align=\"center\" style=\"margin:1em 1em 1em 0; border:solid 1px #AAAAAA; border-collapse:collapse; background-color:transparent; font-size:95%; empty-cells:show;text-align:center;\"><tr style=\"background-color:#FFFFFF\"><td class=\"faq\" rowspan=\"2\"> Posição</td><td class=\"faq\" rowspan=\"17\"></td><td class=\"faq\" colspan=\"3\"> Temperatura Maxima dos Planetas</td><td class=\"faq\" rowspan=\"17\"></td><td class=\"faq\" colspan=\"2\"> Energia dos Satélites</td><td class=\"faq\" rowspan=\"17\"></td><td class=\"faq\" colspan=\"2\"> Deuté.- Nível 10</td><td class=\"faq\" rowspan=\"17\"></td><td class=\"faq\" colspan=\"2\"> Deuté.- Nível 30</td><td class=\"faq\" rowspan=\"17\"></td><td class=\"faq\" colspan=\"3\"> Campos dos Planetas</td></tr><tr style=\"background-color:#FFFFFF\"><td class=\"faq\">minimo</td><td class=\"faq\">&Oslash;</td><td class=\"faq\">máximo</td><td class=\"faq\">minimo</td><td class=\"faq\">máximo</td><td class=\"faq\">minimal</td><td class=\"faq\">maximal</td><td class=\"faq\">minimo</td><td class=\"faq\">máximo</td><td class=\"faq\">minimo</td><td class=\"faq\">&Oslash;</td><td class=\"faq\">máximo</td></tr><tr align=\"center\" style=\"background-color:#ff0000;\"><td class=\"faq\">1</td><td class=\"faq\">200&deg;C</td><td class=\"faq\">220&deg;C</td><td class=\"faq\">240&deg;C</td><td class=\"faq\">60</td><td class=\"faq\">66</td><td class=\"faq\">103</td><td class=\"faq\">145</td><td class=\"faq\">2.093</td><td class=\"faq\">2.931</td><td class=\"faq\">95</td><td class=\"faq\">100</td><td class=\"faq\">108</td></tr><tr align=\"center\" style=\"background-color:#ff7800;\"><td class=\"faq\">2</td><td class=\"faq\">150&deg;C</td><td class=\"faq\">170&deg;C</td><td class=\"faq\">190&deg;C</td><td class=\"faq\">51</td><td class=\"faq\">58</td><td class=\"faq\">155</td><td class=\"faq\">197</td><td class=\"faq\">3.140</td><td class=\"faq\">3.978</td><td class=\"faq\">97</td><td class=\"faq\">103</td><td class=\"faq\">110</td></tr><tr align=\"center\" style=\"background-color:#ffbe00;\"><td class=\"faq\">3</td><td class=\"faq\">100&deg;C</td><td class=\"faq\">120&deg;C</td><td class=\"faq\">140&deg;C</td><td class=\"faq\">43</td><td class=\"faq\">50</td><td class=\"faq\">207</td><td class=\"faq\">248</td><td class=\"faq\">4.187</td><td class=\"faq\">5.025</td><td class=\"faq\">98</td><td class=\"faq\">118</td><td class=\"faq\">137</td></tr><tr align=\"center\" style=\"background-color:#f0ff00;\"><td class=\"faq\">4</td><td class=\"faq\">50&deg;C</td><td class=\"faq\">70&deg;C</td><td class=\"faq\">90&deg;C</td><td class=\"faq\">35</td><td class=\"faq\">41</td><td class=\"faq\">259</td><td class=\"faq\">300</td><td class=\"faq\">5.234</td><td class=\"faq\">6.072</td><td class=\"faq\">123</td><td class=\"faq\">164</td><td class=\"faq\">203</td></tr><tr align=\"center\" style=\"background-color:#dcff00;\"><td class=\"faq\">5</td><td class=\"faq\">40&deg;C</td><td class=\"faq\">60&deg;C</td><td class=\"faq\">80&deg;C</td><td class=\"faq\">33</td><td class=\"faq\">40</td><td class=\"faq\">269</td><td class=\"faq\">311</td><td class=\"faq\">5.444</td><td class=\"faq\">6.281</td><td class=\"faq\">148</td><td class=\"faq\">179</td><td class=\"faq\">210</td></tr><tr align=\"center\" style=\"background-color:#c8ff00;\"><td class=\"faq\">6</td><td class=\"faq\">30&deg;C</td><td class=\"faq\">50&deg;C</td><td class=\"faq\">70&deg;C</td><td class=\"faq\">31</td><td class=\"faq\">38</td><td class=\"faq\">280</td><td class=\"faq\">321</td><td class=\"faq\">5.653</td><td class=\"faq\">6.491</td><td class=\"faq\">148</td><td class=\"faq\">194</td><td class=\"faq\">226</td></tr><tr align=\"center\" style=\"background-color:#96ff00;\"><td class=\"faq\">7</td><td class=\"faq\">20&deg;C</td><td class=\"faq\">40&deg;C</td><td class=\"faq\">60&deg;C</td><td class=\"faq\">30</td><td class=\"faq\">36</td><td class=\"faq\">290</td><td class=\"faq\">331</td><td class=\"faq\">5.862</td><td class=\"faq\">6.700</td><td class=\"faq\">141</td><td class=\"faq\">193</td><td class=\"faq\">237</td></tr><tr align=\"center\" style=\"background-color:#50ff00;\"><td class=\"faq\">8</td><td class=\"faq\">10&deg;C</td><td class=\"faq\">30&deg;C</td><td class=\"faq\">50&deg;C</td><td class=\"faq\">28</td><td class=\"faq\">35</td><td class=\"faq\">300</td><td class=\"faq\">341</td><td class=\"faq\">6.072</td><td class=\"faq\">6.909</td><td class=\"faq\">169</td><td class=\"faq\">208</td><td class=\"faq\">246</td></tr><tr align=\"center\" style=\"background-color:#00ff00;\"><td class=\"faq\">9</td><td class=\"faq\">0&deg;C</td><td class=\"faq\">20&deg;C</td><td class=\"faq\">40&deg;C</td><td class=\"faq\">26</td><td class=\"faq\">33</td><td class=\"faq\">311</td><td class=\"faq\">352</td><td class=\"faq\">6.281</td><td class=\"faq\">7.119</td><td class=\"faq\">161</td><td class=\"faq\">197</td><td class=\"faq\">238</td></tr><tr align=\"center\" style=\"background-color:#00ff64;\"><td class=\"faq\">10</td><td class=\"faq\">-10&deg;C</td><td class=\"faq\">10&deg;C</td><td class=\"faq\">30&deg;C</td><td class=\"faq\">25</td><td class=\"faq\">31</td><td class=\"faq\">321</td><td class=\"faq\">363</td><td class=\"faq\">6.491</td><td class=\"faq\">7.328</td><td class=\"faq\">154</td><td class=\"faq\">188</td><td class=\"faq\">222</td></tr><tr align=\"center\" style=\"background-color:#00ff82;\"><td class=\"faq\">11</td><td class=\"faq\">-20&deg;C</td><td class=\"faq\">0&deg;C</td><td class=\"faq\">20&deg;C</td><td class=\"faq\">23</td><td class=\"faq\">30</td><td class=\"faq\">331</td><td class=\"faq\">373</td><td class=\"faq\">6.700</td><td class=\"faq\">7.538</td><td class=\"faq\">148</td><td class=\"faq\">176</td><td class=\"faq\">204</td></tr><tr align=\"center\" style=\"background-color:#00ff96;\"><td class=\"faq\">12</td><td class=\"faq\">-30&deg;C</td><td class=\"faq\">-10&deg;C</td><td class=\"faq\">10&deg;C</td><td class=\"faq\">21</td><td class=\"faq\">28</td><td class=\"faq\">342</td><td class=\"faq\">383</td><td class=\"faq\">6.909</td><td class=\"faq\">7.747</td><td class=\"faq\">136</td><td class=\"faq\">154</td><td class=\"faq\">171</td></tr><tr align=\"center\" style=\"background-color:#00b4ff;\"><td class=\"faq\">13</td><td class=\"faq\">-70&deg;C</td><td class=\"faq\">-50&deg;C</td><td class=\"faq\">-30&deg;C</td><td class=\"faq\">15</td><td class=\"faq\">21</td><td class=\"faq\">383</td><td class=\"faq\">425</td><td class=\"faq\">7.747</td><td class=\"faq\">8.585</td><td class=\"faq\">109</td><td class=\"faq\">115</td><td class=\"faq\">121</td></tr><tr align=\"center\" style=\"background-color:#0094ff;\"><td class=\"faq\">14</td><td class=\"faq\">-110&deg;C</td><td class=\"faq\">-90&deg;C</td><td class=\"faq\">-70&deg;C</td><td class=\"faq\">8</td><td class=\"faq\">15</td><td class=\"faq\">425</td><td class=\"faq\">466</td><td class=\"faq\">8.585</td><td class=\"faq\">9.422</td><td class=\"faq\">81</td><td class=\"faq\">86</td><td class=\"faq\">93</td></tr><tr align=\"center\" style=\"background-color:#0074ff;\"><td class=\"faq\">15</td><td class=\"faq\">-150&deg;C</td><td class=\"faq\">-130&deg;C</td><td class=\"faq\">-110&deg;C</td><td class=\"faq\">1</td><td class=\"faq\">8</td><td class=\"faq\">466</td><td class=\"faq\">508</td><td class=\"faq\">9.422</td><td class=\"faq\">10.260</td><td class=\"faq\">65</td><td class=\"faq\">69</td><td class=\"faq\">74</td></tr></table></center>Os tamanhos dos planetas de ser mutiplicados pelo fator de ".round(($GLOBALS["game_config"]['initial_fields'] / 163) * PLANET_SIZE_FATOR,2).".",
-"Como é que posso desbloquiar o hangar?"	=> "Para desbloquiares o hangar precisas de ter a fábrica de robots a nível 2, assim que tivéres o nível 2 o hangar irá aparecer automatícamente na fila das construcões.",
-"Como posso obter a planta de fusão?" => "Para obteres a planta de fusão precisas de ter a mina de deutério a nível 5 e a planta de energia a nível 3.",
-"O que é a planta de fusão?" => "A planta de fusão serve para te dar mais energia ao planeta, mas ao contrario da planta de energia está consome deutério, portanto não é uma mais valia usála com muita regularidade.",
-"Fleet Save, o que é e como funciona?" => "O fleet save é uma forma de salvaguardar a tua frota e recursos, pode ser em missão de transporte, recolha ou manter posições ou ate em exploração. Aviso nao e aconselhavel fazer fleet save em exploração devido ao grande risco de perderes a tua frota num combate. As outras 3 opcções são as mais viaveis mas atenção que jogadores com luas podem ver a tua frota no ar, portanto tem muita atenção como fazes o teu fleet save para salvaguardares a tua frota e recursos.", 
-"Como funcionam os ofíciais?" => "Os ofíciais são extras que têem um prazo de duração de 7 dias, os quais durante esse tempo dão os requesitos mostrados por eles dependendo dos ofíciais requesitados.",
-"Quanto tempo é preciso para que o E-Mail passe a permanente na conta ?" => "A alteração permanente do endereço de E-Mail eletrónico será de 7 dias.",
-"Por quanto tempo terei de ficar em modo de férias se for ativado?" => "Se o modo de férias for ativado terás de esperar 48 Horas ate poderes desactivalo.",
-"Se eu quiser apagar a minha conta quanto tempo é preciso para que seja apagada ?" => "A supressão de uma conta tem a duração de 7 dias, no final dos quais será impossivel reaver a conta.",
-"Ao fim de quanto tempo fica a minha conta inativa?" => "A conta fica inativa ao fim de 7 dias, na qual se verá este <b>i</b>. Após 28 dias de inatividade já veras o <b>I</b> maior.",
-"Quanto tempo posso tar sem entrar na minha conta sem ela ser apagada ?" => "A conta será apagada automaticamente após 30 dias de inatividade por parte do dono da conta",
-);
-?>
+$LNG['questions'][2]['category']	= 'Informação Avançada';
+$LNG['questions'][2][1]['title']	= 'Raid';
+$LNG['questions'][2][1]['body']		= <<<BODY
+<h3>Raid:</h3>
+<p>É o ataque contra outros jogadores para tomares posse dos recursos deles. Existe varios tipos de ataques como:</p>
+<ul>
+	<li>"Farmar"</li>
+	<li>ACS</li>
+	<li>Raid (ou Guerra)</li>
+	<li>Interceptar</li>
+</ul>
+<h3>Farmraid:</h3>
+<p>Estes são escaneados para os planetas ao teu redor, e envia pequenas frotas que têm suficiente capacidade de transporte e poder de fogo para abrir caminho, assim para uma menor perda e um lucro maior (a soma de recursos roubados exceder o consumo)</p>
+<h3>ACS:</h3>
+<p>O auge do Raid.<br>
+Aqui são caçados especificamente das frotas inimigas.<br>
+É, portanto, a categoria rainha, exceto como espionagem e uma boa dose de sorte e boa equipa. Se uma frota inimiga viu pela primeira vez este só deve ser capturado e reciclado. Isto em si não é geralmente fácil, uma vez que as frotas que trazem lucro realmente mover muitas vezes fora da sua própria capacidade de reciclagem. Em seguida, fora da frota própria, o reciclador deve ter dado aos seus parceiros os recursos de destroços.</p>
+<h3>Raid:</h3>
+<p>É o mais fácil de fazer, mas também a maneira menos popular para vencer.
+Com o desenvolvimento de destroços aos "derrotados", e como ninguem pode manter estes na galaxa, é encontrado e recolhido.. As vezes é um grande incomodo para quem sofreu o ataque. </p>
+<h3>Intercepção</h3>
+<p>O conteúdo de uma vida de Fleeter é construir frota e destruir. Desde que tu não podes sempre estar em torno de frotas, tens que às vezes, especialmente para chegar a bons jogadores, esforçar-te mais. Isso geralmente não é tão fácil, porque existem maneiras de se proteger.</p>
 
+BODY;
+
+$LNG['questions'][2][2]['title']	= 'Fleetsave';
+$LNG['questions'][2][2]['body']		= <<<BODY
+<h3>Como posso proteger-me</h3>
+<p>Um grande número de armas de defesa assusta alguns jogadores já infelizmente, e são atraídos por outros. Como resultado, tu perdes um monte de recursos, uma vez que as defesas, nada vai para o campo de destroços, quando são destruídos. A única exceção é a chamada Destroços de Defesas, em que o atacante quando te ataca, cria destroços de defesas no campo de destroços (A perda de 7% da defesa não conta nos destroços, conta é a perda total da defesa no combate).
+</p>
+<p>Além disso, existe os Misseis Interplanetários, cujo único objectivo é destruir a defesa. Em contraste com o ataque normal, os misseis não são novamente construidos. Um ataque bem planeado, com misseis interplanetários reduz o perigo à tua própria frota consideravelmente.</p>
+<p>O aumento da pesquisa de Espionagem permite um aumento de poderes ver o conteudo dos outros jogadores. Sendo assim, enquanto elevado for o numero deste, terás acesso às naves, defesa, edificios ou pesquisas do inimigo</p>
+<p>A melhor maneira de proteção é nenhum jogador ver o que tens na realidade, durante o tempo que não tens acesso à Internet e em que estas a executar um fleet. Se o inimigo atacar, roubará apenas os recursos produzidos que não foi levados pelo fleet, o que contribui para o inimigo julgar que és fraco e assim evita a probabilidade de ele atacar-te</p>
+<h3>OGame "Fleet Save"</h3>
+<p>O Fleetsave da frota é um componente chave do OGame, mas infelizmente muitos jogadores não dominam a Fleetsave. Então aqui vai uma explicação: Há muitas maneiras aos seus recursos e sua frota de mais ou menos seguro para proteger contra os ataques das frotas inimigas. Aqui estão algumas das quase 100% de certeza, mas outros são muito incertas.<br>
+O primeiro método de Fleetsaves é a "localização callback". Isso envia frota do jogador para um planeta em sua própria área com a missão de transferir. Este vôo vai então parar após algum tempo. Nisto é usado os calculos de Phalanx em que o jogador faz contas relacionadas com o tempo de frota do inimigo, com o seu tempo de combate. Este método não é 100% certo, mas se tu não quebrares no último momento, mas um par de horas antes, só com um esforço enorme para interceptar.<br> Nota - Muitos jogadores "inteligentes" não conseguem derivado ao defensor aparecer on, ou regressar a frota em voo! </p>
+<p>Um método muito comum de Fleetsave é enviares recuros de uma frota e de uma lua, e enviares para um campo de destroços distante. Neste não conta a quantidade de destroços, mas sim se existe destroços. As naves vão e regressam, com os destroços recolhidos e com tudo salvo</p>
+<p>Outro metodo de fazer fleet facilmente, é fazer fleetsave de lua a lua, em que os Inimigos não podem fazer phalanx a luas (Porque estas é que possuem o sensor!)</p>
+BODY;
+
+$LNG['questions'][2][3]['title']	= 'Luas';
+$LNG['questions'][2][3]['body']		= <<<BODY
+<p>Uma lua pode ocorrer quando um campo de destoços tem pelo menos cerca de 100.000 unidades, o que é, então, uma oportunidade lua 1% acaso. Máxima é de apenas 20% de chance não importa o quão grande é a lua.
+</p>
+<h3>Geral</h3>
+<p>As luas podem ter nomes como Planetas mas normalmente o nome por defeito é "Moon". Podes ter mais de uma lua, mas uma lua por planeta. Os satélites têm a vantagem de que um deles invisíveis para o Fleetsave. Na lua, podes construir Armazens, Tanque de Deutério, Fabrica de Robots ou Nanites, Base Lunar, Sensor Phalanx e o Portal Salto Quantico</p>
+<h3>Tamanhos de Luas</h3>
+<p>A lua pode ser feita depende do numero de destroços que são feitos.A maior hipotese de criação de uma lua simples é de 1667 Caças Ligeiros, em que cria uma hipotese de 20% de lua. Usas Caças Ligeiros porque eles são faceis de serem destruidos.</p><p>De outra maneira, para que exista hipotese de lua, é necessário ter defesas no planeta. É recomendado construir 3334 Lançadores de Misseis ou Lasers Ligeiros</p><p>As enormes quantidades que poderá ser feitas de destroços, irá determinar a formação da lua em torno do teu planeta</p><p>Probabilidade de Lua entre 1% e 19% é de tamanho aleatório e probabilidade de 20% a Lua terá 8000 KM de Diâmetro <br> Luas normais nunca são superiores a 8944 km de diâmetro.</p>
+<h3>Construção</h3>
+<p>Os edificios podem ser Armazens, Tanque de Deutério, Fabrica de Robots ou Nanites, Hangar, Deposito de Aliança, Base Lunar, Sensor Phalanx e o Portal Salto Quantico. O Hangar é inutil ser construido se transferes do proprio planeta para a lua naves. O Depósito de Aliança poderá ser util para defender a Lua de ataques<br>
+Os três edifícios específicos sobre a Lua são:</p>
+<ul><li><p><b>Base Lunar</b><br>Ele é usado para criar novos campos​​, em que são adicionados 3 novos campos por cada nivel</p></li>
+<li><p><b>Sensor Phalanx</b><br>É usado para ver as actividades de frota para o planeta inimigo, mas este não consegue ver os das luas. Tem um alcance limitado de galáxias, em que são aumentadas por nivel</p></li>
+<li><p><b>Portal de Salto Quântico</b><br>Este é usado para transferência de frota de uma lua para a outra instantâneamente! Mas este não transporta recursos e o tempo de saltos entre a transferência de frota isntantânea é de 1 hora</p></li></ul>
+<p>Aqui está uma lista de o desenvolvimento ideal de uma lua:<br>
+<b>Legenda:</b><br>
+MB – Lua<br>
+SP – Phalanx<br>
+ST – Portal<br>
+RB – Fábrica de Robots</p>
+<p>MB1 – RB1 – RB2 – MB2 – SP1 – RB3 – MB3 – SP2 – RB4 – MB4 – SP3 – RB5 – MB5 – SP4 – RB6 – MB6 – SP5 – SP6 – MB7 – SP7 – SP8 – MB8 – ST1<br>
+Esta ordem é apenas sugerida se fores novato, pois claro jogadores mais experientes têm a sua ideia de desenvolvimento</p>
+<h3>Destruição de Lua</h3>
+<p>A lua também pode ser destruída novamente, o qual só é permitido com naves especificas.</p>
+<p>No menu de Fleet, selecionas as naves chamadas "Estrela da Morte" ou "Estrela Destruidora". Quando chegar ao momento de escolher a missão para a Lua, escolhes "Destruir". Estas missões nem sempre são bem sucedidas, a lua poderá ser destruida como tambem não pode. Nestas batalhas não existe destroços! Quanto maior for a lua para ser destruida, mais Estrelas da morte serão necessárias e mais arriscado é a tentativa de destruição deste!</p>
+<h3>Tamanho de Lua:</h3>
+<p>Destroços de 100 000 unidades pode render uma lua de 1% de probabilidade. A probabilidade máxima é de 20%. <p>
+BODY;
+
+$LNG['questions'][2][4]['title']	= 'Aliança';
+$LNG['questions'][2][4]['body']		= <<<BODY
+<h3>Como faço para formar uma Aliança</h3>
+<p>Vais ao menu "Aliança" e selecionas "Criar Aliança". Neste pões a TAG (Sigla) da aliança e o nome desta. Após estes passos executados, fundaste uma aliança</p>
+<p>Abaixo tu encontrarás os seguintes links:<br>
+"Membros": Aqui poderás ver a lista de todos os membros<br>
+"Teu rank": Aqui encontarás a tua "patente" ou rank da Aliança. Se neste és administrador, ao lado encontraráas o menu de administração<br>
+"Mensagem Global": Nesta função poderás enviar uma mensagem geral a todos os jogadores existentes na aliança</p>
+<h3>Gestão de Aliança</h3>
+<p>Neste menu poderás editar a descrição da Aliança, se a desejas apagar, se queres editar as "patentes" ou ranks, os pactos e ainda editar os membros<br>
+O texto externo é uma breve descrição da tua aliança para todos os membros que visitarem a página da aliança, como também o texto interno serve para conteudo exclusivo apenas dos membros da aliança, como coordenadas inimigas, coordenadadas aliadas, etc.<br>
+Também nas configurações, poderás editar a imagem que é exibida da Aliança e tambem poderás especificar o texto de aplicação. Também podes mudar o nome da posição de administrador, que normalmente é "Leader" ou "Fundador"<br>
+"Dissolver Aliança" é a função que faz apagar por completo a aliança. Se queres abandonar a aliança mas não desejas apagar, ai fazes Abdicar / Aceitar aliança</p>
+BODY;

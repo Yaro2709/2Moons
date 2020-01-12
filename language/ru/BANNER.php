@@ -1,13 +1,13 @@
 <?php
 
-// Translated into Russian by InquisitorEA (SporeEA@yandex.ru). All rights reserved  2010-2011
+// 2Moons - Copyright © 2012 Jan Kröpke <info@2moons.cc>
+// Translation into Russian - Copyright © 2012 InquisitorEA <support@moon-hunt.ru>
 
-// This File require UTF-8 encoding now!
-
-$LNG['ub_points']                         = 'Очки';
-$LNG['ub_fleets']                         = 'Флот';
-$LNG['ub_researh']                        = 'Исследования';
-$LNG['ub_buildings']                      = 'Постройки';
-$LNG['ub_defenses']                       = 'Оборона';
-
-?>
+$LNG['ub_points']    = 'Очки';
+$LNG['ub_fleets']    = 'Флот';
+$LNG['ub_researh']   = 'Исследования';
+$LNG['ub_buildings'] = 'Постройки';
+$LNG['ub_defenses']  = 'Оборона';
+$LNG['ub_fights']    = 'Битвы';
+$LNG['ub_quote']     = 'Победы';
+$LNG['ub_rank']      = 'Позиция';

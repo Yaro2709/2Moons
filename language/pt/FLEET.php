@@ -1,15 +1,14 @@
 <?php
 
-// Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2011
+// Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2012
 // Texto escrito conforme o Acordo Ortográfico a ser inserido em 2011 pelo Ministério da Educação de Portugal - convertido pelo Lince.         
 
-// 2Moons - Copyright (C) 2011  Slaver// 2Moons - Copyright (C) 2011  Slaver
- 
-$LNG['Metal']							= 'Metal';
-$LNG['Crystal']							= 'Cristal';
-$LNG['Deuterium']						= 'Deutério';
-$LNG['Darkmatter']						= 'Matéria Negra';
-$LNG['Energy']							= 'Energia';
+// 2Moons - Copyright (C) 2012  Jan Kröpke
+
+
+//----------------------------------------------------------------------------//
+//Outros
+$LNG['and']							= 'e';
 
 //----------------------------------------------------------------------------//
 //Sistema
@@ -43,7 +42,8 @@ $LNG['sys_stealed_ressources'] 			= "Ele roubou";
 $LNG['sys_and']						    = "e";
 $LNG['sys_mess_tower'] 					= "Torre de controle";
 $LNG['sys_mess_attack_report'] 			= "Relatório de Combate";
-
+$LNG['sys_expe_found_ships_nothing']		= 'Não foi possivel encontrar naves';
+$LNG['sys_raport_lost_contact']				= 'Perdeu-se o contato com a frota  (ou seja, foi abatido na primeira rodada.)';
 $LNG['sys_spy_fleet'] 					= "Frota";
 $LNG['sys_spy_defenses'] 				= "Defesas";
 $LNG['sys_mess_qg'] 					= "Central de Operações";
@@ -66,7 +66,7 @@ $LNG['sys_stat_mess'] 		         	= 'A tua frota chegou ao planeta %s e entregou
 $LNG['sys_colo_mess_from']              = 'Colonização';
 $LNG['sys_colo_mess_report'] 			= "Relatório de colonização";
 $LNG['sys_colo_defaultname'] 			= "Colónia";
-
+$LNG['sys_colo_notech'] 					= 'As tuas naves alcançaram as coordenadas %s. Quando os teus colonos aproximaram-se do planeta, eles tinham que determinar que seu equipamento ainda não para o clima predominante foi adequado e deve ser desenvolvido primeiro. Decepcionado, os colonos voltaram.';
 $LNG['sys_colo_arrival'] 				= "A nave de colonização chegou às coordenadas ";
 $LNG['sys_colo_maxcolo'] 				= "A nave de colonização chegou às coordenadas %s, Mas infelizmente, não pode colonizar, não podes ter mais de ";
 $LNG['sys_colo_allisok'] 				= "A nave de colonização chegou às coordenadas %s, A tua colónia acabou de ser colonizada podes começar a construir nela.";
@@ -167,8 +167,7 @@ $LNG['sys_irak_def']                    = '%d dos teus misseis foram intercetado
 $LNG['sys_irak_mess']                   = '(%d) Misseis Interplanetários do planeta %s dirigemce para o planeta %s <br><br>';
 $LNG['sys_gain'] 				  		= 'Lucro';
 $LNG['sys_fleet_won'] 					= "Uma das tuas frotas volta do planeta %s %s e entrega %s de %s, %s de %s, e %s de %s";
-$LNG['sys_perte_attaquant'] 			= "Parte atacante";
-$LNG['sys_perte_defenseur'] 			= "Parte defensora";
+$LNG['sys_lost'] 							= 'Perdas';
 $LNG['sys_debris'] 						= "Destroços";
 $LNG['sys_destruc_title']    			= "Destruição de lua %s :";
 $LNG['sys_mess_destruc_report'] 		= "Relatório de destruição";
@@ -177,7 +176,6 @@ $LNG['sys_destruc_lune'] 				= "A probabilidade de destruição de lua foi de: %
 $LNG['sys_destruc_rip'] 				= "A probabilidade das estrelas serem destruídas no confronto é de: %d%% ";
 $LNG['sys_destruc_stop'] 				= "O defensor não conseguiu evitar a destruição da sua lua";
 $LNG['sys_destruc_mess1'] 				= "As estrelas da morte causam gravitação na órbita da lua";
-$LNG['sys_destruc_mess'] 				= "Uma frota do planeta [%d:%d:%d] vai à lua do planeta [%d:%d:%d].";
 $LNG['sys_destruc_echec'] 				= ".As tuas estrelas da morte e os seus gravitões produziram enormes terramotos na estrutura da lua mas não foram suficientemente fortes para uma lua deste tamanho. O seu ataque foi refletido pela lua e destruiu toda a frota";
 $LNG['sys_destruc_reussi'] 				= ",<br> As tuas estrelas da morte e os seus gravitões produziram enormes terramotos na estrutura da lua.<br> A lua entrou em colapso e foi destruída";
 $LNG['sys_destruc_null'] 				= ", As tuas estrelas da morte e os seus gravitões não têm energia suficiente para fazer qualquer estrago nesta lua.<br> A lua absorveu a onda de gravitões na sua superfície.<br> A frota retornará da sua missão sem ter destruído a lua";
@@ -198,5 +196,10 @@ $LNG['type_mission'][9]  				= 'Destruir';
 $LNG['type_mission'][11] 				= 'Exploração M.N.';
 $LNG['type_mission'][15] 				= 'Exploração Espacial';
 
+$LNG['type_planet_short'][1]  				= 'P';
+$LNG['type_planet_short'][2]  				= 'D';
+$LNG['type_planet_short'][3]  				= 'L';
 
-?>
+$LNG['type_planet'][1]  					= 'Planeta';
+$LNG['type_planet'][2]  					= 'Campo de Destroços';
+$LNG['type_planet'][3]  					= 'Lua';

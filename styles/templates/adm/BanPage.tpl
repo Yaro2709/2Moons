@@ -1,14 +1,14 @@
-{include file="adm/overall_header.tpl"}
-{if $name}
+{include file="overall_header.tpl"}
+{nocache}{if isset($name)}
 <form action="" method="post" name="countt">
 <table width="50%">
 <tr>
 	<th colspan="3">{$bantitle}</th>
 </tr><tr>
-	<td>{$bo_username}</td>
+	<td>{$LNG.bo_username}</td>
 	<td colspan="2"><input name="ban_name" type="text" value="{$name}" readonly="true" class="character"/></td>
 </tr><tr>
-	<td>{$bo_reason} <br><br>{$bo_characters_1}<input id="result2" value="50" size="2" readonly="true" class="character"></td> 
+	<td>{$LNG.bo_reason} <br><br>{$LNG.bo_characters_1}<input id="result2" value="50" size="2" readonly="true" class="character"></td> 
 	<td colspan="2"><textarea name="why" maxlength="50" cols="20" rows="5" onkeyup="$('#result2').val(50 - parseInt($(this).val().length));">{$reas}</textarea></td>
 </tr>
 	{$timesus}
@@ -16,39 +16,43 @@
 	<th colspan="2">{$changedate}</th>
 	{$changedate_advert}
 </tr><tr>
-	<td>{$time_days}</td>
+	<td>{$LNG.bo_permanent}</td>
+	<td><input name="permanent" type="checkbox"></td>
+	{if $changedate_advert}<td>&nbsp;</td>{/if}
+</tr><tr>
+	<td>{$LNG.time_days}</td>
 	<td><input name="days" type="text" value="0" size="5"></td>
 	{if $changedate_advert}<td>&nbsp;</td>{/if}
 </tr><tr>
-	<td>{$time_hours}</td>
+	<td>{$LNG.time_hours}</td>
 	<td><input name="hour" type="text" value="0" size="5"></td>
 	{if $changedate_advert}<td>&nbsp;</td>{/if}
 </tr><tr>
-	<td>{$time_minutes}</td>
+	<td>{$LNG.time_minutes}</td>
 	<td><input name="mins" type="text" value="0" size="5"></td>
 	{if $changedate_advert}<td>&nbsp;</td>{/if}
 </tr><tr>
-	<td>{$time_seconds}</td>
+	<td>{$LNG.time_seconds}</td>
 	<td><input name="secs" type="text" value="0" size="5"></td>
 	{if $changedate_advert}<td>&nbsp;</td>{/if}
 </tr><tr>
-	<th colspan="3">{$bo_vacaations}</th>
+	<th colspan="3">{$LNG.bo_vacaations}</th>
 </tr><tr>
-	<td>{$bo_vacation_mode}</td>
+	<td>{$LNG.bo_vacation_mode}</td>
 	<td colspan="2"><input name="vacat" type="checkbox"{if $vacation} checked = "checked"{/if}></td>
 </tr><tr>
 	<td colspan="3">
-	<input type="submit" value="{$button_submit}" name="bannow" style="width:20%;"/>
+	<input type="submit" value="{$LNG.button_submit}" name="bannow" style="width:20%;"/>
 </tr>
 </table>
 </form>
-{/if}
+{/if}{/nocache}
 <form action="" method="POST" name="users">
 <table width="100%" border="0px">
 <td style="border:0px;width:50%" class="transparent">
 <table align="center" width="90%">
 <tr>
-	<th>{$bo_ban_player}</th>
+	<th>{$LNG.bo_ban_player}</th>
 </tr>
 <tr>
 	<td>
@@ -56,8 +60,8 @@
 	{$UserSelect.List}
 	</select>
 	<br>
-	<a href="?page=bans">{$bo_order_username}</a> &nbsp; <a href="?page=bans&amp;order=id">{$bo_order_id}</a> &nbsp; 
-	<a href="?page=bans&amp;view=bana">{$bo_order_banned}</a>
+	<a href="?page=bans">{$LNG.bo_order_username}</a> &nbsp; <a href="?page=bans&amp;order=id">{$bo_order_id}</a> &nbsp; 
+	<a href="?page=bans&amp;view=bana">{$LNG.bo_order_banned}</a>
 	<script TYPE="text/javascript">
 		var UserList = new filterlist(document.getElementsByName('ban_name')[0]);
 	</script>
@@ -94,17 +98,17 @@
 	<a href="javascript:UserList.set('^Z')" title="{$bo_select_title} Z">Z</A>
 	<br>
 	<input NAME="regexp" onKeyUp="UserList.set(this.value)">
-	<input TYPE="button" onClick="UserList.set(this.form.regexp.value)" value="{$button_filter}">
-	<input TYPE="button" onClick="UserList.reset();this.form.regexp.value=''" value="{$button_deselect}">
+	<input TYPE="button" onClick="UserList.set(this.form.regexp.value)" value="{$LNG.button_filter}">
+	<input TYPE="button" onClick="UserList.reset();this.form.regexp.value=''" value="{$LNG.button_deselect}">
 </td>
 </tr><tr>
 	<td>
-	<input type="submit" value="{$button_submit}" name="panel" style="width:20%;">&nbsp;
-	<input TYPE="button" onClick="UserList.reset();this.form.regexp.value=''" value="{$button_reset}">
+	<input type="submit" value="{$LNG.bo_ban}" name="panel" style="width:20%;">&nbsp;
+	<input TYPE="button" onClick="UserList.reset();this.form.regexp.value=''" value="{$LNG.button_reset}">
 	</td>
 </tr><tr>
 	<td align="left">
-		{$bo_total_users}<span style="color:lime">{$usercount}</span>
+		{$LNG.bo_total_users}<span style="color:lime">{$usercount}</span>
 	</td>
 </tr>
 </table>
@@ -115,7 +119,7 @@
 <form action="" method="POST" name="userban">
 <table align="center" width="90%">
 <tr>
-	<th>{$bo_unban_player}</th>
+	<th>{$LNG.bo_unban_player}</th>
 </tr>
 <tr>
 	<td>
@@ -123,7 +127,7 @@
 	{$UserSelect.ListBan}
 	</select>
 	<br>
-	<a href="?page=bans">{$bo_order_username}</a> &nbsp; <a href="?page=bans&amp;order2=id">{$bo_order_id}</a>
+	<a href="?page=bans">{$LNG.bo_order_username}</a> &nbsp; <a href="?page=bans&amp;order2=id">{$LNG.bo_order_id}</a>
 	<script TYPE="text/javascript">
 		var UsersBan = new filterlist(document.getElementsByName('unban_name')[0]);
 	</script>
@@ -161,20 +165,20 @@
 
 	<br>
 	<input NAME="regexp" onKeyUp="UsersBan.set(this.value)">
-	<input TYPE="button" onClick="UsersBan.set(this.form.regexp.value)" value="{$button_filter}">
-	<input TYPE="button" onClick="UsersBan.set(this.form.regexp.value)" value="{$button_deselect}">
+	<input TYPE="button" onClick="UsersBan.set(this.form.regexp.value)" value="{$LNG.button_filter}">
+	<input TYPE="button" onClick="UsersBan.set(this.form.regexp.value)" value="{$LNG.button_deselect}">
 </td>
 </tr>
 <tr>
-	<td><input value="{$button_submit}" type="submit" style="width:20%;">&nbsp;
-	<input TYPE="button" onClick="UsersBan.reset();this.form.regexp.value=''" value="{$button_reset}"></td>
+	<td><input value="{$LNG.bo_unban}" type="submit" style="width:20%;">&nbsp;
+	<input TYPE="button" onClick="UsersBan.reset();this.form.regexp.value=''" value="{$LNG.button_reset}"></td>
 </tr><tr>
 	<td align="left">
-		{$bo_total_banneds}<span style="color:lime">{$bancount}</span>
+		{$LNG.bo_total_banneds}<span style="color:lime">{$bancount}</span>
 	</td>
 </tr>
 </table>
 </form>
 </td>
 </table>
-{include file="adm/overall_footer.tpl"}
+{include file="overall_footer.tpl"}

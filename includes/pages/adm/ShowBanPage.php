@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,50 +18,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowBanPage() 
 {
-	global $LNG, $db, $USER;
+	global $LNG, $USER;
 	
 	$ORDER = $_GET['order'] == 'id' ? "id" : "username";
 
 	if ($_GET['view'] == 'bana')
 		$WHEREBANA	= "AND `bana` = '1'";
 
-	$UserList		= $db->query("SELECT `username`, `id`, `bana` FROM ".USERS." WHERE `id` != 1 AND `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".$_SESSION['adminuni']."' ".$WHEREBANA." ORDER BY ".$ORDER." ASC;");
+	$UserList		= $GLOBALS['DATABASE']->query("SELECT `username`, `id`, `bana` FROM ".USERS." WHERE `id` != 1 AND `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".$_SESSION['adminuni']."' ".$WHEREBANA." ORDER BY ".$ORDER." ASC;");
 
 	$UserSelect	= array('List' => '', 'ListBan' => '');
 	
 	$Users	=	0;
-	while ($a = $db->fetch_array($UserList))
+	while ($a = $GLOBALS['DATABASE']->fetch_array($UserList))
 	{
 		$UserSelect['List']	.=	'<option value="'.$a['username'].'">'.$a['username'].'&nbsp;&nbsp;(ID:&nbsp;'.$a['id'].')'.(($a['bana']	==	'1') ? $LNG['bo_characters_suus'] : '').'</option>';
 		$Users++;
 	}
 
-	$db->free_result($UserList);
+	$GLOBALS['DATABASE']->free_result($UserList);
 	
 	$ORDER2 = $_GET['order2'] == 'id' ? "id" : "username";
 		
 	$Banneds		=0;
-	$UserListBan	= $db->query("SELECT `username`, `id` FROM ".USERS." WHERE `bana` = '1' AND `universe` = '".$_SESSION['adminuni']."' ORDER BY ".$ORDER2." ASC;");
-	while ($b = $db->fetch_array($UserListBan))
+	$UserListBan	= $GLOBALS['DATABASE']->query("SELECT `username`, `id` FROM ".USERS." WHERE `bana` = '1' AND `universe` = '".$_SESSION['adminuni']."' ORDER BY ".$ORDER2." ASC;");
+	while ($b = $GLOBALS['DATABASE']->fetch_array($UserListBan))
 	{
 		$UserSelect['ListBan']	.=	'<option value="'.$b['username'].'">'.$b['username'].'&nbsp;&nbsp;(ID:&nbsp;'.$b['id'].')</option>';
 		$Banneds++;
 	}
 
-	$db->free_result($UserListBan);
+	$GLOBALS['DATABASE']->free_result($UserListBan);
 
 	$template	= new template();
 	$template->loadscript('filterlist.js');
@@ -69,8 +68,8 @@ function ShowBanPage()
 
 	if(isset($_POST['panel']))
 	{
-		$Name					= request_var('ban_name', '', true);
-		$BANUSER				= $db->uniquequery("SELECT b.theme, b.longer, u.id, u.urlaubs_modus, u.banaday FROM ".USERS." as u LEFT JOIN ".BANNED." as b ON u.`username` = b.`who` WHERE u.`username` = '".$db->sql_escape($Name)."' AND u.`universe` = '".$_SESSION['adminuni']."';");
+		$Name					= HTTP::_GP('ban_name', '', true);
+		$BANUSER				= $GLOBALS['DATABASE']->getFirstRow("SELECT b.theme, b.longer, u.id, u.urlaubs_modus, u.banaday FROM ".USERS." as u LEFT JOIN ".BANNED." as b ON u.`username` = b.`who` WHERE u.`username` = '".$GLOBALS['DATABASE']->sql_escape($Name)."' AND u.`universe` = '".$_SESSION['adminuni']."';");
 			
 		if ($BANUSER['banaday'] <= TIMESTAMP)
 		{
@@ -84,7 +83,7 @@ function ShowBanPage()
 		{
 			$title			= $LNG['bo_bbb_title_3'];
 			$changedate		= $LNG['bo_bbb_title_6'];
-			$changedate_advert	=	'<td class="c" width="18px"><img src="./styles/images/Adm/i.gif" class="tooltip" name="'.$LNG['bo_bbb_title_4'].'"></td>';
+			$changedate_advert	=	'<td class="c" width="18px"><img src="./styles/resource/images/admin/i.gif" class="tooltip" data-tooltip-content="'.$LNG['bo_bbb_title_4'].'"></td>';
 				
 			$reas			= $BANUSER['theme'];
 			$timesus		=	
@@ -105,23 +104,14 @@ function ShowBanPage()
 			'changedate_advert'	=> $changedate_advert,
 			'timesus'			=> $timesus,
 			'vacation'			=> $vacation,
-			'bo_characters_1'	=> $LNG['bo_characters_1'],
-			'bo_reason'			=> $LNG['bo_reason'],
-			'bo_username'		=> $LNG['bo_username'],
-			'bo_vacation_mode'	=> $LNG['bo_vacation_mode'],
-			'bo_vacaations'		=> $LNG['bo_vacaations'],
-			'time_seconds'		=> $LNG['time_seconds'],
-			'time_minutes'		=> $LNG['time_minutes'],
-			'time_hours'		=> $LNG['time_hours'],
-			'time_days'			=> $LNG['time_days'],
 		));
 	} elseif (isset($_POST['bannow']) && $BANUSER['id'] != 1) {
-		$Name              = request_var('ban_name', '' ,true);
-		$reas              = request_var('why', '' ,true);
-		$days              = request_var('days', 0);
-		$hour              = request_var('hour', 0);
-		$mins              = request_var('mins', 0);
-		$secs              = request_var('secs', 0);
+		$Name              = HTTP::_GP('ban_name', '' ,true);
+		$reas              = HTTP::_GP('why', '' ,true);
+		$days              = HTTP::_GP('days', 0);
+		$hour              = HTTP::_GP('hour', 0);
+		$mins              = HTTP::_GP('mins', 0);
+		$secs              = HTTP::_GP('secs', 0);
 		$admin             = $USER['username'];
 		$mail              = $USER['email'];
 		$BanTime           = $days * 86400 + $hour * 3600 + $mins * 60 + $secs;
@@ -129,8 +119,11 @@ function ShowBanPage()
 		if ($BANUSER['longer'] > TIMESTAMP)
 			$BanTime          += ($BANUSER['longer'] - TIMESTAMP);
 		
-		$BannedUntil = ($BanTime + TIMESTAMP) < TIMESTAMP ? TIMESTAMP : TIMESTAMP + $BanTime;
-		
+		if (isset($_POST['permanent'])) {
+			$BannedUntil = 2147483647;
+		} else {
+			$BannedUntil = ($BanTime + TIMESTAMP) < TIMESTAMP ? TIMESTAMP : TIMESTAMP + $BanTime;
+		}
 		
 		if ($BANUSER['banaday'] > TIMESTAMP)
 		{
@@ -142,7 +135,7 @@ function ShowBanPage()
 			$SQL     .= "`author` = '". $admin ."', ";
 			$SQL     .= "`email` = '". $mail ."' ";
 			$SQL     .= "WHERE `who2` = '".$Name."' AND `universe` = '".$_SESSION['adminuni']."';";
-			$db->query($SQL);
+			$GLOBALS['DATABASE']->query($SQL);
 		} else {
 			$SQL      = "INSERT INTO ".BANNED." SET ";
 			$SQL     .= "`who` = '". $Name ."', ";
@@ -152,7 +145,7 @@ function ShowBanPage()
 			$SQL     .= "`author` = '". $admin ."', ";
 			$SQL     .= "`universe` = '".$_SESSION['adminuni']."', ";
 			$SQL     .= "`email` = '". $mail ."';";
-			$db->query($SQL);
+			$GLOBALS['DATABASE']->query($SQL);
 		}
 
 		$SQL     = "UPDATE ".USERS." SET ";
@@ -161,36 +154,23 @@ function ShowBanPage()
 		$SQL	.= isset($_POST['vacat']) ? "`urlaubs_modus` = '1'" : "`urlaubs_modus` = '0'";
 		$SQL    .= "WHERE ";
 		$SQL    .= "`username` = '". $Name ."' AND `universe` = '".$_SESSION['adminuni']."';";
-		$db->query($SQL);
+		$GLOBALS['DATABASE']->query($SQL);
 
 		$template->message($LNG['bo_the_player'].$Name.$LNG['bo_banned'], '?page=bans');
 		exit;
 	} elseif(isset($_POST['unban_name'])) {
-		$Name	= request_var('unban_name', '', true);
-		$db->query("UPDATE ".USERS." SET bana = '0', banaday = '0' WHERE username = '".$db->sql_escape($Name)."' AND `universe` = '".$_SESSION['adminuni']."';");
-		#DELETE FROM ".BANNED." WHERE who = '".$db->sql_escape($Name)."' AND `universe` = '".$_SESSION['adminuni']."';
+		$Name	= HTTP::_GP('unban_name', '', true);
+		$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET bana = '0', banaday = '0' WHERE username = '".$GLOBALS['DATABASE']->sql_escape($Name)."' AND `universe` = '".$_SESSION['adminuni']."';");
+		#DELETE FROM ".BANNED." WHERE who = '".$GLOBALS['DATABASE']->sql_escape($Name)."' AND `universe` = '".$_SESSION['adminuni']."';
 		$template->message($LNG['bo_the_player2'].$Name.$LNG['bo_unbanned'], '?page=bans');
 		exit;
 	}
 
 	$template->assign_vars(array(	
 		'UserSelect'		=> $UserSelect,
-		'bo_ban_player'		=> $LNG['bo_ban_player'],
-		'bo_select_title'	=> $LNG['bo_select_title'],
-		'bo_order_banned'	=> $LNG['bo_order_banned'],
-		'bo_order_id'		=> $LNG['bo_order_id'],
-		'bo_order_username'	=> $LNG['bo_order_username'],
-		'button_filter'		=> $LNG['button_filter'],
-		'button_reset'		=> $LNG['button_reset'],
-		'button_deselect'	=> $LNG['button_deselect'],
-		'button_submit'		=> $LNG['button_submit'],
-		'bo_total_users'	=> $LNG['bo_total_users'],
-		'bo_total_banneds'	=> $LNG['bo_total_banneds'],
-		'bo_unban_player'	=> $LNG['bo_unban_player'],
 		'usercount'			=> $Users,
 		'bancount'			=> $Banneds,
 	));
 	
-	$template->show('adm/BanPage.tpl');
+	$template->show('BanPage.tpl');
 }
-?>

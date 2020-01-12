@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,35 +18,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowInformationPage()
 {
-	global $db, $LNG, $CONF, $USER;
+	global $LNG, $CONF, $USER;
 
 	if(file_exists(ini_get('error_log')))
 		$Lines	= count(file(ini_get('error_log')));
 	else
 		$Lines	= 0;
-		
+	
+	try {
+		$dateTimeZoneServer = new DateTimeZone(Config::get('timezone'));
+	} catch (Exception $e) {
+		$dateTimeZoneServer	= new DateTimeZone(date_default_timezone_get());
+	}
+	
+	try {
+		$dateTimeZoneUser	= new DateTimeZone($USER['timezone']);
+	} catch (Exception $e) {
+		$dateTimeZoneUser	= new DateTimeZone(date_default_timezone_get());
+	}
+	
+	try {
+		$dateTimeZonePHP	= new DateTimeZone(ini_get('date.timezone'));
+	} catch (Exception $e) {
+		$dateTimeZonePHP	= new DateTimeZone(date_default_timezone_get());
+	}
+	
+	$dateTimeServer		= new DateTime("now", $dateTimeZoneServer);
+	$dateTimeUser		= new DateTime("now", $dateTimeZoneUser);
+	$dateTimePHP		= new DateTime("now", $dateTimeZonePHP);
+	
 	$template	= new template();
 	$template->assign_vars(array(
-		'info_information'	=> sprintf($LNG['info_information'], 'http://dev.2moons.cc/bugtracker'),
+		'info_information'	=> sprintf($LNG['info_information'], 'http://tracker.2moons.cc/'),
 		'info'				=> $_SERVER['SERVER_SOFTWARE'],
 		'vPHP'				=> PHP_VERSION,
 		'vAPI'				=> PHP_SAPI,
-		'vGame'				=> $CONF['VERSION'],
-		'vMySQLc'			=> $db->getVersion(),
-		'vMySQLs'			=> $db->getServerVersion(),
+		'vGame'				=> Config::get('VERSION'),
+		'vMySQLc'			=> $GLOBALS['DATABASE']->getVersion(),
+		'vMySQLs'			=> $GLOBALS['DATABASE']->getServerVersion(),
 		'root'				=> $_SERVER['SERVER_NAME'],
 		'gameroot'			=> $_SERVER['SERVER_NAME'].str_replace('/admin.php', '', $_SERVER['PHP_SELF']),
 		'json'				=> function_exists('json_encode') ? 'Ja' : 'Nein',
@@ -59,12 +80,10 @@ function ShowInformationPage()
 		'log_errors'		=> ini_get('log_errors') ? 'Aktiv' : 'Inaktiv',
 		'errorlog'			=> ini_get('error_log'),
 		'errorloglines'		=> $Lines,
-		'php_tz'			=> sprintf("%01.2f", date("O") / 100),
-		'conf_tz'			=> $CONF['timezone'],
-		'user_tz'			=> $USER['timezone'],
+		'php_tz'			=> $dateTimePHP->getOffset() / 3600,
+		'conf_tz'			=> $dateTimeServer->getOffset() / 3600,
+		'user_tz'			=> $dateTimeUser->getOffset() / 3600,
 	));
 
-	$template->show('adm/ShowInformationPage.tpl');
+	$template->show('ShowInformationPage.tpl');
 }
-
-?>

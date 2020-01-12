@@ -47,7 +47,7 @@ $config['langDefault'] = DEFAULT_LANG;
 $config['langNames'] = array('ar'=>'عربي','bg'=>'Български','bp'=>'Português (Brasil)','ca'=>'Català','cy'=>'Cymraeg','cz'=>'Česky','de'=>'Deutsch','el'=>'Ελληνικα','en'=>'English','es'=>'Español','et'=>'Eesti','fi'=>'Suomi','fr'=>'Français','gl'=>'Galego','he'=>'עברית','hr' => 'Hrvatski','hu' => 'Magyar','in'=>'Bahasa Indonesia','it'=>'Italiano','ja'=>'日本語','ka'=>'ქართული','kr'=>'한글','nl'=>'Nederlands','no'=>'Norsk','pl'=>'Polski','ro'=>'România','ru'=>'Русский','sk'=>'Slovenčina','sl'=>'Slovensko','sr'=>'Srpski','sv'=>'Svenska','tr'=>'Türkçe','uk'=>'Українська','zh'=>'中文 (简体)', 'zh-tw'=>'中文 (繁體)');
 
 // Available styles:
-$config['styleAvailable'] = array('2Moons', 'beige','black','grey','Oxygen','Lithium','Sulfur','Cobalt','Mercury','Radium','prosilver','subsilver2','subblack2','subSilver','Core','MyBB','vBulletin');
+$config['styleAvailable'] = array('2Moons');
 // Default style:
 $config['styleDefault'] = '2Moons';
 

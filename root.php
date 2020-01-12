@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,40 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-define('INSIDE' 	, true);
-define('ROOT'		, true);
-define('IN_ADMIN'	, true);
+define('MODE', 'LOGIN');
 define('ROOT_PATH'	, str_replace('\\', '/',dirname(__FILE__)).'/');
 
 require(ROOT_PATH . 'includes/common.php');
-$LANG->includeLang(array('ADMIN'));
+$LNG->includeData(array('L18N', 'INGAME', 'ADMIN'));
 
 if(isset($_REQUEST['admin_pw']))
 {
-	$login = $db->uniquequery("SELECT `id`, `username`, `dpath`, `authlevel`, `id_planet` FROM ".USERS." WHERE `id` = '1' AND `password` = '".md5($_REQUEST['admin_pw'])."';");
+	$login = $GLOBALS['DATABASE']->getFirstRow("SELECT `id`, `username`, `dpath`, `authlevel`, `id_planet` FROM ".USERS." WHERE `id` = '1' AND `password` = '".cryptPassword($_REQUEST['admin_pw'])."';");
 	if(isset($login)) {
 		session_start();
 		$SESSION       	= new Session();
 		$SESSION->CreateSession($login['id'], $login['username'], $login['id_planet'], $UNI, $login['authlevel'], $login['dpath']);
-		$_SESSION['admin_login']	= md5($_REQUEST['admin_pw']);
-		redirectTo('admin.php');
+		$_SESSION['admin_login']	= cryptPassword($_REQUEST['admin_pw']);
+		HTTP::redirectTo('admin.php');
 	}
 }
 $template	= new template();
 
+$tplDir	= $template->getTemplateDir();
+$template->setTemplateDir($tplDir[0].'adm/');
 $template->assign_vars(array(	
-	'adm_login'			=> $LNG['adm_login'],
-	'adm_password'			=> $LNG['adm_password'],
-	'adm_absenden'			=> $LNG['adm_absenden'],
+	'lang' 		=> $LNG->getLanguage(),
+	'title'		=> Config::get('game_name').' - '.$LNG['adm_cp_title'],
+	'REV'		=> substr(Config::get('VERSION'), -4),
+	'date'		=> explode("|", date('Y\|n\|j\|G\|i\|s\|Z', TIMESTAMP)),
+	'Offset'	=> 0,
+	'VERSION'	=> Config::get('VERSION'),
+	'dpath'		=> 'gow',
+	'bodyclass'	=> 'popup',
+	'username'	=> 'root'
 ));
-$template->show('adm/LoginPage.tpl');
-?>
+$template->show('LoginPage.tpl');

@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowUpdatePage()
 {
-	global $LNG, $CONF, $db;
+	global $LNG, $CONF;
+	$template	= new template();
+	$template->message('<p>This Site is currently under construction, because the update system brings somtimes inconsistent game installations.</p><p>Alternate update process: <a href="http://2moons.cc/b4-support/b7-installation-update-und-konvertierung/t1721-howto-update-your-2moons-game-with-private-modifications-without-edit-files-one-by-one/" target="blank"><u>2moons.cc Board</u></a></p><p>We apologize for any inconvenience.</p>');
+	exit;
+	
 	if(!function_exists('curl_init'))
 	{
 		$template	= new template();
@@ -44,10 +47,10 @@ function ShowUpdatePage()
 		$Temp		= array_map('intval', $Temp);
 
 		if(count(GetLogs($Temp[2]), COUNT_RECURSIVE) > 8)
-			update_config(array('VERSION' => $Temp[0].'.'.$Temp[1].'.'.$Temp[2]));
+			Config::update(array('VERSION' => $Temp[0].'.'.$Temp[1].'.'.$Temp[2]));
 	}
 	
-	$ACTION	= request_var('action', '');
+	$ACTION	= HTTP::_GP('action', '');
 	switch($ACTION)
 	{
 		case "download":
@@ -67,7 +70,7 @@ function ShowUpdatePage()
 
 function DownloadUpdates() {
 exit;
-	// Header f�r Download senden
+	// Header für Download senden
 	header('Content-length: '.strlen($File));
 	header('Content-Type: application/force-download');
 	header('Content-Disposition: attachment; filename="patch_'.$FirstRev.'_to_'.$LastRev.'.zip"');
@@ -79,15 +82,21 @@ exit;
 }
 
 function CheckPermissions() {
-	$DIRS	= $_REQUEST['dirs'];
+	global $LNG;
+	$DIRS	= array_unique($_REQUEST['dirs']);
+	$errors	= array();
 	foreach($DIRS as $DIR) {
-		if(is_writable(ROOT_PATH.$DIR) || !mkdir(ROOT_PATH.$DIR))
-			continue;
-		
-		echo json_encode(array('status' => $GLOBALS['LNG']['up_chmod_error']."./".$DIR, 'error' => true));
-		exit;
+		if(!file_exists(ROOT_PATH.$DIR))
+			@mkdir(ROOT_PATH.$DIR);
+
+		if(!is_writable(ROOT_PATH.$DIR))
+			$errors[]	= "./".$DIR;
 	}
-	echo json_encode(array('status' => 'OK', 'error' => false));
+	
+	if(!empty($errors))
+		echo json_encode(array('status' => $LNG['up_chmod_error']."\r\n".implode("\r\n", $errors), 'error' => true));
+	else
+		echo json_encode(array('status' => 'OK', 'error' => false));
 }
 
 function ExecuteUpdates() {
@@ -119,7 +128,7 @@ function DisplayUpdates() {
 		'canDownload'				=> function_exists('gzcompress'),
 	));
 		
-	$template->show('adm/UpdatePage.tpl');
+	$template->show('UpdatePage.tpl');
 }
 
 function GetLogs($fromRev) {
@@ -154,7 +163,7 @@ function GetLogs($fromRev) {
 				foreach($value['children'] as $entry) {
 					if ($entry['name'] == 'D:VERSION-NAME') $array['version'] = $entry['tagData'];
 					if ($entry['name'] == 'D:CREATOR-DISPLAYNAME') $array['author'] = $entry['tagData'];
-					if ($entry['name'] == 'S:DATE') $array['date'] = tz_date(strtotime($entry['tagData']));
+					if ($entry['name'] == 'S:DATE') $array['date'] = _date($LNG['php_tdformat'], strtotime($entry['tagData']), $USER['timezone']);
 					if ($entry['name'] == 'D:COMMENT') $array['comment'] = makebr($entry['tagData']);
 
 					if (($entry['name'] == 'S:ADDED-PATH') || ($entry['name'] == 'S:MODIFIED-PATH') || ($entry['name'] == 'S:DELETED-PATH')) {
@@ -232,5 +241,3 @@ class xml2Array {
 		array_pop($this->arrOutput);
 	}
 }
-
-?>

@@ -31,18 +31,28 @@ require(ROOT_PATH.'includes/libs/Smarty/Smarty.class.php');
 		
 class template extends Smarty
 {
+	protected $window	= 'full';
+	protected $jsscript	= array();
+	protected $script	= array();
+	
 	function __construct()
 	{	
 		parent::__construct();
-		$this->force_compile 		= false;
-		$this->caching 				= false;
-		$this->compile_check		= true; #Set false for production!
-		$this->jsscript				= array();
-		$this->script				= array();
-		$this->compile_dir			= is_writable(ROOT_PATH.'cache/') ? ROOT_PATH.'cache/' : $this->getTempPath();
-		$this->template_dir			= ROOT_PATH.'/styles/templates/';
-		$this->Popup				= false;
-		$this->Dialog				= false;
+		$this->smartySettings();
+	}
+	
+	function smartySettings()
+	{	
+		$this->force_compile 			= false;
+		$this->caching 					= true; #Set true for production!
+		$this->merge_compiled_includes	= true;
+		$this->compile_check			= true; #Set false for production!
+		$this->php_handling				= Smarty::PHP_REMOVE;
+		
+		$this->setCompileDir(is_writable(ROOT_PATH.'cache/') ? ROOT_PATH.'cache/' : $this->getTempPath());
+		$this->setCacheDir(ROOT_PATH.'cache/templates');
+		$this->setTemplateDir(ROOT_PATH.'styles/templates/');
+		#$this->loadFilter('output', 'trimwhitespace');
 	}
 	
 	public function loadscript($script)
@@ -62,213 +72,74 @@ class template extends Smarty
 		return BasicFileUtil::getTempFolder();
 	}
 		
-	public function assign_vars(array $var = array()) 
+	public function assign_vars($var, $nocache = true) 
 	{		
-		parent::assign($var);
-	}
-	
-	private function Menus()
-	{
-		global $PLANET, $LNG, $USER, $CONF, $resource, $db;
-		
-		//PlanetMenu
-		if(isset($USER['PLANETS']))
-			$USER['PLANETS']	= getPlanets($USER);
-		
-		if($PLANET[$resource[43]] > 0)
-			$this->loadscript("gate.js");
-		
-		$this->loadscript("topnav.js");
-		$this->loadscript("planetmenu.js");
-		$this->phpself	= "?page=".request_var('page', '')."&amp;mode=".request_var('mode', '');
-		$PlanetSelect	= array();
-		$Scripttime		= array();
-		foreach($USER['PLANETS'] as $CurPlanetID => $PlanetQuery)
-		{
-			if(!empty($PlanetQuery['b_building_id']))
-			{
-				$QueueArray						= unserialize($PlanetQuery['b_building_id']);
-				foreach($QueueArray as $ListIDArray)
-				{
-					if($ListIDArray[3] > TIMESTAMP)
-						$Scripttime[$PlanetQuery['id']][]	= $ListIDArray[3] - TIMESTAMP;
-				}
-			}
-			$Planetlist[$PlanetQuery['id']]	= array(
-				'url'		=> $this->phpself."&amp;cp=".$PlanetQuery['id'],
-				'name'		=> $PlanetQuery['name'].(($PlanetQuery['planet_type'] == 3) ? " (".$LNG['fcm_moon'].")":""),
-				'image'		=> $PlanetQuery['image'],
-				'galaxy'	=> $PlanetQuery['galaxy'],
-				'system'	=> $PlanetQuery['system'],
-				'planet'	=> $PlanetQuery['planet'],
-				'ptype'		=> $PlanetQuery['planet_type'],
-			);
-			
-			$PlanetSelect[$this->phpself."&amp;cp=".$PlanetQuery['id']]	= $PlanetQuery['name'].(($PlanetQuery['planet_type'] == 3) ? " (" . $LNG['fcm_moon'] . ")":"")."&nbsp;[".$PlanetQuery['galaxy'].":".$PlanetQuery['system'].":".$PlanetQuery['planet']."]&nbsp;&nbsp;";
-		}
-		
-		if($USER['urlaubs_modus'] == 1) {
-			$CONF['metal_basic_income']     = 0;
-			$CONF['crystal_basic_income']   = 0;
-			$CONF['deuterium_basic_income'] = 0;
-		}
-		
-		$Messages	= $db->countquery("SELECT COUNT(*) FROM ".MESSAGES." WHERE `message_owner` = ".$USER['id']." AND `message_unread` = '1'");
-		
-		$this->assign_vars(array(	
-			'PlanetMenu' 		=> $Planetlist,
-			'show_planetmenu' 	=> $LNG['show_planetmenu'],
-			'current_pid'		=> $PLANET['id'],
-			'Scripttime'		=> json_encode($Scripttime),	
-			'new_message' 		=> $Messages,
-			'forum_url'			=> $CONF['forum_url'],
-			'topnav'			=> true,
-			'metal'				=> $PLANET['metal'],
-			'crystal'			=> $PLANET['crystal'],
-			'deuterium'			=> $PLANET['deuterium'],
-			'energy'			=> (($PLANET['energy_max'] + $PLANET['energy_used']) < 0) ? colorRed(shortly_number($PLANET['energy_max'] + $PLANET['energy_used']).'/'.shortly_number($PLANET['energy_max'])) : shortly_number($PLANET['energy_max'] + $PLANET['energy_used']) . '/' . shortly_number($PLANET['energy_max']),
-			'energy_alt'		=> pretty_number($PLANET['energy_max'] + $PLANET['energy_used']).'/'.pretty_number($PLANET['energy_max']),
-			'darkmatter'		=> $USER['darkmatter'],
-			'metal_max'			=> $PLANET['metal_max'],
-			'crystal_max'		=> $PLANET['crystal_max'],
-			'deuterium_max' 	=> $PLANET['deuterium_max'],
-			'js_metal_max'		=> floattostring($PLANET['metal_max']),
-			'js_crystal_max'	=> floattostring($PLANET['crystal_max']),
-			'js_deuterium_max' 	=> floattostring($PLANET['deuterium_max']),
-			'js_metal_hr'		=> $PLANET['planet_type'] == 1 ? floattostring($PLANET['metal_perhour'] + $CONF['metal_basic_income'] * $CONF['resource_multiplier']) : 0,
-			'js_crystal_hr'		=> $PLANET['planet_type'] == 1 ? floattostring($PLANET['crystal_perhour'] + $CONF['crystal_basic_income'] * $CONF['resource_multiplier']) : 0,
-			'js_deuterium_hr'	=> $PLANET['planet_type'] == 1 ? floattostring($PLANET['deuterium_perhour'] + $CONF['deuterium_basic_income'] * $CONF['resource_multiplier']) : 0,
-			'current_planet'	=> $this->phpself."&amp;cp=".$PLANET['id'],
-			'tn_vacation_mode'	=> $LNG['tn_vacation_mode'],
-			'closed'			=> !$CONF['game_disable'] ? $LNG['ov_closed'] : false,
-			'vacation'			=> $USER['urlaubs_modus'] ? tz_date($USER['urlaubs_until']) : false,
-			'delete'			=> $USER['db_deaktjava'] ? sprintf($LNG['tn_delete_mode'], tz_date($USER['db_deaktjava'] + ($CONF['del_user_manually'] * 86400))) : false,
-			'image'				=> $PLANET['image'],
-			'settings_tnstor'	=> $USER['settings_tnstor'],
-			'PlanetSelect'		=> $PlanetSelect,
-			'Metal'				=> $LNG['Metal'],
-			'Crystal'			=> $LNG['Crystal'],
-			'Deuterium'			=> $LNG['Deuterium'],
-			'Darkmatter'		=> $LNG['Darkmatter'],
-			'Energy'			=> $LNG['Energy'],
-			'class'				=> 'normal',
-		));
-	}
-	
-    private function main()
-    {
-		global $USER, $CONF, $LANG, $LNG, $THEME;
-        $this->assign_vars(array(
-            'title'				=> $CONF['game_name'],
-            'uni_name'			=> $CONF['uni_name'],
-            'dpath'				=> $THEME->getTheme(),
-            'vmode'				=> $USER['urlaubs_modus'],
-            'is_pmenu'			=> $USER['settings_planetmenu'],
-			'authlevel'			=> $USER['authlevel'],
-            'lang'    			=> $LANG->getUser(),
-            'ready'    			=> $LNG['ready'],
-			'date'				=> explode("|", date('Y\|n\|j\|G\|i\|s\|Z', TIMESTAMP)),
-			'cron'				=> GetCrons(),
-			'ga_active'			=> $CONF['ga_active'],
-			'ga_key'			=> $CONF['ga_key'],
-			'debug'				=> $CONF['debug'],
-			'fcm_info'			=> $LNG['fcm_info'],
-			'VERSION'			=> $CONF['VERSION'],
-			'REV'				=> substr($CONF['VERSION'], -4),
-			'js_tdformat'		=> $LNG['js_tdformat'],
-			'week_day'			=> json_encode($LNG['week_day']),
-			'months' 			=> json_encode($LNG['months']),
-			'TimeZone' 			=> ($USER['timezone'] + $USER['dst']) * 3600,
-			'Offset'			=> tz_diff(),
-		));
+		parent::assign($var, NULL, $nocache);
 	}
 	
 	private function adm_main()
 	{
-		global $LNG, $CONF;
+		global $LNG, $CONF, $USER;
+		
+		$dateTimeServer		= new DateTime("now");
+		if(isset($USER['timezone'])) {
+			try {
+				$dateTimeUser	= new DateTime("now", new DateTimeZone($USER['timezone']));
+			} catch (Exception $e) {
+				$dateTimeUser	= $dateTimeServer;
+			}
+		} else {
+			$dateTimeUser	= $dateTimeServer;
+		}
+		
 		$this->assign_vars(array(
 			'scripts'			=> $this->script,
-			'title'				=> $CONF['game_name'].' - '.$LNG['adm_cp_title'],
+			'title'				=> Config::get('game_name').' - '.$LNG['adm_cp_title'],
 			'fcm_info'			=> $LNG['fcm_info'],
+            'lang'    			=> $LNG->getLanguage(),
+			'REV'				=> substr(Config::get('VERSION'), -4),
+			'date'				=> explode("|", date('Y\|n\|j\|G\|i\|s\|Z', TIMESTAMP)),
+			'Offset'			=> $dateTimeUser->getOffset() - $dateTimeServer->getOffset(),
+			'VERSION'			=> Config::get('VERSION'),
+			'dpath'				=> 'styles/theme/gow/',
+			'bodyclass'			=> 'full'
 		));
 	}
 	
-	public function login_main()
-	{
-		global $USER, $CONF, $LNG, $LANG, $UNI;
-		$this->assign_vars(array(
-			'cappublic'			=> $CONF['cappublic'],
-			'servername' 		=> $CONF['game_name'],
-			'forum_url' 		=> $CONF['forum_url'],
-			'fb_active'			=> $CONF['fb_on'],
-			'fb_key' 			=> $CONF['fb_apikey'],
-			'mail_active'		=> $CONF['mail_active'],
-			'forum' 			=> $LNG['forum'],
-			'register_closed'	=> $LNG['register_closed'],
-			'fb_perm'			=> sprintf($LNG['fb_perm'], $CONF['game_name']),
-			'menu_index'		=> $LNG['menu_index'],
-			'menu_news'			=> $LNG['menu_news'],
-			'menu_rules'		=> $LNG['menu_rules'],
-			'menu_agb'			=> $LNG['menu_agb'],
-			'menu_pranger'		=> $LNG['menu_pranger'],
-			'menu_top100'		=> $LNG['menu_top100'],
-			'menu_disclamer'	=> $LNG['menu_disclamer'],
-			'game_captcha'		=> $CONF['capaktiv'],
-			'reg_close'			=> $CONF['reg_closed'],
-			'ref_active'		=> $CONF['ref_active'],
-			'ga_active'			=> $CONF['ga_active'],
-			'ga_key'			=> $CONF['ga_key'],
-			'getajax'			=> request_var('getajax', 0),
-			'lang'				=> $LANG->getUser(),
-			'UNI'				=> $UNI,
-			'VERSION'			=> $CONF['VERSION'],
-			'REV'				=> substr($CONF['VERSION'], -4),
-			'langs'				=> json_encode(Language::getAllowedLangs(false)),
-		));
-	}
-		
-	public function isPopup()
-	{	
-		$this->assign_vars(array(
-			'class'			=> 'popup',
-		));	
-		$this->Popup		= true;
-	}
-		
-	public function isDialog()
-	{
-		$this->Dialog		= true;
-	}
-		
 	public function show($file)
 	{		
-		global $USER, $PLANET, $CONF, $LNG, $db, $THEME;
+		global $USER, $PLANET, $CONF, $LNG, $THEME;
 
 		if($THEME->isCustomTPL($file))
-			$this->template_dir	= $THEME->getTemplatePath();
+			$this->setTemplateDir($THEME->getTemplatePath());
 			
-		if(!defined('INSTALL')) {
-			if(defined('IN_ADMIN')) {
-				$this->adm_main();
-			} elseif(defined('LOGIN')) {
-				$this->template_dir	.= 'index/';
-				$this->login_main();
-			} elseif(!$this->Dialog) {
-				if(!defined('AJAX')) {
-					$_SESSION['USER']	= $USER;
-					$_SESSION['PLANET']	= $PLANET;
-				}
-				$this->main();
-				if($this->Popup === false)
-					$this->Menus();
-			}
+		$tplDir	= $this->getTemplateDir();
+			
+		if(MODE === 'INSTALL') {
+			$this->setTemplateDir($tplDir[0].'install/');
+		} elseif(MODE === 'ADMIN') {
+			$this->setTemplateDir($tplDir[0].'adm/');
+			$this->adm_main();
 		}
 
 		$this->assign_vars(array(
-			'scripts'			=> $this->jsscript,
-			'execscript'		=> implode("\n", $this->script),
+			'scripts'		=> $this->jsscript,
+			'execscript'	=> implode("\n", $this->script),
 		));
-			
+
+		$this->assign_vars(array(
+			'LNG'			=> $LNG,
+		), false);
+		
+		$this->compile_id	= $LNG->getLanguage();
+		
+		parent::display($file);
+	}
+	
+	public function display($file)
+	{
+		global $LNG;
+		$this->compile_id	= $LNG->getLanguage();
 		parent::display($file);
 	}
 	
@@ -283,8 +154,6 @@ class template extends Smarty
 	public function message($mes, $dest = false, $time = 3, $Fatal = false)
 	{
 		global $LNG, $THEME;
-		if($Fatal)
-			$this->isPopup(true);
 	
 		$this->assign_vars(array(
 			'mes'		=> $mes,
@@ -294,12 +163,19 @@ class template extends Smarty
 		));
 		
 		$this->gotoside($dest, $time);
-		if (defined('IN_ADMIN')) {
-			$this->show('adm/error_message_body.tpl');
-			exit;
-		}
 		$this->show('error_message_body.tpl');
 	}
+	
+	public static function printMessage($Message, $fullSide = true, $redirect = NULL) {
+		$template	= new self;
+		if(!isset($redirect)) {
+			$redirect	= array(false, 0);
+		}
+		
+		$template->message($Message, $redirect[0], $redirect[1], !$fullSide);
+		exit;
+	}
+	
     /**
     * Workaround  for new Smarty Method to add custom props...
     */
@@ -338,5 +214,3 @@ class template extends Smarty
         }
     }
 }
-
-?>

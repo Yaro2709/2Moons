@@ -22,6 +22,9 @@
  */
 
 @media screen,projection,handheld {
+	:focus {
+		outline:0 none;
+	}
 	
 	#loginContent {
 		background-color:#E5E5E8;
@@ -56,13 +59,15 @@
 	}
 	#content input, #content select, #content textarea {
 		border:1px solid #212121;
-		background:#393939;
+		background: #0D1014;
+		background: rgba(13, 16, 20, 0.95);
 		color:#CCC;
 		font-family:Verdana;
 		font-size:10px;
 	}
 	#content #chatList, #content #onlineListContainer, #content #helpContainer, #content #settingsContainer, #content #bbCodeContainer, #content #colorCodesContainer, #content #emoticonsContainer {
-		background:#393939;
+		background: #0D1014;
+		background: rgba(13, 16, 20, 0.95);
 		border: 0px;
 	}
 	.statusContainerOn {
@@ -107,10 +112,11 @@
 	    background:url('../img/autoscroll-off.png') no-repeat;
 	}
 	#content .rowEven {
-		background-color:#333;
+		background: transparent
 	}
 	#content .rowOdd {
-		background-color:#393939;
+		background: #212428;
+		background: rgba(33, 36, 40, 0.3);
 	}
 	#content .guest {
 		color:gray;
@@ -147,6 +153,9 @@
 		line-height:18px;
 		padding-left:3px;
 		text-align:left
+	}
+	#onlineListContainer h3 {
+		padding:2px 3px;
 	}
 	#content #settingsContainer #settingsList input.playback {
 	    background:url('../img/playback.png') no-repeat;

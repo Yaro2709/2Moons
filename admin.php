@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-define('INSIDE'  , true);
-define('IN_ADMIN', true);
+define('MODE', 'ADMIN');
 
 define('ROOT_PATH', str_replace('\\', '/',dirname(__FILE__)).'/');
 
 require(ROOT_PATH . 'includes/common.php');
 require_once(ROOT_PATH . 'includes/classes/class.Log.php');
 
-if ($USER['authlevel'] == AUTH_USR) redirectTo('game.php');
+if ($USER['authlevel'] == AUTH_USR) HTTP::redirectTo('game.php');
 
 if(!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] != $USER['password'])
 {
@@ -44,8 +42,8 @@ if(!isset($_SESSION['admin_login']) || $_SESSION['admin_login'] != $USER['passwo
 	exit;
 }
 
-$page = request_var('page', '');
-$uni = request_var('uni', 0);
+$page = HTTP::_GP('page', '');
+$uni = HTTP::_GP('uni', 0);
 
 if($USER['authlevel'] == AUTH_ADM && !empty($uni))
 	$_SESSION['adminuni'] = $uni;
@@ -54,6 +52,10 @@ if(empty($_SESSION['adminuni']))
 
 switch($page)
 {
+	case 'logout':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowLogoutPage.php');
+		ShowLogoutPage();
+	break;
 	case 'infos':
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowInformationPage.php');
 		ShowInformationPage();
@@ -90,9 +92,9 @@ switch($page)
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowStatsPage.php');
 		ShowStatsPage();
 	break;
-	case 'update':
-		include_once(ROOT_PATH . 'includes/pages/adm/ShowUpdatePage.php');
-		ShowUpdatePage();
+	case 'disclamer':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowDisclamerPage.php');
+		ShowDisclamerPage();
 	break;
 	case 'create':
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowCreatorPage.php');
@@ -128,7 +130,7 @@ switch($page)
 	break;
 	case 'support':
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowSupportPage.php');
-		ShowSupportPage();
+		new ShowSupportPage();
 	break;
 	case 'password':
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowPassEncripterPage.php');
@@ -190,10 +192,24 @@ switch($page)
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowVertify.php');
 		ShowVertify();
 	break;
+	case 'cronjob':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowCronjobPage.php');
+		ShowCronjob();
+	break;
+	case 'giveaway':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowGiveawayPage.php');
+		ShowGiveaway();
+	break;
+	case 'autocomplete':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowAutoCompletePage.php');
+		ShowAutoCompletePage();
+	break;
+	case 'dump':
+		include_once(ROOT_PATH . 'includes/pages/adm/ShowDumpPage.php');
+		ShowDumpPage();
+	break;
 	default:
 		include_once(ROOT_PATH . 'includes/pages/adm/ShowIndexPage.php');
 		ShowIndexPage();
 	break;
 }
-
-?>

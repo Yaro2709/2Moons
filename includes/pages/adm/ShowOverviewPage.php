@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
 function ShowOverviewPage()
@@ -40,6 +39,9 @@ function ShowOverviewPage()
 			
 		if(file_exists(ROOT_PATH.'webinstall.php'))
 			$Message[]	= sprintf($LNG['ow_file_detected'], 'webinstall.php');
+			
+		if(file_exists(ROOT_PATH.'includes/ENABLE_INSTALL_TOOL'))
+			$Message[]	= sprintf($LNG['ow_file_detected'], 'includes/ENABLE_INSTALL_TOOL');
 					
 		if(!is_writable(ROOT_PATH.'cache'))
 			$Message[]	= sprintf($LNG['ow_dir_not_writable'], 'cache');
@@ -48,7 +50,8 @@ function ShowOverviewPage()
 			$Message[]	= sprintf($LNG['ow_dir_not_writable'], 'includes');
 	}
 	
-	$template	= new template();
+	$template	= new template();
+
 
 	$template->assign_vars(array(	
 		'ow_none'			=> $LNG['ow_none'],
@@ -66,7 +69,5 @@ function ShowOverviewPage()
 		'date'				=> date('m\_Y', TIMESTAMP),
 	));
 	
-	$template->show('adm/OverviewBody.tpl');
+	$template->show('OverviewBody.tpl');
 }
-
-?>

@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowQuickEditorPage()
 {
-	global $USER, $LNG, $db, $reslist, $resource;
-	$action	= request_var('action', '');
-	$edit	= request_var('edit', '');
-	$id 	= request_var('id', 0);
+	global $USER, $LNG, $reslist, $resource, $pricelist;
+	$action	= HTTP::_GP('action', '');
+	$edit	= HTTP::_GP('edit', '');
+	$id 	= HTTP::_GP('id', 0);
 
 	switch($edit)
 	{
@@ -44,35 +43,43 @@ function ShowQuickEditorPage()
 			{
 				$SpecifyItemsPQ	.= "`".$resource[$ID]."`,";
 			}
-			$PlanetData	= $db->uniquequery("SELECT ".$SpecifyItemsPQ." `name`, `id_owner`, `planet_type`, `galaxy`, `system`, `planet`, `destruyed`, `diameter`, `field_current`, `field_max`, `temp_min`, `temp_max`, `metal`, `crystal`, `deuterium` FROM ".PLANETS." WHERE `id` = '".$id."';");
+			$PlanetData	= $GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsPQ." `name`, `id_owner`, `planet_type`, `galaxy`, `system`, `planet`, `destruyed`, `diameter`, `field_current`, `field_max`, `temp_min`, `temp_max`, `metal`, `crystal`, `deuterium` FROM ".PLANETS." WHERE `id` = '".$id."';");
 						
 			if($action == 'send'){
 				$SQL	= "UPDATE ".PLANETS." SET ";
 				$Fields	= $PlanetData['field_current'];
 				foreach($DataIDs as $ID)
 				{
+					$level	= min(max(0, round(HTTP::_GP($resource[$ID], 0.0))), (in_array($ID, $reslist['build']) ? 255: 18446744073709551615));
+				
 					if(in_array($ID, $reslist['allow'][$PlanetData['planet_type']]))
-						$Fields	+= request_outofint($resource[$ID]) - $PlanetData[$resource[$ID]];
+					{
+						$Fields	+= $level - $PlanetData[$resource[$ID]];
+					}
 					
-					$SQL	.= "`".$resource[$ID]."` = '".request_outofint($resource[$ID])."', ";
+					$SQL	.= "`".$resource[$ID]."` = ".$level.", ";
 				}
-				$SQL	.= "`metal` = '".request_outofint('metal')."', ";
-				$SQL	.= "`crystal` = '".request_outofint('crystal')."', ";
-				$SQL	.= "`deuterium` = '".request_outofint('deuterium')."', ";
+				
+				$SQL	.= "`metal` = ".max(0, round(HTTP::_GP('metal', 0.0))).", ";
+				$SQL	.= "`crystal` = ".max(0, round(HTTP::_GP('crystal', 0.0))).", ";
+				$SQL	.= "`deuterium` = ".max(0, round(HTTP::_GP('deuterium', 0.0))).", ";
 				$SQL	.= "`field_current` = '".$Fields."', ";
-				$SQL	.= "`field_max` = '".request_var('field_max', 0)."', ";
-				$SQL	.= "`name` = '".$db->sql_escape(request_var('name', '', UTF8_SUPPORT))."' ";
+				$SQL	.= "`field_max` = '".HTTP::_GP('field_max', 0)."', ";
+				$SQL	.= "`name` = '".$GLOBALS['DATABASE']->sql_escape(HTTP::_GP('name', '', UTF8_SUPPORT))."', ";
+				$SQL	.= "`eco_hash` = '' ";
 				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';";
 					
-				$db->query($SQL);
+				$GLOBALS['DATABASE']->query($SQL);
 				
 				$old = array();
 				$new = array();
-                foreach($DataIDs as $IDs)
+                foreach(array_merge($DataIDs,$reslist['resstype'][1]) as $IDs)
                 {
                     $old[$IDs]    = $PlanetData[$resource[$IDs]];
-					$new[$IDs]    = request_outofint($resource[$IDs]);
+					$new[$IDs]    = max(0, round(HTTP::_GP($resource[$IDs], 0.0)));
                 }
+				$old['field_max'] = $PlanetData['field_max'];
+				$new['field_max'] = HTTP::_GP('field_max', 0);
 				$LOG = new Log(2);
 				$LOG->target = $id;
 				$LOG->old = $old;
@@ -81,7 +88,7 @@ function ShowQuickEditorPage()
 		
 				exit(sprintf($LNG['qe_edit_planet_sucess'], $PlanetData['name'], $PlanetData['galaxy'], $PlanetData['system'], $PlanetData['planet']));
 			}
-			$UserInfo				= $db->uniquequery("SELECT `username` FROM ".USERS." WHERE `id` = '".$PlanetData['id_owner']."' AND `universe` = '".$_SESSION['adminuni']."';");
+			$UserInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `username` FROM ".USERS." WHERE `id` = '".$PlanetData['id_owner']."' AND `universe` = '".$_SESSION['adminuni']."';");
 
 			$build = $defense = $fleet	= array();
 			
@@ -117,25 +124,6 @@ function ShowQuickEditorPage()
 
 			$template	= new template();
 			$template->assign_vars(array(	
-				'qe_resources'	=> $LNG['qe_resources'],
-				'Metal'			=> $LNG['Metal'],
-				'Crystal'		=> $LNG['Crystal'],
-				'Deuterium'		=> $LNG['Deuterium'],
-				'qe_defensive'	=> $LNG['qe_defensive'],
-				'qe_fleet'		=> $LNG['qe_fleet'],
-				'qe_build'		=> $LNG['qe_build'],
-				'qe_input'		=> $LNG['qe_input'],
-				'qe_count'		=> $LNG['qe_count'],
-				'qe_level'		=> $LNG['qe_level'],
-				'qe_name'		=> $LNG['qe_name'],
-				'qe_reset'		=> $LNG['qe_reset'],
-				'qe_send'		=> $LNG['qe_send'],
-				'qe_temp'		=> $LNG['qe_temp'],
-				'qe_fields'		=> $LNG['qe_fields'],
-				'qe_owner'		=> $LNG['qe_owner'],
-				'qe_coords'		=> $LNG['qe_coords'],
-				'qe_id'			=> $LNG['qe_id'],
-				'qe_info'		=> $LNG['qe_info'],
 				'build'			=> $build,
 				'fleet'			=> $fleet,
 				'defense'		=> $defense,
@@ -157,7 +145,7 @@ function ShowQuickEditorPage()
 				'crystal_c'		=> pretty_number($PlanetData['crystal']),
 				'deuterium_c'	=> pretty_number($PlanetData['deuterium']),
 			));
-			$template->show('adm/QuickEditorPlanet.tpl');
+			$template->show('QuickEditorPlanet.tpl');
 		break;
 		case 'player':
 			$DataIDs	= array_merge($reslist['tech'], $reslist['officier']);
@@ -165,31 +153,53 @@ function ShowQuickEditorPage()
 			{
 				$SpecifyItemsPQ	.= "`".$resource[$ID]."`,";
 			}
-			$UserData	= $db->uniquequery("SELECT ".$SpecifyItemsPQ." `username`, `authlevel`, `galaxy`, `system`, `planet`, `id_planet`, `darkmatter`, `authattack`, `authlevel` FROM ".USERS." WHERE `id` = '".$id."';");
+			$UserData	= $GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsPQ." `username`, `authlevel`, `galaxy`, `system`, `planet`, `id_planet`, `darkmatter`, `authattack`, `authlevel` FROM ".USERS." WHERE `id` = '".$id."';");
 			$ChangePW	= $USER['id'] == ROOT_USER || ($id != ROOT_USER && $USER['authlevel'] > $UserData['authlevel']);
 		
 			if($action == 'send'){
 				$SQL	= "UPDATE ".USERS." SET ";
 				foreach($DataIDs as $ID)
 				{
-					$SQL	.= "`".$resource[$ID]."` = '".abs(request_var($resource[$ID], 0))."', ";
+					$SQL	.= "`".$resource[$ID]."` = ".min(abs(HTTP::_GP($resource[$ID], 0)), 255).", ";
 				}
-				$SQL	.= "`darkmatter` = '".max(request_var('darkmatter', 0), 0)."', ";
+				$SQL	.= "`darkmatter` = '".max(HTTP::_GP('darkmatter', 0), 0)."', ";
 				if(!empty($_POST['password']) && $ChangePW)
-					$SQL	.= "`password` = '".md5(request_var('password', '', true))."', ";
-				$SQL	.= "`username` = '".$db->sql_escape(request_var('name', '', UTF8_SUPPORT))."', ";
-				$SQL	.= "`authattack` = '".($UserData['authlevel'] != AUTH_USR && request_var('authattack', '') == 'on' ? $UserData['authlevel'] : 0)."' ";
+					$SQL	.= "`password` = '".cryptPassword(HTTP::_GP('password', '', true))."', ";
+				$SQL	.= "`username` = '".$GLOBALS['DATABASE']->sql_escape(HTTP::_GP('name', '', UTF8_SUPPORT))."', ";
+				$SQL	.= "`authattack` = '".($UserData['authlevel'] != AUTH_USR && HTTP::_GP('authattack', '') == 'on' ? $UserData['authlevel'] : 0)."' ";
 				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';";
-				$db->query($SQL);
+				$GLOBALS['DATABASE']->query($SQL);
 				
 				$old = array();
 				$new = array();
+				$multi	=  HTTP::_GP('multi', 0);
 				foreach($DataIDs as $IDs)
                 {
                     $old[$IDs]    = $UserData[$resource[$IDs]];
-                    $new[$IDs]    = abs(request_var($resource[$IDs], 0));
+                    $new[$IDs]    = abs(HTTP::_GP($resource[$IDs], 0));
                 }
-                $LOG = new Log(1);
+				$old[921]			= $UserData[$resource[921]];
+				$new[921]			= abs(HTTP::_GP($resource[921], 0));
+				$old['username']	= $UserData['username'];
+				$new['username']	= $GLOBALS['DATABASE']->sql_escape(HTTP::_GP('name', '', UTF8_SUPPORT));
+				$old['authattack']	= $UserData['authattack'];
+				$new['authattack']	= ($UserData['authlevel'] != AUTH_USR && HTTP::_GP('authattack', '') == 'on' ? $UserData['authlevel'] : 0);
+				$old['multi']		= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MULTI." WHERE userID = ".$id.";");
+				$new['authattack']	= $multi;
+			
+				if($old['multi'] != $multi)
+				{
+					if($multi == 0)
+					{
+						$GLOBALS['DATABASE']->query("DELETE FROM ".MULTI." WHERE userID = ".((int) $id).";");
+					}
+					elseif($multi == 1)
+					{
+						$GLOBALS['DATABASE']->query("INSERT INTO ".MULTI." SET userID = ".((int) $id).";");
+					}
+				}
+				
+				$LOG = new Log(1);
 				$LOG->target = $id;
 				$LOG->old = $old;
 				$LOG->new = $new;
@@ -197,7 +207,7 @@ function ShowQuickEditorPage()
 				
 				exit(sprintf($LNG['qe_edit_player_sucess'], $UserData['username'], $id));
 			}
-			$PlanetInfo				= $db->uniquequery("SELECT `name` FROM ".PLANETS." WHERE `id` = '".$UserData['id_planet']."' AND `universe` = '".$_SESSION['adminuni']."';");
+			$PlanetInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `name` FROM ".PLANETS." WHERE `id` = '".$UserData['id_planet']."' AND `universe` = '".$_SESSION['adminuni']."';");
 
 			$tech		= array();
 			$officier	= array();
@@ -223,22 +233,6 @@ function ShowQuickEditorPage()
 
 			$template	= new template();
 			$template->assign_vars(array(	
-				'qe_resources'	=> $LNG['qe_resources'],
-				'Darkmatter'	=> $LNG['Darkmatter'],
-				'qe_officier'	=> $LNG['qe_officier'],
-				'qe_tech'		=> $LNG['qe_tech'],
-				'qe_input'		=> $LNG['qe_input'],
-				'qe_level'		=> $LNG['qe_level'],
-				'qe_name'		=> $LNG['qe_name'],
-				'qe_reset'		=> $LNG['qe_reset'],
-				'qe_send'		=> $LNG['qe_send'],
-				'qe_password'	=> $LNG['qe_password'],
-				'qe_owner'		=> $LNG['qe_owner'],
-				'qe_hpcoords'	=> $LNG['qe_hpcoords'],
-				'qe_id'			=> $LNG['qe_id'],
-				'qe_info'		=> $LNG['qe_info'],
-				'qe_change'		=> $LNG['qe_change'],
-				'qe_authattack'	=> $LNG['qe_authattack'],
 				'tech'			=> $tech,
 				'officier'		=> $officier,
 				'id'			=> $id,
@@ -250,12 +244,12 @@ function ShowQuickEditorPage()
 				'planet'		=> $UserData['planet'],
 				'authlevel'		=> $UserData['authlevel'],
 				'authattack'	=> $UserData['authattack'],
+				'multi'			=> $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MULTI." WHERE userID = ".$id.";"),
 				'ChangePW'		=> $ChangePW,
 				'darkmatter'	=> floattostring($UserData['darkmatter']),
 				'darkmatter_c'	=> pretty_number($UserData['darkmatter']),
 			));
-			$template->show('adm/QuickEditorUser.tpl');
+			$template->show('QuickEditorUser.tpl');
 		break;
 	}
 }
-?>

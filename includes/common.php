@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,165 +18,172 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if(!defined('IN_ADMIN') || !defined('IN_CRON'))
-	define("STARTTIME",	microtime(true));
+define("BETA", 0);
 
-	
-define("BETA", file_exists(ROOT_PATH.'BETA_GAME'));
-
-ignore_user_abort(true);
-error_reporting(E_ALL ^ E_NOTICE);
-ini_set('display_errors', 1);
-header('Content-Type: text/html; charset=UTF-8');
-define('TIMESTAMP',	$_SERVER['REQUEST_TIME']);
-
-require_once(ROOT_PATH . 'includes/config.php');	
-require_once(ROOT_PATH . 'includes/constants.php');
-
-ini_set('session.save_path', ROOT_PATH.'cache/sessions');
-ini_set('upload_tmp_dir', ROOT_PATH.'cache/sessions');
-ini_set('session.use_cookies', '1');
-ini_set('session.use_only_cookies', '1');
-session_set_cookie_params(SESSION_LIFETIME, '/');
-session_cache_limiter('nocache');
-session_name('2Moons');
-ini_set('session.use_trans_sid', 0);
-ini_set('session.auto_start', '0');
-ini_set('session.serialize_handler', 'php');  
-ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
-ini_set('session.gc_probability', '1');
-ini_set('session.gc_divisor', '1000');
-ini_set('session.bug_compat_warn', '0');
-ini_set('session.bug_compat_42', '0');
-ini_set('session.cookie_httponly', true);
-ini_set('error_log', ROOT_PATH.'includes/error.log');
-
-if(!defined('LOGIN'))
-	session_start();
-	
-if(!function_exists('bcadd'))
-	require_once(ROOT_PATH . 'includes/bcmath.php');
-	
-require_once(ROOT_PATH . 'includes/GeneralFunctions.php');
-set_exception_handler('exception_handler');
-
-require_once(ROOT_PATH . 'includes/classes/class.MySQLi.php');
-require_once(ROOT_PATH . 'includes/classes/class.Lang.php');
-require_once(ROOT_PATH . 'includes/classes/class.theme.php');
-require_once(ROOT_PATH . 'includes/classes/class.Session.php');
-	
-$db 	= new DB_MySQLi();
-$THEME	= new Theme();	
-$LANG	= new Language();
-$CONFIG	= array();
-
-$UNI	= getUniverse();
-unset($database);
-
-// Say Browsers to Allow ThirdParty Cookies (Thanks to morktadela)
-header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-
-if(UNIS_MULTIVARS)
-	require_once(ROOT_PATH.'includes/vars_uni'.$UNI.'.php');
-else
-	require_once(ROOT_PATH.'includes/vars.php');
-	
-$CONF	= getConfig($UNI);
-$LANG->setDefault($CONF['lang']);
-require(ROOT_PATH.'includes/libs/FirePHP/FirePHP.class.php');
-require(ROOT_PATH.'includes/libs/FirePHP/fb.php');
-$FirePHP	= FirePHP::getInstance(true);
-$FirePHP->setEnabled((bool) $GLOBALS['CONF']['debug']);
-if($GLOBALS['CONF']['debug']) {
-	ob_start();
-	$FirePHP->registerErrorHandler(true);
+if (isset($_POST['GLOBALS']) || isset($_GET['GLOBALS'])) {
+	exit('You cannot set the GLOBALS-array from outside the script.');
 }
 
-if (!defined('CLI') && !defined('LOGIN') && !defined('IN_CRON') && !defined('AJAX') && !defined('ROOT'))
-{
-	$SESSION       	= new Session();
+// Magic Quotes work around.
+// http://www.php.net/manual/de/security.magicquotes.disabling.php#91585
+if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() == 1) {
+    function stripslashes_gpc(&$value)
+    {
+        $value = stripslashes($value);
+    }
+    array_walk_recursive($_GET, 'stripslashes_gpc');
+    array_walk_recursive($_POST, 'stripslashes_gpc');
+    array_walk_recursive($_COOKIE, 'stripslashes_gpc');
+    array_walk_recursive($_REQUEST, 'stripslashes_gpc');
+}
+
+if (function_exists('mb_internal_encoding')) {
+	mb_internal_encoding("UTF-8");
+}
+
+ignore_user_abort(true);
+error_reporting(E_ALL & ~E_STRICT);
+
+// If the guy forgot to set date.timezone on php.ini
+date_default_timezone_set(@date_default_timezone_get());
+
+ini_set('display_errors', 1);
+header('Content-Type: text/html; charset=UTF-8');
+define('TIMESTAMP',	time());
 	
-	if(!$SESSION->IsUserLogin()) redirectTo('index.php?code=3');
+require(ROOT_PATH . 'includes/constants.php');
+
+ini_set('log_errors', 'On');
+ini_set('error_log', ROOT_PATH.'includes/error.log');
+
+require(ROOT_PATH . 'includes/GeneralFunctions.php');
+set_exception_handler('exceptionHandler');
+set_error_handler('errorHandler');
+
+require(ROOT_PATH . 'includes/classes/class.Cache.php');
+require(ROOT_PATH . 'includes/classes/class.Database.php');
+require(ROOT_PATH . 'includes/classes/class.theme.php');
+require(ROOT_PATH . 'includes/classes/class.Session.php');
+require(ROOT_PATH . 'includes/classes/class.template.php');
+require(ROOT_PATH . 'includes/classes/Config.class.php');
+require(ROOT_PATH . 'includes/classes/ArrayUtil.class.php');
+require(ROOT_PATH . 'includes/classes/Language.class.php');
+require(ROOT_PATH . 'includes/classes/HTTP.class.php');
+require(ROOT_PATH . 'includes/classes/PlayerUtil.class.php');
+
+// Say Browsers to Allow ThirdParty Cookies (Thanks to morktadela)
+HTTP::sendHeader('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
+define('AJAX_REQUEST', HTTP::_GP('ajax', 0));
+
+$THEME		= new Theme();	
+$CACHE		= new Cache();
+
+if (MODE === 'INSTALL')
+{
+	return;
+}
+
+if(!file_exists(ROOT_PATH.'includes/config.php')) {
+	HTTP::redirectTo("install/index.php");
+}
+
+require(ROOT_PATH . 'includes/config.php');
+require(ROOT_PATH . 'includes/dbtables.php');
+
+$SESSION	= new Session();
+$DATABASE	= new Database();
+unset($database);
+
+Config::init();
+$UNI		= getUniverse();
+Config::setGlobals();
+
+date_default_timezone_set(Config::get('timezone'));
+
+require(ROOT_PATH.'includes/vars.php');
+
+if (MODE === 'INGAME' || MODE === 'ADMIN' || MODE === 'CHAT')
+{	
+	if(!$SESSION->isActiveSession())
+	{
+		HTTP::redirectTo('index.php?code=3');
+	}
 	
 	$SESSION->UpdateSession();
-	
-	if($CONF['game_disable'] == 0 && $_SESSION['authlevel'] == AUTH_USR) {
-		message($CONF['close_reason']);
-	}
 
-	if(!CheckModule(10) && !defined('IN_ADMIN') && request_var('ajax', 0) == 0)
+	require(ROOT_PATH.'includes/classes/class.BuildFunctions.php');
+	require(ROOT_PATH.'includes/classes/class.PlanetRessUpdate.php');
+	
+	if(!AJAX_REQUEST && MODE === 'INGAME' && isModulAvalible(MODULE_FLEET_EVENTS)) {
 		require(ROOT_PATH.'includes/FleetHandler.php');
+	}
 		
-	$USER	= $db->uniquequery("SELECT u.*, s.`total_points`, s.`total_rank` FROM ".USERS." as u LEFT JOIN ".STATPOINTS." as s ON s.`id_owner` = u.`id` AND s.`stat_type` = '1' WHERE u.`id` = '".$_SESSION['id']."';");
-	$FirePHP->log("Load User: ".$USER['id']);
+	$USER	= $GLOBALS['DATABASE']->getFirstRow("SELECT 
+	user.*, 
+	stat.total_points, 
+	stat.total_rank,
+	COUNT(message.message_id) as messages
+	FROM ".USERS." as user 
+	LEFT JOIN ".STATPOINTS." as stat ON stat.id_owner = user.id AND stat.stat_type = '1' 
+	LEFT JOIN ".MESSAGES." as message ON message.message_owner = user.id AND message.message_unread = '1'
+	WHERE user.id = ".$_SESSION['id']."
+	GROUP BY message.message_owner;");
+	
 	if(empty($USER)) {
 		exit(header('Location: index.php'));
-	} elseif(empty($USER['lang'])) {
-		$USER['lang']	= $CONF['lang'];
-		$db->query("UPDATE ".USERS." SET `lang` = '".$USER['lang']."' WHERE `id` = '".$USER['id']."';");
-		$FirePHP->log("Load User: ".$USER['id']);
 	}
 	
-	$LANG->setUser($USER['lang']);	
-	$LANG->includeLang(array('L18N', 'INGAME', 'TECH'));
+	$LNG	= new Language($USER['lang']);
+	$LNG->includeData(array('L18N', 'INGAME', 'TECH', 'CUSTOM'));
 	$THEME->setUserTheme($USER['dpath']);
-	if($USER['bana'] == 1)
-	{
-		message("<font size=\"6px\">".$LNG['css_account_banned_message']."</font><br><br>".sprintf($LNG['css_account_banned_expire'],date("d. M y H:i", $USER['banaday']))."<br><br>".$LNG['css_goto_homeside']);
-		exit;
+	
+	if(Config::get('game_disable') == 0 && $USER['authlevel'] == AUTH_USR) {
+		ShowErrorPage::printError($LNG['sys_closed_game'].'<br><br>'.Config::get('close_reason'), false);
+	}
+
+	if($USER['bana'] == 1) {
+		ShowErrorPage::printError("<font size=\"6px\">".$LNG['css_account_banned_message']."</font><br><br>".sprintf($LNG['css_account_banned_expire'], _date($LNG['php_tdformat'], $USER['banaday'], $USER['timezone']))."<br><br>".$LNG['css_goto_homeside'], false);
 	}
 	
-	if (!defined('IN_ADMIN'))
+	if (MODE === 'INGAME')
 	{
-		require_once(ROOT_PATH . 'includes/classes/class.PlanetRessUpdate.php');
-		$PLANET = $db->uniquequery("SELECT * FROM `".PLANETS."` WHERE `id` = '".$_SESSION['planet']."';");
+		if($UNI != $USER['universe'] && count($CONFIG) > 1)
+		{
+			HTTP::redirectTo(PROTOCOL.HTTP_HOST.HTTP_BASE."uni".$USER['universe']."/".HTTP_FILE, true);
+		}
+		
+		$PLANET = $GLOBALS['DATABASE']->getFirstRow("SELECT * FROM ".PLANETS." WHERE id = ".$_SESSION['planet'].";");
 
-		if(empty($PLANET)){
-			$PLANET = $db->uniquequery("SELECT * FROM `".PLANETS."` WHERE `id` = '".$USER['id_planet']."';");
+		if(empty($PLANET))
+		{
+			$PLANET = $GLOBALS['DATABASE']->getFirstRow("SELECT * FROM ".PLANETS." WHERE id = ".$USER['id_planet'].";");
 			
-			if(empty($PLANET)){
+			if(empty($PLANET))
+			{
 				throw new Exception("Main Planet does not exist!");
 			}
 		}
+		
 		$USER['factor']		= getFactors($USER);
 		$USER['PLANETS']	= getPlanets($USER);
-		$FirePHP->log("Load Planet: ".$PLANET['id']);
+	} elseif (MODE === 'ADMIN') {
+		error_reporting(E_ERROR | E_WARNING | E_PARSE);
 		
-		
-		if(empty($PLANET['b_hanger_id']) && !empty($PLANET['b_hanger']))
-		{
-			$_SESSION['messtoken'] = md5($USER['id'].'|1');
-			$db->query("UPDATE ".PLANETS." SET `b_hanger` = 0 WHERE `id` = '".$_SESSION['planet']."';");
-			message("<h1>Bug ahead!</h1><p>Please give Informations about your last steps!</p><textarea style=\"width:100%\" cols=\"5\" id=\"message\"></textarea><button onclick=\"$.post('game.php?page=messages&mode=send&id=1&ajax=1&subjectAutomatic bugraport!&text='+$('#message').val(), function(){document.location.href='game.php'});\">Send</button></form>");
-			exit;
-		}
-		if(empty($PLANET['b_building_id']) && !empty($PLANET['b_building']))
-		{
-			$_SESSION['messtoken'] = md5($USER['id'].'|1');
-			$db->query("UPDATE ".PLANETS." SET `b_building` = 0 WHERE `id` = '".$_SESSION['planet']."';");
-			message("<h1>Bug ahead!</h1><p>Please give Informations about your last steps!</p><textarea style=\"width:100%\" cols=\"5\" id=\"message\"></textarea><button onclick=\"$.post('game.php?page=messages&mode=send&id=1&ajax=1&subject=Automatic bugraport!&text='+$('#message').val(), function(){document.location.href='game.php'});\">Send</button></form>");
-			exit;
-		}
-	} else {
-		$USER['rights']	= unserialize($USER['rights']);
-		$LANG->includeLang(array('ADMIN'));
+		$USER['rights']		= unserialize($USER['rights']);
+		$LNG->includeData(array('ADMIN', 'CUSTOM'));
 	}
-} elseif(defined('LOGIN')) {
-	//Login
-	$LANG->GetLangFromBrowser();
-	$LANG->includeLang(array('INGAME', 'PUBLIC'));
 }
-
-if (!defined('AJAX') && !defined('CLI'))
-	require_once(ROOT_PATH.'includes/classes/class.template.php');
-	
-?>
+elseif(MODE === 'LOGIN')
+{
+	$LNG	= new Language();
+	$LNG->getUserAgentLanguage();
+	$LNG->includeData(array('L18N', 'INGAME', 'PUBLIC', 'CUSTOM'));
+}

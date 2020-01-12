@@ -1,13 +1,13 @@
 <?PHP
 /**
- *                            ts3admin.class.php                    <br />
- *                            ------------------                    <br />
- *   begin                : 18. December 2009                       <br />
- *   copyright            : (C) 2009-2011 Par0nid Solutions         <br />
- *   email                : par0noid@gmx.de                         <br />
- *   version              : 0.6.2                                   <br />
- *   last modified        : 29. June 2011                           <br />
- *   build                : 5130002                                 <br />
+ *                            ts3admin.class.php                      <br />
+ *                            ------------------                      <br />
+ *   begin                : 18. December 2009                         <br />
+ *   copyright            : (C) 2009-2012 Par0noid Solutions          <br />
+ *   email                : par0noid@gmx.de                           <br />
+ *   version              : 0.6.6               	                  <br />
+ *   last modified        : 22. July 2012		                      <br />
+ *   build                : 5132014                                   <br />
  *
 
     This file is a powerful library for querying TeamSpeak3 servers.<br />																			
@@ -30,8 +30,8 @@
 /**
  * @author      Par0noid Solutions <par0noid@gmx.de>
  * @package     ts3admin
- * @version     0.6.2
- * @copyright   Copyright (c) 2009-2011, Stefan Z.
+ * @version     0.6.6
+ * @copyright   Copyright (c) 2009-2012, Stefan Z.
  * @link        http://ts3admin.info
  * @link        http://par0noid.info
  */
@@ -67,7 +67,7 @@ class ts3admin {
   * @param		string	$banreason	banreason [optional]
   * @return     array banId/s
   */
-	function banAddByIp($ip, $time, $banreason = '') {
+	function banAddByIp($ip, $time, $banreason = NULL) {
 		if(!$this->runtime['selected']) { return $this->checkSelected(); }
 		
 		if(!empty($banreason)) { $msg = ' banreason='.$this->escapeText($banreason); } else { $msg = ''; }
@@ -93,7 +93,7 @@ class ts3admin {
   * @param		string	$banreason	Banreason (optional)
   * @return     array banId/s
   */
-	function banAddByUid($uid, $time, $banreason = "") {
+	function banAddByUid($uid, $time, $banreason = NULL) {
 		if(!$this->runtime['selected']) { return $this->checkSelected(); }
 		if(!empty($banreason)) { $msg = ' banreason='.$this->escapeText($banreason); } else { $msg = ''; }
 		
@@ -118,7 +118,7 @@ class ts3admin {
   * @param		string	$banreason	Banreason [optional]
   * @return     array banId/s
   */
-	function banAddByName($name, $time, $banreason = "") {
+	function banAddByName($name, $time, $banreason = NULL) {
 		if(!$this->runtime['selected']) { return $this->checkSelected(); }
 		if(!empty($banreason)) { $msg = ' banreason='.$this->escapeText($banreason); } else { $msg = ''; }
 										
@@ -659,18 +659,18 @@ class ts3admin {
   * @author     Par0noid Solutions
   * @access		public
   * @param		integer $cid channelID [optional]
-  * @param		integer $clid clientID [optional]
+  * @param		integer $cldbid clientDBID [optional]
   * @param		integer $cgid groupID [optional]
   * @return     multidimensional-array channelGroupClientList
   */
-	function channelGroupClientList($cid = '', $clid = '', $cgid = '') {
+	function channelGroupClientList($cid = NULL, $clid = NULL, $cgid = NULL) {
 		if(!$this->runtime['selected']) { return $this->checkSelected(); }
-		
+
 		if(!empty($cid)) { $cid = ' cid='.$cid; }
-		if(!empty($clid)) { $clid = ' clid='.$clid; }
+		if(!empty($cldbid)) { $clid = ' cldbid='.$cldbid; }
 		if(!empty($cgid)) { $cgid = ' cgid='.$cgid; }
 		
-		return $this->getData('multi', 'channelgroupclientlist '.$cid.$clid.$cgid);
+		return $this->getData('multi', 'channelgroupclientlist'.$cid.$cldbid.$cgid);
 	}
 
 /**
@@ -2103,34 +2103,38 @@ class ts3admin {
 	}
 
 /**
-  * logView displays a specified number of entries from the servers log<br><br><br>
+  * logView Displays a specified number of entries from the servers log. If instance is set to 1, the server will return lines from the master logfile (ts3server_0.log) instead of the selected virtual server logfile<br><br><br>
   * 
   * <b>Output:</b><br>
   * <code>
   * Array
   * {
-  *  [timestamp] => 1286147873
-  *  [level] => 4
-  *  [channel] => ServerParser
-  *  [msg] => deleted VirtualServer(2)
+  *  [last_pos] => 0
+  *  [file_size] => 1085
+  *  [l] => 2012-01-10 20:34:31.379260|INFO    |ServerLibPriv |   | TeamSpeak 3 Server 3.0.1 (2011-11-17 07:34:30)
+  * }
+  * {
+  *  [l] => 2012-01-10 20:34:31.380260|INFO    |DatabaseQuery |   | dbPlugin name:    SQLite3 plugin, Version 2, (c)TeamSpeak Systems GmbH
+  * }
+  * {
+  *  [l] => 2012-01-10 20:34:31.380260|INFO    |DatabaseQuery |   | dbPlugin version: 3.7.3
   * }
   * </code>
   *
   * @author     Par0noid Solutions
   * @access		public
-  * @param		integer	$limit	between 1 and 500
-  * @param		string	$comparator	{<|>|=} [optional]
-  * @param		string	$timestamp	YYYY-MM-DD\shh:mm:ss [optional]
+  * @param		integer	$lines	between 1 and 100
+  * @param		integer	$reverse	{1|0} [optional]
+  * @param		integer	$instance	{1|0} [optional]
+  * @param		integer	$begin_pos	{1|0} [optional]
   * @return     multidimensional-array logEntries
   */
-	function logView($limit, $comparator = '', $timestamp = '') {
-		if(!empty($comparator)) { $comparator = ' comparator='.$this->escapeText($comparator); }
-		if(!empty($timestamp)) { $timestamp = ' timestamp='.$this->escapeText($timestamp); }
-		if($limit >=1 and $limit <=500) {
-			return $this->getData('multi', 'logview limitcount='.$limit.$comparator.$timestamp);
+	function logView($lines, $reverse = 0, $instance = 0, $begin_pos = 0) {		
+		if($lines >=1 and $lines <=100) {
+			return $this->getData('multi', 'logview lines='.$lines.' reverse='.($reverse == 0 ? '0' : '1').' instance='.($instance == 0 ? '0' : '1').' begin_pos='.($begin_pos == 0 ? '0' : '1'));
 		}else{
-			$this->addDebugLog('please choose a limit between 1 and 500');
-			$this->generateOutput(false, array('Error: please choose a limit between 1 and 500'), false);
+			$this->addDebugLog('please choose a limit between 1 and 100');
+			$this->generateOutput(false, array('Error: please choose a limit between 1 and 100'), false);
 		}
 	}
 
@@ -2920,6 +2924,65 @@ class ts3admin {
 	}
 
 /**
+  * serverTemppasswordAdd sets a new temporary server password specified with pw.<br>
+  * The temporary password will be valid for the number of seconds specified with duration.<br>
+  * The client connecting with this password will automatically join the channel specified with tcid.<br>
+  * If tcid is set to 0, the client will join the default channel.
+  *
+  * @author     Par0noid Solutions
+  * @access		public
+  * @param		string	$pw				temporary password
+  * @param		string	$duration		durations in seconds
+  * @param		string	$desc			description [optional]
+  * @param		string	$tcid			cid user enters on connect (0 = Default channel) [optional]
+  * @return     boolean success
+  */
+	function serverTemppasswordAdd($pw, $duration, $tcid = 0, $desc = 'none') {
+		if(!$this->runtime['selected']) { return $this->checkSelected(); }
+		return $this->getdata('boolean', 'servertemppasswordadd pw='.$this->escapeText($pw).' desc='.(!empty($desc) ? $this->escapeText($desc) : 'none').' duration='.$duration.' tcid='.$tcid);
+	}
+
+/**
+  * serverTemppasswordDel deletes the temporary server password specified with pw.
+  * 
+  * @author     Par0noid Solutions
+  * @access		public
+  * @param		string	$pw		temporary password
+  * @return     boolean success
+  */	
+	function serverTemppasswordDel($pw) {
+		if(!$this->runtime['selected']) { return $this->checkSelected(); }
+		return $this->getdata('boolean', 'servertemppassworddel pw='.$this->escapeText($pw));
+	}
+
+/**
+  * serverTemppasswordList returns a list of active temporary server passwords. The output contains the clear-text password, the nickname and unique identifier of the creating client.<br><br><br>
+  *
+  * <b>Output:</b><br>
+  * <code>
+  * Array
+  * {
+  *  [nickname] => serveradmin
+  *  [uid] => 1
+  *  [desc] => none
+  *  [pw_clear] => test
+  *  [start] => 1334996838
+  *  [end] => 1335000438
+  *  [tcid] => 0
+  * }
+  * </code>
+  *
+  * @author     Par0noid Solutions
+  * @access		public
+  * @return     multidimensional-array	serverTemppasswordList
+  */
+	function serverTemppasswordList() {
+		if(!$this->runtime['selected']) { return $this->checkSelected(); }
+		return $this->getData('multi', 'servertemppasswordlist');
+	}
+	
+
+/**
   * setclientchannelgroup sets the channel group of a client to the ID specified with cgid
   *
   * @author     Par0noid Solutions
@@ -2977,10 +3040,11 @@ class ts3admin {
 		if(count($customFieldSet)) {
 			$settingsString = array();
 		
-			foreach($data as $key => $value) {
+			foreach($customFieldSet as $key => $value) {
 				$settingsString[] = 'ident='.$this->escapeText($key).' value='.$this->escapeText($value);
 			}
-			$customFieldSet = ' '.implode('|', $settingsString);
+			
+			$customFieldSet = ' tokencustomset='.implode('|', $settingsString);
 		}else{
 			$customFieldSet = '';
 		}

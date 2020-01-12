@@ -2,6 +2,7 @@ var resttime	= 0;
 var time		= 0;
 var endtime		= 0;
 var interval	= 0;
+var buildname	= "";
 
 function Buildlist() {
 	var rest	= resttime - (serverTime.getTime() - startTime) / 1000;
@@ -11,10 +12,11 @@ function Buildlist() {
 		$('#command').remove();
 		document.title	= Ready + ' - ' + Gamename;
 		window.setTimeout(function() {
-			window.location.href = 'game.php?page=buildings&mode=research';
+			window.location.href = 'game.php?page=research';
 		}, 1000);
 		return true;
 	}
+	document.title	= GetRestTimeFormat(rest) + ' - ' + buildname + ' - ' + Gamename;
 	
 	$('#time').text(GetRestTimeFormat(rest));
 }
@@ -29,9 +31,10 @@ function CreateProcessbar() {
 }
 
 $(document).ready(function() {
-	time		= $('#time').attr('time');
-	resttime	= $('#progressbar').attr('time');
-	endtime		= $('.timer:first').attr('time');
+	time		= $('#time').data('time');
+	resttime	= $('#progressbar').data('time');
+	endtime		= $('.timer:first').data('time');
+	buildname	= $('.onlist:first').text();
 	interval	= window.setInterval(Buildlist, 1000);
 	window.setTimeout(CreateProcessbar, 5);
 	Buildlist();

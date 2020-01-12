@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,48 +18,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-define('INSIDE'  , true);
-define('LOGIN'   , false);
-define('IN_CRON' , true);
+define('MODE', 'BANNER');
+define('ROOT_PATH', str_replace('\\', '/',dirname(__FILE__)).'/');
 
-define('ROOT_PATH' ,'./');
+if(!extension_loaded('gd')) {
+	clearGIF();
+}
 
-if(!extension_loaded('gd'))
-	redirectTo('index.php?action=keepalive');
-	
 require(ROOT_PATH . 'includes/common.php');
-error_reporting(E_ALL);
-$id = request_var('id', 0);
+$id = HTTP::_GP('id', 0);
 
-if(CheckModule(37) || $id == 0) exit();
+if(!isModulAvalible(MODULE_BANNER) || $id == 0) {
+	clearGIF();
+}
 
-$LANG->GetLangFromBrowser();
-$LANG->includeLang(array('L18N', 'BANNER'));
+$LNG = new Language;
+$LNG->getUserAgentLanguage();
+$LNG->includeData(array('L18N', 'BANNER', 'CUSTOM'));
 
 require_once(ROOT_PATH."includes/classes/class.StatBanner.php");
 
-
 $banner = new StatBanner();
 $Data	= $banner->GetData($id);
-if(!isset($Data) || !is_array($Data))
-	exit;
+if(!isset($Data) || !is_array($Data)) {
+	clearGIF();
+}
 	
 $ETag	= md5(implode('', $Data));
 header('ETag: '.$ETag);
+
 if(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $ETag) {
-	header('HTTP/1.0 304 Not Modified');
+	HTTP::sendHeader('HTTP/1.0 304 Not Modified');
 	exit;
 }
 
 $banner->CreateUTF8Banner($Data);
-
-?>

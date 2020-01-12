@@ -17,7 +17,7 @@ Message	= {
 			var count = parseInt($('#unread_'+Message.MessID).text());
 			var lmnew = parseInt($('#newmesnum').text());
 				
-			$('#unread_'+Message.MessID).text('0');
+			$('#unread_'+Message.MessID).text(Math.max(0, $('#unread_100').text() - 10));
 			if(Message.MessID != 999) {
 				$('#unread_100').text($('#unread_100').text() - count);
 			}
@@ -29,10 +29,17 @@ Message	= {
 		}
 	},
 
-	getMessages: function (MessID) {
-		Message.MessID	= MessID;			
-		Message.MessageCount(MessID);			
-		$.get('game.php?page=messages&mode=getMessages&messcat='+MessID+'&ajax=1', function(data) {
+	getMessages: function (MessID, page) {
+		if (typeof page === "undefined") {
+			page = 1;
+		}
+		Message.MessID	= MessID;
+		Message.MessageCount(MessID);
+		
+		$('#loading').show();
+		
+		$.get('game.php?page=messages&mode=view&messcat='+MessID+'&site='+page+'&ajax=1', function(data) {
+			$('#loading').hide();
 			$('#messagestable').remove();
 			$('#content table:eq(0)').after(data);
 		});

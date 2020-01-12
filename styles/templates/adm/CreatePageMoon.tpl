@@ -1,4 +1,4 @@
-{include file="adm/overall_header.tpl"}
+{include file="overall_header.tpl"}
 <form action="" method="post">
 <table width="40%">
 <tr>
@@ -15,7 +15,7 @@
 <tr>
 	<td>{$mo_diameter}</td>
 	<td colspan="2"><input type="text" name="diameter" size="5" maxlength="5">
-	<input type="checkbox" checked="checked" name="diameter_check"> (Random)</td>
+	<input type="checkbox" checked="checked" name="diameter_check"> ({$LNG.mo_moon_random})</td>
 </tr>
 <tr>
 	<td>{$mo_fields_avaibles}</td>
@@ -28,4 +28,4 @@
 </tr>
 </table>
 </form>
-{include file="adm/overall_footer.tpl"}
+{include file="overall_footer.tpl"}

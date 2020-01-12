@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,47 +18,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
-
-if (!defined('INSIDE')) exit;
 
 class MissionFunctions
 {	
-	function __construct()
-	{
-		$this->kill	= 0;
-	}
-
+	public $kill	= 0;
+	public $_fleet	= array();
+	public $_upd	= array();
+	
 	function UpdateFleet($Option, $Value)
 	{
 		$this->_fleet[$Option] = $Value;
 		$this->_upd[$Option] = $Value;
 	}
+
+	function setState($Value)
+	{
+		$this->_fleet['fleet_mess'] = $Value;
+		$this->_upd['fleet_mess']	= $Value;
+		
+		switch($Value)
+		{
+			case FLEET_OUTWARD:
+				$this->eventTime = $this->_fleet['fleet_start_time'];
+			break;
+			case FLEET_RETURN:
+				$this->eventTime = $this->_fleet['fleet_end_time'];
+			break;
+			case FLEET_HOLD:
+				$this->eventTime = $this->_fleet['fleet_end_stay'];
+			break;
+		}
+	}
 	
 	function SaveFleet()
 	{
-		global $db;
 		if($this->kill == 1)
 			return;
 			
+		$Qry	= array();
+		
 		foreach($this->_upd as $Opt => $Val)
 		{
 			$Qry[]	= "`".$Opt."` = '".$Val."'";
 		}
 		
-		$db->query("UPDATE ".FLEETS." SET ".implode(', ',$Qry)." WHERE `fleet_id` = '".$this->_fleet['fleet_id']."';");
+		if(!empty($Qry)) {
+			$GLOBALS['DATABASE']->multi_query("UPDATE ".FLEETS." SET ".implode(', ',$Qry)." WHERE `fleet_id` = ".$this->_fleet['fleet_id'].";UPDATE ".FLEETS_EVENT." SET time = ".$this->eventTime." WHERE `fleetID` = ".$this->_fleet['fleet_id'].";");
+		}
 	}
 		
 	function RestoreFleet($Start = true)
 	{
-		global $resource, $db;
+		global $resource;
 
 		$FleetRecord         = explode(';', $this->_fleet['fleet_array']);
 		$QryUpdFleet         = '';
@@ -81,20 +99,19 @@ class MissionFunctions
 		$Qry  .= "WHERE ";
 		$Qry  .= "p.`id` = '".($Start == true ? $this->_fleet['fleet_start_id'] : $this->_fleet['fleet_end_id'])."' ";
 		$Qry  .= "AND u.id = p.id_owner;";
-		$Qry  .= "DELETE FROM ".FLEETS." WHERE `fleet_id` = ".$this->_fleet['fleet_id'].";";
-		$db->multi_query($Qry);
+		$GLOBALS['DATABASE']->multi_query($Qry);
+		$this->KillFleet();
 	}
 	
 	function StoreGoodsToPlanet($Start = false)
 	{
-		global $db;
-		$Qry   = "UPDATE ".PLANETS." SET ";
+				$Qry   = "UPDATE ".PLANETS." SET ";
 		$Qry  .= "`metal` = `metal` + ".$this->_fleet['fleet_resource_metal'].", ";
 		$Qry  .= "`crystal` = `crystal` + ".$this->_fleet['fleet_resource_crystal'].", ";
 		$Qry  .= "`deuterium` = `deuterium` + ".$this->_fleet['fleet_resource_deuterium']." ";
 		$Qry  .= "WHERE ";
 		$Qry  .= "`id` = ".($Start == true ? $this->_fleet['fleet_start_id'] : $this->_fleet['fleet_end_id']).";";
-		$db->query($Qry);
+		$GLOBALS['DATABASE']->query($Qry);
 		
 		$this->UpdateFleet('fleet_resource_metal', '0');
 		$this->UpdateFleet('fleet_resource_crystal', '0');
@@ -103,9 +120,21 @@ class MissionFunctions
 	
 	function KillFleet()
 	{
-		global $db;
 		$this->kill	= 1;
-		$db->query("DELETE FROM ".FLEETS." WHERE `fleet_id` = ".$this->_fleet['fleet_id'].";");
-	}	
+		$GLOBALS['DATABASE']->multi_query("DELETE FROM ".FLEETS." WHERE `fleet_id` = ".$this->_fleet['fleet_id'].";
+		DELETE FROM ".FLEETS_EVENT." WHERE `fleetID` = ".$this->_fleet['fleet_id'].";");
+	}
+	
+	function getLanguage($language = NULL, $userID = NULL)
+	{
+		if(is_null($language) && !is_null($userID))
+		{
+			$language = $GLOBALS['DATABASE']->getFirstCell("SELECT lang FROM ".USERS." WHERE id = ".$this->_fleet['fleet_owner'].";");
+		}
+		
+		$LNG		= new Language($language);
+		$LNG->includeData(array('L18N', 'FLEET', 'TECH', 'CUSTOM'));
+		
+		return $LNG;
+	}
 }
-?>

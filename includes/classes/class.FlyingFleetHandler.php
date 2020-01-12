@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,75 +18,88 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
-
-if (!defined('INSIDE')) die(header("location:../../"));
 
 class FlyingFleetHandler
 {	
-	function __construct($fleetquery)
-	{
-		global $db;
-		$MissionsPattern	= array(
-			1	=> 'MissionCaseAttack',
-			2	=> 'MissionCaseACS',
-			3	=> 'MissionCaseTransport',
-			4	=> 'MissionCaseStay',
-			5	=> 'MissionCaseStayAlly',
-			6	=> 'MissionCaseSpy',
-			7	=> 'MissionCaseColonisation',
-			8	=> 'MissionCaseRecycling',
-			9	=> 'MissionCaseDestruction',
-			10	=> 'MissionCaseMIP',
-			11	=> 'MissionCaseFoundDM',
-			15	=> 'MissionCaseExpedition',
-		);
+	protected $token;
+	
+	public static $MissionsPattern	= array(
+		1	=> 'MissionCaseAttack',
+		2	=> 'MissionCaseACS',
+		3	=> 'MissionCaseTransport',
+		4	=> 'MissionCaseStay',
+		5	=> 'MissionCaseStayAlly',
+		6	=> 'MissionCaseSpy',
+		7	=> 'MissionCaseColonisation',
+		8	=> 'MissionCaseRecycling',
+		9	=> 'MissionCaseDestruction',
+		10	=> 'MissionCaseMIP',
+		11	=> 'MissionCaseFoundDM',
+		15	=> 'MissionCaseExpedition',
+	);
 		
+	function setToken($token)
+	{
+		$this->token	= $token;
+	}
+	
+	
+	function run()
+	{
+				
 		require_once(ROOT_PATH.'includes/classes/class.MissionFunctions.php');
-		while ($CurrentFleet = $db->fetch_array($fleetquery))
+		
+		$fleetResult = $GLOBALS['DATABASE']->query("SELECT ".FLEETS.".* 
+		FROM ".FLEETS_EVENT." 
+		INNER JOIN ".FLEETS." ON fleetID = fleet_id
+		WHERE `lock` = '".$this->token."';");
+		while ($fleetRow = $GLOBALS['DATABASE']->fetch_array($fleetResult))
 		{
-			if(!isset($MissionsPattern[$CurrentFleet['fleet_mission']])) {
-				$db->query("DELETE FROM ".FLEETS." WHERE `fleet_id` = '".$CurrentFleet['fleet_id']."';");
+			if(!isset(self::$MissionsPattern[$fleetRow['fleet_mission']])) {
+				$GLOBALS['DATABASE']->query("DELETE FROM ".FLEETS." WHERE `fleet_id` = '".$fleetRow['fleet_id']."';");
 				continue;
 			}
 			
-			if(!$this->IfFleetBusy($CurrentFleet['fleet_id'])) continue;
-			getConfig($CurrentFleet['fleet_universe']);
+			#if(!$this->IfFleetBusy($fleetRow['fleet_id'])) continue;
 			
-			require_once(ROOT_PATH.'includes/classes/missions/'.$MissionsPattern[$CurrentFleet['fleet_mission']].'.php');
-			$Mission	= new $MissionsPattern[$CurrentFleet['fleet_mission']]($CurrentFleet);
+			$missionName	= self::$MissionsPattern[$fleetRow['fleet_mission']];
 			
-			if($CurrentFleet['fleet_mess'] == 0 && $CurrentFleet['fleet_start_time'] <= TIMESTAMP)
-				$Mission->TargetEvent();
-			elseif($CurrentFleet['fleet_mess'] == 2 && $CurrentFleet['fleet_end_stay'] <= TIMESTAMP)	
-				$Mission->EndStayEvent();
-			elseif($CurrentFleet['fleet_mess'] == 1 && $CurrentFleet['fleet_end_time'] <= TIMESTAMP)
-				$Mission->ReturnEvent();
-				
-			$Mission = NULL;
-			unset($Mission);
+			require_once(ROOT_PATH.'includes/classes/missions/'.$missionName.'.php');
+			$Mission	= new $missionName($fleetRow);
+			
+			switch($fleetRow['fleet_mess'])
+			{
+				case 0:
+					$Mission->TargetEvent();
+				break;
+				case 1:
+					$Mission->ReturnEvent();
+				break;
+				case 2:
+					$Mission->EndStayEvent();
+				break;
+			}
 
-			$db->query("UPDATE ".FLEETS." SET `fleet_busy` = '0' WHERE `fleet_id` = '".$CurrentFleet['fleet_id']."';");
+			#$GLOBALS['DATABASE']->query("UPDATE ".FLEETS." SET `fleet_busy` = '0' WHERE `fleet_id` = '".$fleetRow['fleet_id']."';");
 		}
+		$GLOBALS['DATABASE']->free_result($fleetResult);
 	}
 	
 	function IfFleetBusy($FleetID)
 	{
-		global $db;
-		$FleetInfo	= $db->uniquequery("SELECT fleet_busy FROM ".FLEETS." WHERE `fleet_id` = '".$FleetID."';");
+		$FleetInfo	= $GLOBALS['DATABASE']->getFirstRow("SELECT fleet_busy FROM ".FLEETS." WHERE `fleet_id` = '".$FleetID."';");
 		if($FleetInfo['fleet_busy'] == 1) {
 			return false;
 		} else {
-			$db->query("UPDATE ".FLEETS." SET `fleet_busy` = '1' WHERE `fleet_id` = '".$FleetID."';");
+			$GLOBALS['DATABASE']->query("UPDATE ".FLEETS." SET `fleet_busy` = '1' WHERE `fleet_id` = '".$FleetID."';");
 			return true;
 		}
 	}
 }
-?>

@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,58 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowActivePage()
 {
-	global $LNG, $db, $USER;
-	$id = request_var('id', 0);
+	global $LNG, $USER;
+	$id = HTTP::_GP('id', 0);
 	if($_GET['action'] == 'delete' && !empty($id))
-		$db->query("DELETE FROM ".USERS_VALID." WHERE `id` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';");
+		$GLOBALS['DATABASE']->query("DELETE FROM ".USERS_VALID." WHERE `validationID` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';");
 
-	$query = $db->query("SELECT * FROM ".USERS_VALID." WHERE `universe` = '".$_SESSION['adminuni']."' ORDER BY id ASC");
+	$query = $GLOBALS['DATABASE']->query("SELECT * FROM ".USERS_VALID." WHERE `universe` = '".$_SESSION['adminuni']."' ORDER BY validationID ASC");
 
 	$Users	= array();
-	while ($User = $db->fetch_array($query)) {
+	while ($User = $GLOBALS['DATABASE']->fetch_array($query)) {
 		$Users[]	= array(
-			'id'		=> $User['id'],
-			'name'		=> $User['username'],
-			'date'		=> tz_date($User['date']),
-			'email'		=> $User['email'],
-			'ip'		=> $User['ip'],
-			'password'	=> $User['password'],
-			'cle'		=> $User['cle'],
+			'id'			=> $User['validationID'],
+			'name'			=> $User['userName'],
+			'date'			=> _date($LNG['php_tdformat'], $User['date'], $USER['timezone']),
+			'email'			=> $User['email'],
+			'ip'			=> $User['ip'],
+			'password'		=> $User['password'],
+			'validationKey'	=> $User['validationKey'],
 		);
 	}
 
-	$template	= new template();
+	$template	= new template();
+
 	$template->assign_vars(array(	
 		'Users'				=> $Users,
 		'uni'				=> $_SESSION['adminuni'],
-		'UserLang'			=> $USER['lang'],
-		'id'				=> $LNG['ap_id'],
-		'username'			=> $LNG['ap_username'],
-		'datum'				=> $LNG['ap_datum'],
-		'email'				=> $LNG['ap_email'],
-		'ip'				=> $LNG['ap_ip'],
-		'aktivieren'		=> $LNG['ap_aktivieren'],
-		'del'				=> $LNG['ap_del'],
-		'sicher'			=> $LNG['ap_sicher'],
-		'entfernen'			=> $LNG['ap_entfernen'],
-		'insgesamt'			=> $LNG['ap_insgesamt'],
-		'nicht_aktivierte'	=> $LNG['ap_nicht_aktivierte'],
-		'nicht_aktivierte_u'=> $LNG['ap_nicht_aktivierte_user'],
 	));
 	
-	$template->show('adm/ActivePage.tpl');
+	$template->show('ActivePage.tpl');
 }
-?>

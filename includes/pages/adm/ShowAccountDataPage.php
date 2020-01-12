@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowAccountDataPage()
 {
-	global $USER, $reslist, $resource, $db, $LNG;
+	global $USER, $reslist, $resource, $LNG;
 
 	$template 	= new template();
 
-	$id_u	= request_var('id_u', 0);
+	$id_u	= HTTP::_GP('id_u', 0);
 	if (!empty($id_u))
 	{
-		$OnlyQueryLogin 	= $db->uniquequery("SELECT `id`, `authlevel` FROM ".USERS." WHERE `id` = '".$id_u."' AND `universe` = '".$_SESSION['adminuni']."';");
+		$OnlyQueryLogin 	= $GLOBALS['DATABASE']->getFirstRow("SELECT `id`, `authlevel` FROM ".USERS." WHERE `id` = '".$id_u."' AND `universe` = '".$_SESSION['adminuni']."';");
 
 		if(!isset($OnlyQueryLogin))
 		{
@@ -53,15 +52,15 @@ function ShowAccountDataPage()
 		
 			// COMIENZA SAQUEO DE DATOS DE LA TABLA DE USUARIOS
 			$SpecifyItemsU	= 
-			"u.id,u.username,u.email,u.email_2,u.authlevel,u.id_planet,u.galaxy,u.system,u.planet,u.user_lastip,u.ip_at_reg,u.darkmatter,u.register_time,u.onlinetime,u.noipcheck,u.urlaubs_modus,u.
+			"u.id,u.username,u.email,u.email_2,u.authlevel,u.id_planet,u.galaxy,u.system,u.planet,u.user_lastip,u.ip_at_reg,u.darkmatter,u.register_time,u.onlinetime,u.urlaubs_modus,u.
 			 urlaubs_until,u.ally_id,a.ally_name,".$SpecifyItemsUQ."
 			 u.ally_register_time,u.ally_rank_id,u.bana,u.banaday";
 			
-			$UserQuery 	= 	$db->uniquequery("SELECT ".$SpecifyItemsU." FROM ".USERS." as u LEFT JOIN ".SESSION." as s ON s.user_id = u.id LEFT JOIN ".ALLIANCE." a ON a.id = u.ally_id WHERE u.`id` = '".$id_u."';");
+			$UserQuery 	= 	$GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsU." FROM ".USERS." as u LEFT JOIN ".SESSION." as s ON s.userID = u.id LEFT JOIN ".ALLIANCE." a ON a.id = u.ally_id WHERE u.`id` = '".$id_u."';");
 
 			
-			$reg_time		= tz_date($UserQuery['register_time']);
-			$onlinetime		= tz_date($UserQuery['onlinetime']);
+			$reg_time		= _date($LNG['php_tdformat'], $UserQuery['register_time'], $USER['timezone']);
+			$onlinetime		= _date($LNG['php_tdformat'], $UserQuery['onlinetime'], $USER['timezone']);
 			$id				= $UserQuery['id'];
 			$nombre			= $UserQuery['username'];
 			$email_1		= $UserQuery['email'];
@@ -75,7 +74,6 @@ function ShowAccountDataPage()
 			$info			= $UserQuery['user_ua'];
 			$alianza		= $UserQuery['ally_name'];
 			$nivel			= $LNG['rank'][$UserQuery['authlevel']];
-			$ipcheck		= $LNG['ac_checkip'][$UserQuery['noipcheck']];
 			$vacas 			= $LNG['one_is_yes'][$UserQuery['urlaubs_modus']];
 			$suspen 		= $LNG['one_is_yes'][$UserQuery['bana']]; 
 
@@ -103,11 +101,11 @@ function ShowAccountDataPage()
 			{
 				$mas			= '<a ref="#" onclick="$(\'#banned\').slideToggle();return false"> '.$LNG['ac_more'].'</a>';
 				
-				$BannedQuery	= $db->uniquequery("SELECT theme,time,longer,author FROM ".BANNED." WHERE `who` = '".$UserQuery['username']."';");
+				$BannedQuery	= $GLOBALS['DATABASE']->getFirstRow("SELECT theme,time,longer,author FROM ".BANNED." WHERE `who` = '".$UserQuery['username']."';");
 				
 				
-				$sus_longer	= tz_date($BannedQuery['longer']);
-				$sus_time	= tz_date($BannedQuery['time']);
+				$sus_longer	= _date($LNG['php_tdformat'], $BannedQuery['longer'], $USER['timezone']);
+				$sus_time	= _date($LNG['php_tdformat'], $BannedQuery['time'], $USER['timezone']);
 				$sus_reason	= $BannedQuery['theme'];
 				$sus_author	= $BannedQuery['author'];
 				
@@ -119,7 +117,7 @@ function ShowAccountDataPage()
 			"tech_count,defs_count,fleet_count,build_count,build_points,tech_points,defs_points,fleet_points,tech_rank,build_rank,defs_rank,fleet_rank,total_points,
 			stat_type";
 			
-			$StatQuery	= $db->uniquequery("SELECT ".$SpecifyItemsS." FROM ".STATPOINTS." WHERE `id_owner` = '".$id_u."' AND `stat_type` = '1';");
+			$StatQuery	= $GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsS." FROM ".STATPOINTS." WHERE `id_owner` = '".$id_u."' AND `stat_type` = '1';");
 
 			$count_tecno	= pretty_number($StatQuery['tech_count']);
 			$count_def		= pretty_number($StatQuery['defs_count']);
@@ -148,7 +146,7 @@ function ShowAccountDataPage()
 			if ($alianza == 0 && $AliID == 0)
 			{
 				$alianza	= $LNG['ac_no_ally'];
-				$AllianceHave	= "<span class=\"no_moon\"><img src=\"./styles/images/Adm/arrowright.png\" width=\"16\" height=\"10\"/> 
+				$AllianceHave	= "<span class=\"no_moon\"><img src=\"./styles/resource/images/admin/arrowright.png\" width=\"16\" height=\"10\"/> 
 							".$LNG['ac_alliance']."&nbsp;".$LNG['ac_no_alliance']."</span>";	
 			}
 			elseif ($alianza != NULL && $AliID != 0)
@@ -156,14 +154,14 @@ function ShowAccountDataPage()
 				include_once(ROOT_PATH.'includes/functions/BBCode.php');	
 				
 				$AllianceHave	= '<a href="#" onclick="$(\'#alianza\').slideToggle();return false" class="link">
-							<img src="./styles/images/Adm/arrowright.png" width="16" height="10"> '.$LNG['ac_alliance'].'</a>';
+							<img src="./styles/resource/images/admin/arrowright.png" width="16" height="10"> '.$LNG['ac_alliance'].'</a>';
 										
 							
 				
 				$SpecifyItemsA	= 
 				"ally_owner,id,ally_tag,ally_name,ally_web,ally_description,ally_text,ally_request,ally_image,ally_members,ally_register_time";
 				
-				$AllianceQuery		= $db->uniquequery("SELECT ".$SpecifyItemsA." FROM ".ALLIANCE." WHERE `ally_name` = '".$alianza."';");
+				$AllianceQuery		= $GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsA." FROM ".ALLIANCE." WHERE `ally_name` = '".$alianza."';");
 				
 				
 				$alianza				= $alianza;
@@ -172,7 +170,7 @@ function ShowAccountDataPage()
 				$tag					= $AllianceQuery['ally_tag'];
 				$ali_nom				= $AllianceQuery['ally_name'];
 				$ali_cant				= $AllianceQuery['ally_members'];
-				$ally_register_time		= tz_date($AllianceQuery['ally_register_time']);
+				$ally_register_time		= _date($LNG['php_tdformat'], $AllianceQuery['ally_register_time'], $USER['timezone']);
 				$ali_lider				= $AllianceQuery['ally_owner'];
 				$ali_web				= $AllianceQuery['ally_web'] != NULL ? "<a href=".$AllianceQuery['ally_web']." target=_blank>".$AllianceQuery['ally_web']."</a>" : $LNG['ac_no_web'];
 										
@@ -221,12 +219,12 @@ function ShowAccountDataPage()
 				}
 				
 				
-				$SearchLeader		= $db->uniquequery("SELECT `username` FROM ".USERS." WHERE `id` = '".$ali_lider."';");
+				$SearchLeader		= $GLOBALS['DATABASE']->getFirstRow("SELECT `username` FROM ".USERS." WHERE `id` = '".$ali_lider."';");
 				$ali_lider	= $SearchLeader['username'];
 
 
 
-				$StatQueryAlly	= $db->uniquequery("SELECT ".$SpecifyItemsS." FROM ".STATPOINTS." WHERE `id_owner` = '".$ali_lider."' AND `stat_type` = '2';");
+				$StatQueryAlly	= $GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsS." FROM ".STATPOINTS." WHERE `id_owner` = '".$ali_lider."' AND `stat_type` = '2';");
 						
 				$count_tecno_ali	= pretty_number($StatQueryAlly['tech_count']);
 				$count_def_ali		= pretty_number($StatQueryAlly['defs_count']);
@@ -255,11 +253,11 @@ function ShowAccountDataPage()
 			$names	= "<tr><th class=\"center\" width=\"150\">&nbsp;</th>";
 			
 			// COMIENZA EL SAQUEO DE DATOS DE LOS PLANETAS
-			$SpecifyItemsP	= "planet_type,id,name,galaxy,system,planet,destruyed,diameter,field_current,field_max,temp_min,temp_max,metal,crystal,deuterium,energy_max,".$SpecifyItemsPQ."energy_used";
+			$SpecifyItemsP	= "planet_type,id,name,galaxy,system,planet,destruyed,diameter,field_current,field_max,temp_min,temp_max,metal,crystal,deuterium,energy,".$SpecifyItemsPQ."energy_used";
 				
-			$PlanetsQuery	= $db->query("SELECT ".$SpecifyItemsP." FROM ".PLANETS." WHERE `id_owner` = '".$id_u."';");
+			$PlanetsQuery	= $GLOBALS['DATABASE']->query("SELECT ".$SpecifyItemsP." FROM ".PLANETS." WHERE `id_owner` = '".$id_u."';");
 			
-			while ($PlanetsWhile	= $db->fetch_array($PlanetsQuery))
+			while ($PlanetsWhile	= $GLOBALS['DATABASE']->fetch_array($PlanetsQuery))
 			{
 				if ($PlanetsWhile['planet_type'] == 3)
 				{
@@ -288,11 +286,11 @@ function ShowAccountDataPage()
 						<td>".pretty_number($PlanetsWhile['diameter'])."</td>
 						<td>".pretty_number($PlanetsWhile['field_current'])." / ".pretty_number(CalculateMaxPlanetFields($PlanetsWhile))." (".pretty_number($PlanetsWhile['field_current'])." / ".pretty_number($PlanetsWhile['field_max']).")</td>
 						<td>".pretty_number($PlanetsWhile['temp_min'])." / ".pretty_number($PlanetsWhile['temp_max'])."</td>"
-						.(allowedTo('ShowQuickEditorPage') ? "<td><a href=\"javascript:openEdit('".$PlanetsWhile['id']."', 'planet');\" border=\"0\"><img src=\"./styles/images/Adm/GO.png\" title=".$LNG['se_search_edit']."></a></td>" : "").
+						.(allowedTo('ShowQuickEditorPage') ? "<td><a href=\"javascript:openEdit('".$PlanetsWhile['id']."', 'planet');\" border=\"0\"><img src=\"./styles/resource/images/admin/GO.png\" title=".$LNG['se_search_edit']."></a></td>" : "").
 					"</tr>";
 					
 					
-					$SumOfEnergy	= ($PlanetsWhile['energy_max'] + $PlanetsWhile['energy_used']);
+					$SumOfEnergy	= ($PlanetsWhile['energy'] + $PlanetsWhile['energy_used']);
 					
 					if ($SumOfEnergy < 0) 
 						$Color	= "<font color=#FF6600>".shortly_number($SumOfEnergy)."</font>";
@@ -308,7 +306,7 @@ function ShowAccountDataPage()
 						<td><a title=\"".pretty_number($PlanetsWhile['metal'])."\">".shortly_number($PlanetsWhile['metal'])."</a></td>
 						<td><a title=\"".pretty_number($PlanetsWhile['crystal'])."\">".shortly_number($PlanetsWhile['crystal'])."</a></td>
 						<td><a title=\"".pretty_number($PlanetsWhile['deuterium'])."\">".shortly_number($PlanetsWhile['deuterium'])."</a></td>
-						<td><a title=\"".pretty_number($SumOfEnergy)."\">".$Color."</a>/<a title=\"".pretty_number($PlanetsWhile['energy_max'])."\">".shortly_number($PlanetsWhile['energy_max'])."</a></td>
+						<td><a title=\"".pretty_number($SumOfEnergy)."\">".$Color."</a>/<a title=\"".pretty_number($PlanetsWhile['energy'])."\">".shortly_number($PlanetsWhile['energy'])."</a></td>
 					</tr>";
 					$names	.= "<th class=\"center\" width=\"60\">".$Planettt."</th>";
 					foreach(array_merge($reslist['fleet'], $reslist['build'], $reslist['defense']) as $ID)
@@ -316,7 +314,7 @@ function ShowAccountDataPage()
 						$RES[$resource[$ID]]	.= "<td width=\"60\"><a title=\"".pretty_number($PlanetsWhile[$resource[$ID]])."\">".shortly_number($PlanetsWhile[$resource[$ID]])."</a></td>";
 					}
 					
-					$MoonHave = $MoonZ != 0 ? '<a href="#" onclick="$(\'#especiales\').slideToggle();return false" class="link"><img src="./styles/images/Adm/arrowright.png" width="16" height="10"/> '.$LNG['moon_build']."</a>" : "<span class=\"no_moon\"><img src=\"./styles/images/Adm/arrowright.png\" width=\"16\" height=\"10\"/>".$LNG['moon_build']."&nbsp;".$LNG['ac_moons_no']."</span>";					
+					$MoonHave = $MoonZ != 0 ? '<a href="#" onclick="$(\'#especiales\').slideToggle();return false" class="link"><img src="./styles/resource/images/admin/arrowright.png" width="16" height="10"/> '.$LNG['moon_build']."</a>" : "<span class=\"no_moon\"><img src=\"./styles/resource/images/admin/arrowright.png\" width=\"16\" height=\"10\"/>".$LNG['moon_build']."&nbsp;".$LNG['ac_moons_no']."</span>";					
 				}
 				
 				$DestruyeD	= 0;
@@ -418,7 +416,7 @@ function ShowAccountDataPage()
 				'id_ali'						=> $id_ali,
 				'ip'							=> $ip,
 				'ip2'							=> $ip2,
-				'ipcheck'						=> $ipcheck,
+				'ipcheck'						=> true,
 				'reg_time'						=> $reg_time,
 				'onlinetime'					=> $onlinetime,
 				'id_p'							=> $id_p,
@@ -497,11 +495,11 @@ function ShowAccountDataPage()
 				'se_search_edit'				=> $LNG['se_search_edit'],
 				'resources_title'				=> $LNG['resources_title'],
 				'ac_name'						=> $LNG['ac_name'],
-				'Metal'							=> $LNG['Metal'],
-				'Crystal'						=> $LNG['Crystal'],
-				'Deuterium'						=> $LNG['Deuterium'],
-				'Energy'						=> $LNG['Energy'],
-				'Darkmatter'					=> $LNG['Darkmatter'],
+				'Metal'							=> $LNG['tech'][901],
+				'Crystal'						=> $LNG['tech'][902],
+				'Deuterium'						=> $LNG['tech'][903],
+				'Energy'						=> $LNG['tech'][911],
+				'Darkmatter'					=> $LNG['tech'][921],
 				'buildings_title'				=> $LNG['buildings_title'],
 				'ships_title'					=> $LNG['ships_title'],
 				'defenses_title'				=> $LNG['defenses_title'],
@@ -513,13 +511,13 @@ function ShowAccountDataPage()
 				'ac_coords'						=> $LNG['ac_coords'],
 				'ac_time_destruyed'				=> $LNG['ac_time_destruyed'],
 			));					
-			$template->show('adm/AccountDataPageDetail.tpl');
+			$template->show('AccountDataPageDetail.tpl');
 		}
 		exit;
 	}
 	$Userlist	= "";
-	$UserWhileLogin	= $db->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".$_SESSION['adminuni']."' ORDER BY `username` ASC;");
-	while($UserList	= $db->fetch_array($UserWhileLogin))
+	$UserWhileLogin	= $GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".$_SESSION['adminuni']."' ORDER BY `username` ASC;");
+	while($UserList	= $GLOBALS['DATABASE']->fetch_array($UserWhileLogin))
 	{
 		$Userlist	.= "<option value=\"".$UserList['id']."\">".$UserList['username']."&nbsp;&nbsp;(".$LNG['rank'][$UserList['authlevel']].")</option>";
 	}
@@ -534,6 +532,5 @@ function ShowAccountDataPage()
 		'ac_select_id_num'	=> $LNG['ac_select_id_num'],
 		'button_submit'		=> $LNG['button_submit'],
 	));					
-	$template->show('adm/AccountDataPageIntro.tpl');
+	$template->show('AccountDataPageIntro.tpl');
 }
-?>

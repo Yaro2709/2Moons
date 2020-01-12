@@ -1,11 +1,9 @@
 <?php
 
-$LNG['Metal']								= 'Metal';
-$LNG['Crystal']								= 'Crystal';
-$LNG['Deuterium']							= 'Deuterium';
-$LNG['Darkmatter']							= 'Dark matter';
-$LNG['Energy']								= 'Energy';
+// Translated into English by QwataKayean . All rights reversed (C) 2012
+// 2Moons - Copyright (C) 2010-2012 Slaver
 
+$LNG['and']							= 'and';
 
 //----------------------------------------------------------------------------//
 //SYSTEM
@@ -60,7 +58,7 @@ $LNG['sys_stat_mess'] 		         		= 'Your fleet reaches the planet %s and deliv
 $LNG['sys_colo_mess_from'] 					= "Colonisation";
 $LNG['sys_colo_mess_report'] 				= "Colonisation report";
 $LNG['sys_colo_defaultname'] 				= "Colony";
-
+$LNG['sys_colo_notech'] 					= 'One of your fleets reached the coordinates %s. When your settlers approached the planet, they had to determine that their equipment still not for the prevailing climate was suitable and must be developed first. Disappointed, the settlers returned.';
 $LNG['sys_colo_arrival'] 					= "";
 $LNG['sys_colo_maxcolo'] 					= "One of your fleets reaches the coordinates %s. Ssettlement is not possible as you can only have %d planets. ";
 $LNG['sys_colo_allisok'] 					= "One of your fleets reaches the coordinates %s. The settlers start to colonise the new planet.";
@@ -69,6 +67,7 @@ $LNG['sys_colo_notfree'] 					= "One of your fleets reaches the coordinates %s. 
 
 $LNG['sys_expe_report'] 					= "Expedition report";
 $LNG['sys_recy_report'] 					= "Recycling Report";
+$LNG['sys_expe_found_ships_nothing']		= 'No ships could be found.';
 $LNG['sys_expe_blackholl_1'] 				= "Your fleet encountered a black hole and was partly destroyed! ";
 $LNG['sys_expe_blackholl_2'] 				= "Your fleet encountered a black hole and was destroyed completely! ";
 $LNG['sys_expe_found_goods'] 				= "Your researchers have found a planet rich in raw materials! <br>It has %s %s, %s %s and %s %s mined";
@@ -161,18 +160,17 @@ $LNG['sys_irak_def'] 					  	= '%d Rockets of yours were intercepted.';
 $LNG['sys_irak_mess']						= 'Interplanetary rockets (%d) from %s are on the planet %s <br><br>';
 $LNG['sys_gain'] 				  			= 'Profit';
 $LNG['sys_fleet_won'] 						= 'One of your fleets returns from a attack at the planet %s %s. You have captured %s %s, %s %s and %s %s ';
-$LNG['sys_perte_attaquant'] 				= 'Losses attacker';
-$LNG['sys_perte_defenseur'] 				= 'Losses defender';
+$LNG['sys_lost'] 							= 'Losses';
 $LNG['sys_debris'] 							= 'Rubblefield';
 $LNG['sys_destruc_title']       		   	= 'The following fleets face each other for a moon destruction:';
 $LNG['sys_mess_destruc_report']  		  	= 'Report: Moon destruction';
 $LNG['sys_raport_not_found']				= 'Invalid Battle Report ID';
 
+$LNG['sys_raport_lost_contact']				= 'The contact to the attacking fleet was lost (that is, it was shot down in the first round.)';
 $LNG['sys_destruc_lune']          		 	= 'The probability of a moon destruction is: %d%% ';
 $LNG['sys_destruc_rip']          			= 'The probability of a self-destruction of the fleet is: %d%%';
 $LNG['sys_destruc_stop']      			 	= 'The defender has blocked the moon destruction successfully.';
 $LNG['sys_destruc_mess1']       		   	= 'The deathstars fired their tremendous energy at the moon. ';
-$LNG['sys_destruc_mess']        		   	= 'A fleet from the planet [%d:%d:%d] reached the moon at [%d:%d:%d].';
 $LNG['sys_destruc_echec']       		   	= 'Earthquakes shook the planet. But something went wrong, the deathstars exploded and disintegrated into a thousands pieces, the shockwaves took out the entire fleet.';
 $LNG['sys_destruc_reussi']      		   	= 'The deathstars beams reached the moon and teared it to pieces. <br>The entire moon was destroyed.';
 $LNG['sys_destruc_null']        		   	= 'The deathstars could not charge fully before firing and imploded.<br> The moon is not destroyed.';
@@ -192,4 +190,11 @@ $LNG['type_mission'][8]  					= 'Recycle';
 $LNG['type_mission'][9]  					= 'Destroy';
 $LNG['type_mission'][11]  					= 'DM Investigation';
 $LNG['type_mission'][15] 					= 'Expedition';
-?>
+
+$LNG['type_planet_short'][1]  				= 'P';
+$LNG['type_planet_short'][2]  				= 'D';
+$LNG['type_planet_short'][3]  				= 'M';
+
+$LNG['type_planet'][1]  					= 'Planet';
+$LNG['type_planet'][2]  					= 'Debris';
+$LNG['type_planet'][3]  					= 'Moon';

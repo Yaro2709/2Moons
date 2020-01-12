@@ -10,16 +10,20 @@
 // Include custom libraries and initialization code here
 
 
-define('INSIDE', true );
-define('AJAX', true );
-
+define('MODE', 'CHAT');
 define('ROOT_PATH', str_replace('\\', '/',dirname(AJAX_CHAT_PATH)).'/');
-require(ROOT_PATH . 'includes/common.php');
-$SESSION       	= new Session();
+require(ROOT_PATH.'includes/common.php');
+require(ROOT_PATH.'includes/pages/game/class.AbstractPage.php');
+require(ROOT_PATH.'includes/pages/game/class.ShowErrorPage.php');
 
-if(!$SESSION->IsUserLogin() || ($CONF['game_disable'] == 0 && $_SESSION['authlevel'] == AUTH_USR))
-	redirectTo('index.php?code=3');
+if(!$SESSION->IsUserLogin() || (Config::get('game_disable') == 0 && $USER['authlevel'] == AUTH_USR))
+{
+	HTTP::redirectTo('index.php?code=3');
+}
 	
-if(CheckModule(7))
-	message($LNG['sys_module_inactive'],"?page=overview", 3, true, true);
+if(!isModulAvalible(MODULE_CHAT))
+{
+	ShowErrorPage::printError($LNG['sys_module_inactive']);
+}
+
 ?>

@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,34 +18,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
+if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowModulePage()
 {
 	global $CONF, $LNG;
+	
+	$module	= Config::get('moduls');
+	
 	if($_GET['mode']) {
-		$CONF['moduls'][request_var('id', 0)]	= ($_GET['mode'] == 'aktiv') ? 1 : 0;
-		update_config(array('moduls' => implode(";", $CONF['moduls'])));
-		$CONF['moduls']		= explode(";", $CONF['moduls']);
+		$module[HTTP::_GP('id', 0)]	= ($_GET['mode'] == 'aktiv') ? 1 : 0;
+		Config::update(array('moduls' => implode(";", $module)));
 	}
-	$IDs	= range(0, 41);
+	
+	$IDs	= range(0, MODULE_AMOUNT - 1);
+	
 	foreach($IDs as $ID => $Name) {
 		$Modules[$ID]	= array(
 			'name'	=> $LNG['modul'][$ID], 
-			'state'	=> isset($CONF['moduls'][$ID]) ? $CONF['moduls'][$ID] : 1,
+			'state'	=> isset($module[$ID]) ? $module[$ID] : 1,
 		);
 	}
+	
 	asort($Modules);
-	$template	= new template();
+	$template	= new template();
+
 	$template->assign_vars(array(
 		'Modules'				=> $Modules,
 		'mod_module'			=> $LNG['mod_module'],
@@ -56,6 +61,5 @@ function ShowModulePage()
 		'mod_change_deactive'	=> $LNG['mod_change_deactive'],
 	));
 	
-	$template->show('adm/ModulePage.tpl');
+	$template->show('ModulePage.tpl');
 }
-?>

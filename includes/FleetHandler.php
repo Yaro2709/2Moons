@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,48 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
  
-if(php_sapi_name() === 'cli') {
-	error_reporting(E_ALL ^ E_NOTICE);
-	define('ROOT_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))).'/');
-	define('TIMESTAMP',	time());
-	ini_set('display_errors', 0);
-	ini_set('error_log', ROOT_PATH.'/includes/cli_error.log');
-	if(!function_exists('bcadd'))
-		require_once(ROOT_PATH . 'includes/bcmath.php');
+#$GLOBALS['DATABASE']->query("LOCK TABLE ".AKS." WRITE, ".RW." WRITE, ".MESSAGES." WRITE, ".CONFIG." WRITE, ".FLEETS_EVENT." WRITE, ".FLEETS." WRITE, ".PLANETS." WRITE, ".PLANETS." as p WRITE, ".TOPKB." WRITE, ".USERS." WRITE, ".USERS." as u WRITE, ".STATPOINTS." WRITE;");	
 
-	require_once(ROOT_PATH . 'includes/config.php');	
-	require_once(ROOT_PATH . 'includes/constants.php');
-	require_once(ROOT_PATH . 'includes/classes/class.MySQLi.php');
-	require_once(ROOT_PATH . 'includes/classes/class.Lang.php');
-	require_once(ROOT_PATH . 'includes/GeneralFunctions.php');
-	require_once(ROOT_PATH . 'includes/vars.php');
-	$db 	= new DB_MySQLi();
-	unset($database);
-	$LANG	= new Language();
-}
-	
-$db->query("LOCK TABLE ".AKS." WRITE, ".RW." WRITE, ".MESSAGES." WRITE, ".CONFIG." WRITE, ".FLEETS." WRITE, ".PLANETS." WRITE, ".PLANETS." as p WRITE, ".TOPKB." WRITE, ".USERS." WRITE, ".USERS." as u WRITE, ".STATPOINTS." WRITE;");	
+$token			= getRandomString();
 
-$FLEET = $db->query("SELECT * FROM ".FLEETS." WHERE (`fleet_start_time` <= '". TIMESTAMP ."' AND `fleet_mess` = '0') OR (`fleet_end_time` <= '". TIMESTAMP ."' AND `fleet_mess` = '1') OR (`fleet_end_stay` <= '". TIMESTAMP ."' AND `fleet_mess` = '2') ORDER BY `fleet_start_time` ASC;");
-if($db->num_rows($FLEET) > 0)
-{
+$fleetResult	= $GLOBALS['DATABASE']->query("UPDATE ".FLEETS_EVENT." SET `lock` = '".$token."' WHERE `lock` IS NULL AND `time` <= ". TIMESTAMP .";");
+
+if($GLOBALS['DATABASE']->affectedRows() !== 0) {
 	require_once(ROOT_PATH . 'includes/classes/class.FlyingFleetHandler.php');
+	
+	$fleetObj	= new FlyingFleetHandler();
+	$fleetObj->setToken($token);
+	$fleetObj->run();
 
-	new FlyingFleetHandler($FLEET);
+	$GLOBALS['DATABASE']->query("UPDATE ".FLEETS_EVENT." SET `lock` = NULL WHERE `lock` = '".$token."';"); #UNLOCK TABLES
 }
-$db->free_result($FLEET);
-$db->query("UNLOCK TABLES");  
-
-if(php_sapi_name() === 'cli') {
-	echo 'OK! - '.date(TIMEFORMAT)."\r\n";
-}
-?>

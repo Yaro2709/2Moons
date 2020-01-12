@@ -19,35 +19,27 @@ function number_format (number, decimals) {
     return s.join(dec);
 }
 
-function NumberGetHumanReadable(value) {
-	return number_format(removeE(Math.floor(value)), 0);
+function NumberGetHumanReadable(value, dec) {
+	if(typeof dec === "undefined") {
+		dec = 0;
+	}
+	if(dec == 0)
+	{
+		value	= removeE(Math.floor(value));
+	}
+	return number_format(value, dec);
 }
 
 function shortly_number(number)
 {
-	var count	= number.toString().length;
-	if(count < 4)
-		return NumberGetHumanReadable(number);
-	else if(count < 7)
-		return NumberGetHumanReadable(number/1000)+' K';
-	else if(count < 13)
-		return NumberGetHumanReadable(number/1000000)+' M';
-	else if(count < 19)
-		return NumberGetHumanReadable(number/1000000000000)+' B';
-	else if(count < 25)
-		return NumberGetHumanReadable(number/1000000000000000000)+' T';
-	else if(count < 31)
-		return NumberGetHumanReadable(number/1000000000000000000000000)+' Q';
-	else if(count < 37)
-		return NumberGetHumanReadable(number/1000000000000000000000000000000)+' Q+';
-	else if(count < 43)
-		return NumberGetHumanReadable(number/1000000000000000000000000000000000000)+' S';
-	else if(count < 49)
-		return NumberGetHumanReadable(number/1000000000000000000000000000000000000000000)+' S+';
-	else if(count < 55)
-		return NumberGetHumanReadable(number/1000000000000000000000000000000000000000000000000)+' O';
-	else
-		return NumberGetHumanReadable(number/1000000000000000000000000000000000000000000000000000000)+' N';
+	var unit = ["K", "M", "B", "T", "Q", "Q+", "S", "S+", "O", "N"];
+	key	= 0;
+	while(number >= 1000000)
+    {
+		++key;
+        number = number / 1000000;
+    };
+	return NumberGetHumanReadable(number, ((number != 0 && number < 100) + 0))+'&nbsp;'+unit[key];
 }
 
 function removeE(Number) {
@@ -92,6 +84,7 @@ function dezInt(num, size, prefix) {
 	result += ((prefix != "0") ? minus : "") + num;
 	return result;
 }
+
 function getFormatedTime(time) {
 	hours = Math.floor(time / 3600);
 	timeleft = time % 3600;
@@ -122,27 +115,12 @@ function OpenPopup(target_url, win_name, width, height) {
 }
 
 function DestroyMissiles() {
-	$.getJSON('?page=infos&gid=44&action=send&'+$('.missile').serialize(), function(data) {
-		$('#missile_502').text(data[0]);
-		$('#missile_503').text(data[1]);
+	$.getJSON('?page=information&mode=destroyMissiles&'+$('.missile').serialize(), function(data) {
+		$('#missile_502').text(NumberGetHumanReadable(data[0]));
+		$('#missile_503').text(NumberGetHumanReadable(data[1]));
 		$('.missile').val('');
 	});
 }
-
-function allydiplo(action, id, level) {
-	if(id != '0')
-		var vid = "&id="+id;
-	else
-		var vid = "";
-				
-	if(level != '0')
-		var vlevel = "&level="+level;
-	else
-		var vlevel = "";
-		
-    OpenPopup("game.php?page=alliance&mode=admin&edit=diplo&action="+action+vid+vlevel+"&ajax=1", "diplo", 720, 300);
-}
-
 
 function handleErr(errMessage, url, line) 
 { 
@@ -158,63 +136,122 @@ function handleErr(errMessage, url, line)
 	return true; 
 }
 
-var Dialog	= {
-	div: '#popup',
-	buttons	: {OK: function() { $(Dialog.div).dialog('close') }},
-		
-	create: function(button, div) {
-		div	= div || Dialog.div;
-		if($(div).length === 0) {
-			$('body').append('<div id="'+div.substr(1)+'"> </div>');
-			$(div).dialog({
-				autoOpen: false,
-				modal: true,
-				width: 650,
-				buttons: button || Dialog.buttons
-			});
-		} else {
-			$(div).dialog('close').dialog('option', 'buttons', button || Dialog.buttons);
-		}
-		$(div).html('<div style="width:100%;margin:140px 0;text-align:center;vertical-align:middle;font-size:18px;">Loading</div>');
-	},
-	
-	close: function() {
-		$(Dialog.div).dialog('close');
-	},
-	
+var Dialog	= {	
 	info: function(ID){
-		Dialog.create();
-		$(Dialog.div).dialog('open').load('game.php?page=infos&gid='+ID, function() {
-			$(this).dialog('option', 'title', $('#info_name').text());
-		});
-		return false;
+		return Dialog.open('game.php?page=information&id='+ID, 590, (ID > 600 && ID < 800) ? 210 : ((ID > 100 && ID < 200) ? 300 : 620));
 	},
 	
 	alert: function(msg, callback){
-		Dialog.create({OK:function(){$('#alert').dialog('close');$('#alert').dialog('option', 'width', 650);if(typeof callback==="function")callback();}}, '#alert');
-		$('#alert').html('<div style="text-align:center;">'+msg.replace(/\n/g, '<br>')+'</div>').dialog('option', 'width', 300).dialog('option', 'title', head_info).dialog('open');
+		alert(msg);
+		if(typeof callback === "function") {
+			callback();
+		}
 	},
 	
 	PM: function(ID, Subject, Message) {
 		if(typeof Subject !== 'string')
 			Subject	= '';
 
-	    OpenPopup('game.php?page=messages&mode=write&id='+ID+'&subject='+encodeURIComponent(Subject)+'&message='+encodeURIComponent(Subject), "", 720, 300);
-		return false;
+		return Dialog.open('game.php?page=messages&mode=write&id='+ID+'&subject='+encodeURIComponent(Subject)+'&message='+encodeURIComponent(Subject), 650, 350);
 	},
 	
-	Playercard: function(ID, Name) {
-	    OpenPopup('game.php?page=playercard&id='+ID, "", 720, 600);
+	Playercard: function(ID) {
+		return Dialog.open('game.php?page=playerCard&id='+ID, 650, 600);
+	},
+	
+	Buddy: function(ID) {
+		return Dialog.open('game.php?page=buddyList&mode=request&id='+ID, 650, 300);
+	},
+	
+	PlanetAction: function() {
+		return Dialog.open('game.php?page=overview&mode=actions', 400, 180);
+	},
+	
+	AllianceChat: function() {
+	    return OpenPopup('game.php?page=chat&action=alliance', "alliance_chat", 960, 900);
+	},
+	
+	open: function(url, width, height) {
+		$.fancybox({
+			width: width,
+			padding: 0,
+			height: height,
+			type: 'iframe',
+			href: url
+		});
+		
 		return false;
 	}
 }
 
 function NotifyBox(text) {
 	tip = $('#tooltip')
-	tip.html(text).css({
-		top : 200,
-		left : $(window).width() / 2 - tip.outerWidth() / 2,
-		padding: '20px'
+	tip.html(text).addClass('notify').css({
+		left : (($(window).width() - $('#leftmenu').width()) / 2 - tip.outerWidth() / 2) + $('#leftmenu').width(),
 	}).show();
-	window.setTimeout(function(){tip.fadeOut(1000)}, 500);
+	window.setTimeout(function(){tip.fadeOut(1000, function() {tip.removeClass('notify')})}, 500);
 }
+
+
+function UhrzeitAnzeigen() {
+   $(".servertime").text(getFormatedDate(serverTime.getTime(), tdformat));
+}
+
+
+$.widget("custom.catcomplete", $.ui.autocomplete, {
+	_renderMenu: function( ul, items ) {
+		var self = this,
+			currentCategory = "";
+		$.each( items, function( index, item ) {
+			if ( item.category != currentCategory ) {
+				ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+				currentCategory = item.category;
+			}
+			self._renderItem( ul, item );
+		});
+	}
+});
+
+$(function() {
+	$('#drop-admin').on('click', function() {
+		$.get('admin.php?page=logout', function() {
+			$('.globalWarning').animate({
+				'height' :0,
+				'padding' :0,
+				'opacity' :0
+			}, function() {
+				$(this).hide();
+			});
+		});
+	});
+	
+	
+	window.setInterval(function() {
+		$('.countdown').each(function() {
+			var s		= $(this).data('time') - (serverTime.getTime() - startTime) / 1000;
+			if(s <= 0) {
+				$(this).text('-');
+			} else {
+				$(this).text(GetRestTimeFormat(s));
+			}
+		});
+	}, 1000);
+	
+	$('#planetSelector').on('change', function() {
+		document.location = '?'+queryString+'&cp='+$(this).val();
+	});
+
+	UhrzeitAnzeigen();
+	setInterval(UhrzeitAnzeigen, 1000);
+	
+	$("button#create_new_alliance_rank").click(function() {
+		$("div#new_alliance_rank").dialog(		{
+			draggable: false,
+			resizable: false,
+			modal: true,
+			width: 760
+		});
+
+		return false;
+	});
+});

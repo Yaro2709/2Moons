@@ -1,11 +1,12 @@
 <?php
 
-// Translated into Russian by InquisitorEA (SporeEA@yandex.ru). All rights reserved © 2010-2011
+// 2Moons - Copyright © 2012 Jan Kröpke <info@2moons.cc>
+// Translation into Russian - Copyright © 2012 InquisitorEA <support@moon-hunt.ru>
 
 setlocale(LC_ALL, 'ru_RU.UTF8', 'russian'); // http://msdn.microsoft.com/en-us/library/39cwe7zf%28vs.71%29.aspx
 setlocale(LC_NUMERIC, 'C');
 
-// Основное
+// Дата и время
 $LNG['dir']            = 'ltr';
 $LNG['week_day']       = array('Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт');
 $LNG['months']         = array('Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек');
@@ -13,6 +14,10 @@ $LNG['js_tdformat']    = '[M] [D] [d] [H]:[i]:[s]';
 $LNG['php_timeformat'] = 'H:i:s';
 $LNG['php_dateformat'] = 'd. M Y';
 $LNG['php_tdformat']   = 'd. M Y, H:i:s';
+$LNG['short_day']      = 'd';
+$LNG['short_hour']     = 'h';
+$LNG['short_minute']   = 'm';
+$LNG['short_second']   = 's';
 
 $LNG['timezones'] = array(
 	'-12'	=> '[UTC − 12] Меридиан смены дат (запад)',

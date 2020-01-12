@@ -1,4 +1,4 @@
-{include file="adm/overall_header.tpl"}
+{include file="overall_header.tpl"}
 <form action="" method="post">
 <input type="hidden" name="mode" value="agregar">
 <table width="40%">
@@ -10,9 +10,9 @@
 	<td><input name="id" type="text" size="4"></td>
 </tr><tr>
 	<td>{$new_creator_coor}</td>
-	<td><input name="galaxy" type="text" size="3" maxlength="1" class="tooltip" name="{$po_galaxy}">&nbsp; :
-	<input name="system" type="text" size="3" maxlength="3" class="tooltip" name="{$po_system}">&nbsp; :
-	<input name="planet" type="text" size="3" maxlength="2" class="tooltip" name="{$po_planet}"><br>
+	<td><input name="galaxy" type="text" size="3" maxlength="1" class="tooltip" data-tooltip-content="{$po_galaxy}">&nbsp; :
+	<input name="system" type="text" size="3" maxlength="3" class="tooltip" data-tooltip-content="{$po_system}">&nbsp; :
+	<input name="planet" type="text" size="3" maxlength="2" class="tooltip" data-tooltip-content="{$po_planet}"><br>
 	</td>
 </tr><tr>
 	<td>{$po_name_planet}</td>
@@ -27,4 +27,4 @@
 </tr>
 </table>
 </form>
-{include file="adm/overall_footer.tpl"}
+{include file="overall_footer.tpl"}

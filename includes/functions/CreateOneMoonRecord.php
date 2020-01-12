@@ -2,7 +2,7 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  Copyright (C) 2012 Jan Kröpke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,78 +18,64 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
+ * @version 1.7.0 (2013-01-17)
  * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @link http://2moons.cc/
  */
 
-if(!defined('INSIDE')) die('Hacking attempt!');
+function CreateOneMoonRecord($Galaxy, $System, $Planet, $Universe, $Owner, $MoonName, $Chance, $time = 0, $Size = 0)
+{
+	global $USER;
 
-	function CreateOneMoonRecord($Galaxy, $System, $Planet, $Universe, $Owner, $MoonID, $MoonName, $Chance, $Size = 0)
-	{
-		global $LNG, $USER, $db;
+	$SQL  = "SELECT id_luna,planet_type,id,name,temp_max,temp_min FROM ".PLANETS." ";
+	$SQL .= "WHERE ";
+	$SQL .= "universe = '".$Universe."' AND ";
+	$SQL .= "galaxy = '".$Galaxy."' AND ";
+	$SQL .= "system = '".$System."' AND ";
+	$SQL .= "planet = '".$Planet."' AND ";
+	$SQL .= "planet_type = '1';";
+	$MoonPlanet = $GLOBALS['DATABASE']->getFirstRow($SQL);
 
-		$SQL  = "SELECT id_luna,planet_type,id,name,temp_max,temp_min FROM ".PLANETS." ";
-		$SQL .= "WHERE ";
-		$SQL .= "`universe` = '".$Universe."' AND ";
-		$SQL .= "`galaxy` = '".$Galaxy."' AND ";
-		$SQL .= "`system` = '".$System."' AND ";
-		$SQL .= "`planet` = '".$Planet."' AND ";
-		$SQL .= "`planet_type` = '1';";
-		$MoonPlanet = $db->uniquequery($SQL);
+	if ($MoonPlanet['id_luna'] != 0)
+		return false;
 
-		if ($MoonPlanet['id_luna'] != 0)
-			return false;
-
-		if($Size == 0) {
-			$size	= floor(pow(mt_rand(10, 20) + 3 * $Chance, 0.5) * 1000); # New Calculation - 23.04.2011
-		} else {
-			$size	= $Size;
-		}
-		
-		$maxtemp	= $MoonPlanet['temp_max'] - mt_rand(10, 45);
-		$mintemp	= $MoonPlanet['temp_min'] - mt_rand(10, 45);
-
-		$SQL  = "INSERT INTO ".PLANETS." SET ";
-		$SQL .= "`name` = '".$MoonName."', ";
-		$SQL .= "`id_owner` = '".$Owner."', ";
-		$SQL .= "`universe` = '".$Universe."', ";
-		$SQL .= "`galaxy` = '".$Galaxy."', ";
-		$SQL .= "`system` = '".$System."', ";
-		$SQL .= "`planet` = '".$Planet."', ";
-		$SQL .= "`last_update` = '".TIMESTAMP."', ";
-		$SQL .= "`planet_type` = '3', ";
-		$SQL .= "`image` = 'mond', ";
-		$SQL .= "`diameter` = '".$size."', ";
-		$SQL .= "`field_max` = '1', ";
-		$SQL .= "`temp_min` = '".$mintemp."', ";
-		$SQL .= "`temp_max` = '".$maxtemp."', ";
-		$SQL .= "`metal` = '0', ";
-		$SQL .= "`metal_perhour` = '0', ";
-		$SQL .= "`metal_max` = '".BASE_STORAGE_SIZE."', ";
-		$SQL .= "`crystal` = '0', ";
-		$SQL .= "`crystal_perhour` = '0', ";
-		$SQL .= "`crystal_max` = '".BASE_STORAGE_SIZE."', ";
-		$SQL .= "`deuterium` = '0', ";
-		$SQL .= "`deuterium_perhour` = '0', ";
-		$SQL .= "`deuterium_max` = '".BASE_STORAGE_SIZE."';";
-		$db->query($SQL);
-				
-		$SQL  = "UPDATE ".PLANETS." SET ";
-		$SQL .= "`id_luna` = '".$db->GetInsertID()."' ";
-		$SQL .= "WHERE ";
-		$SQL .= "`universe` = '".$Universe."' AND ";
-		$SQL .= "`galaxy` = '".$Galaxy."' AND ";
-		$SQL .= "`system` = '".$System."' AND ";
-		$SQL .= "`planet` = '".$Planet."' AND ";
-		$SQL .= "`planet_type` = '1';";				
-		$db->query($SQL);
-
-		return $MoonPlanet['name'];
+	if($Size == 0) {
+		$size	= floor(pow(mt_rand(10, 20) + 3 * $Chance, 0.5) * 1000); # New Calculation - 23.04.2011
+	} else {
+		$size	= $Size;
 	}
+	
+	$maxtemp	= $MoonPlanet['temp_max'] - mt_rand(10, 45);
+	$mintemp	= $MoonPlanet['temp_min'] - mt_rand(10, 45);
 
-?>
+	$GLOBALS['DATABASE']->multi_query("INSERT INTO ".PLANETS." SET
+					  name = '".$MoonName."',
+					  id_owner = ".$Owner.",
+					  universe = ".$Universe.",
+					  galaxy = ".$Galaxy.",
+					  system = ".$System.",
+					  planet = ".$Planet.",
+					  last_update = ".TIMESTAMP.",
+					  planet_type = '3',
+					  image = 'mond',
+					  diameter = ".$size.",
+					  field_max = '1',
+					  temp_min = ".$mintemp.",
+					  temp_max = ".$maxtemp.",
+					  metal = 0,
+					  metal_perhour = 0,
+					  crystal = 0,
+					  crystal_perhour = 0,
+					  deuterium = 0,
+					  deuterium_perhour = 0;
+					  SET @moonID = LAST_INSERT_ID();
+					  UPDATE ".PLANETS." SET
+					  id_luna = @moonID
+					  WHERE
+					  id = ".$MoonPlanet['id'].";");
+
+	return true;
+}

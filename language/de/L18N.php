@@ -1,5 +1,31 @@
 <?php
 
+/**
+ *  2Moons
+ *  Copyright (C) 2012 Jan Kröpke
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package 2Moons
+ * @author Jan Kröpke <info@2moons.cc>
+ * @copyright 2012 Jan Kröpke <info@2moons.cc>
+ * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
+ * @version 1.7.0 (2013-01-17)
+ * @info $Id$
+ * @link http://2moons.cc/
+ */
+
 setlocale(LC_ALL, 'de_DE', 'german'); // http://msdn.microsoft.com/en-us/library/39cwe7zf%28vs.71%29.aspx
 setlocale(LC_NUMERIC, 'C');
 
@@ -11,6 +37,10 @@ $LNG['js_tdformat']		= '[M] [D] [d] [H]:[i]:[s]';
 $LNG['php_timeformat']	= 'H:i:s';
 $LNG['php_dateformat']	= 'd. M Y';
 $LNG['php_tdformat']	= 'd. M Y, H:i:s';
+$LNG['short_day']		= 'd';
+$LNG['short_hour']		= 'h';
+$LNG['short_minute']	= 'm';
+$LNG['short_second']	= 's';
 
 //Note for the translators, use the phpBB Translation file (LANG/common.php) instead of your own translations
 

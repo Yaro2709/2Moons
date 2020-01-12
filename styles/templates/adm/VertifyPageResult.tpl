@@ -1,19 +1,19 @@
-{include file="adm/overall_header.tpl"}
+{include file="overall_header.tpl"}
 <table>
 	<tr>
-		<th colspan="4">{lang}vt_fail{/lang}</th>
+		<th colspan="4">{$LNG.vt_fail}</th>
 	</tr>
 	<tr>
-		<td colspan="4">{lang}vt_info{/lang}</td>
+		<td colspan="4">{$LNG.vt_info}</td>
 	</tr>
 	<tr>
 		<td colspan="4"><div class="processbar" style="background-color: green; height: 14px;width:0;"></div><div class="info" style="margin-top: -14px;"></div></td>
 	</tr>
 	<tr>
-		<td><span id="fileok">0</span> {lang}vt_fileok{/lang}</td><td><span id="filefail">0</span> {lang}vt_filefail{/lang}</td><td><span id="filenew">0</span> {lang}vt_filenew{/lang}</td><td><span id="fileerror">0</span> {lang}vt_fileerror{/lang}</td>
+		<td><span id="fileok">0</span> {$LNG.vt_fileok}</td><td><span id="filefail">0</span> {$LNG.vt_filefail}</td><td><span id="filenew">0</span> {$LNG.vt_filenew}</td><td><span id="fileerror">0</span> {$LNG.vt_fileerror}</td>
 	</tr>
 	<tr id="result">
-		<td colspan="4"><div style="display: block; overflow: auto; max-height: 280px;">{lang}vt_loadfile{/lang}</div></td>
+		<td colspan="4" class="left"><div style="display: block; overflow-y: scroll; height: 280px;">{$LNG.vt_loadfile}</div></td>
 	</tr>
 </table>
-{include file="adm/overall_footer.tpl"}
+{include file="overall_footer.tpl"}

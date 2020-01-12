@@ -1,14 +1,14 @@
-{include file="adm/overall_header.tpl"}
+{include file="overall_header.tpl"}
 <form action="" method="POST">
 <table width="90%">
 <tr>
 <td class="transparent left">
 <input type="checkbox" {$minimize} name="minimize"><input type="submit" value="{$se_contrac}" class="button">
-<img src="./styles/images/Adm/GO.png" onClick="javascript:$('#search').slideToggle()" style="cursor:pointer;padding-right:60px;" class="tooltip" name="{$ac_minimize_maximize}">
+<img src="./styles/resource/images/admin/GO.png" onClick="javascript:$('#seeker').slideToggle();" style="cursor:pointer;padding-right:60px;" class="tooltip" data-tooltip-content="{$ac_minimize_maximize}">
 </td>
 </tr>
 </table>
-<div id="search"{$diisplaay}>
+<div id="seeker"{$diisplaay}>
 <table width="90%">
 	<tr>
 		<th colspan="8">
