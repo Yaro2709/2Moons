@@ -1,79 +1,72 @@
 {block name="title" prepend}{$LNG.siteTitleIndex}{/block}
 {block name="content"}
-<section>
-	<h1>{$descHeader}</h1>
-	<p class="desc">{$descText}</p>
-	<p class="desc"><ul id="desc_list">{foreach $gameInformations as $info}<li>{$info}</li>{/foreach}</ul></p>
-</section>
-<section>
-	<table class="contentbox">
-		<tr class="contentbox-header">
-			<td class="contentbox-header-left"></td><td class="contentbox-header-center"></td><td class="contentbox-header-right"></td>
-		</tr>
-		<tr class="contentbox-content">
-			<td class="contentbox-content-left"></td><td class="contentbox-content-center">
-				<h1>{$LNG.loginHeader}</h1>
-				<form id="login" name="login" action="index.php?page=login" data-action="index.php?page=login" method="post">
-					<div class="row">
-						<label for="universe">{$LNG.universe}</label>
-						<select name="uni" id="universe" class="changeAction">{html_options options=$universeSelect selected=$UNI}</select>
-					</div>
-					<div class="row">
-						<label for="username">{$LNG.loginUsername}</label>
-						<input name="username" id="username" type="text">
-					</div>
-					<div class="row">
-						<label for="password">{$LNG.loginPassword}</label>
-						<input name="password" id="password" type="password">
-					</div>
-					<div class="row">
-						<input type="submit" value="{$LNG.loginButton}">
-					</div>
-				</form>
-				{if $facebookEnable}<a href="#" data-href="index.php?page=externalAuth&method=facebook" class="fb_login"><img src="styles/resource/images/facebook/fb-connect-large.png" alt=""></a>{/if}<!-- http://b.static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif -->
-				<br><span class="small">{$loginInfo}</span>
-			</td><td class="contentbox-content-right"></td>
-		</tr>
-		<tr class="contentbox-footer">
-			<td class="contentbox-footer-left"></td><td class="contentbox-footer-center"></td><td class="contentbox-footer-right"></td>
-		</tr>
-	</table>
-</section>
-<section>
-	<div class="button-box">
-		<div class="button-box-inner">
-			<div class="button-important">
-				<a href="index.php?page=register">
-					<span class="button-left"></span>
-					<span class="button-center">{$LNG.buttonRegister}</span>
-					<span class="button-right"></span>
-				</a>
+	<div class="jumbotron" style="margin-top:10px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-lg-12">
+					<h1>{$descHeader}</h1>
+					<p>{$descText}</p>
+					<p style="text-align: center;"><a class="btn btn-lg btn-success" href="index.php?page=screens">{$LNG.buttonScreenshot}</a></p>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="button-box">
-		<div class="button-box-inner">
-			{if $mailEnable} 
-			<div class="button multi">
-				<a href="index.php?page=lostPassword">
-					<span class="button-left"></span>
-					<span class="button-center">{$LNG.buttonLostPassword}</span>
-					<span class="button-right"></span>
-				</a>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">{$LNG.siteTitleNews}</div>
+                    {foreach $newsList as $newsRow}
+						<div class="panel-body">
+							<h1 class="page-header">{$newsRow.title}</h1>
+							<p>{$newsRow.text}</p>
+						</div>
+                    {foreachelse}
+						<div class="panel-body">
+							<h3 class="page-header">{$LNG.news_does_not_exist}</h3>
+						</div>
+                    {/foreach}
+					<div style="text-align: right; padding: 10px;">
+						<a href="index.php?page=news">
+							<button type="button" class="btn btn-success">All {$LNG.siteTitleNews}</button>
+						</a>
+					</div>
+				</div>
 			</div>
-			<div class="button multi">
-			{else}
-			<div class="button">
-			{/if}
-				<a href="index.php?page=screens">
-					<span class="button-left"></span>
-					<span class="button-center">{$LNG.buttonScreenshot}</span>
-					<span class="button-right"></span>
-				</a>
+
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">{$LNG.loginHeader}</div>
+					<div class="panel-body">
+						<form id="login" name="login" action="index.php?page=login" data-action="index.php?page=login" method="post">
+							<div class="form-group">
+								<label for="universe">{$LNG.universe}</label>
+								<select name="uni" id="universe" class="form-control changeAction">{html_options options=$universeSelect selected=$UNI}</select>
+							</div>
+							<div class="form-group">
+								<label for="username">{$LNG.loginUsername}</label>
+								<input type="text" class="form-control" name="username" id="username" placeholder="{$LNG.loginUsername}">
+							</div>
+							<div class="form-group">
+								<label for="password">{$LNG.loginPassword}</label>
+								<input type="password" class="form-control" name="password" id="password" placeholder="{$LNG.loginPassword}">
+							</div>
+							<div style="text-align: right;">
+								<button type="submit" class="btn btn-primary">{$LNG.loginButton}</button>
+							</div>
+						</form>
+                        {if $facebookEnable}<a href="#" data-href="index.php?page=externalAuth&method=facebook" class="fb_login"><img src="styles/resource/images/facebook/fb-connect-large.png" alt=""></a>{/if}<!-- http://b.static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif -->
+						<div style="text-align: center">
+							<a href="index.php?page=register">{$LNG.buttonRegister}</a> {if $mailEnable}- <a href="index.php?page=lostPassword">{$LNG.buttonLostPassword}</a>{/if}
+							<br>
+							<span class="small">{$loginInfo}</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</section>
 {/block}
 {block name="script" append}
 <script>{if $code}alert({$code|json});{/if}</script>

@@ -9,7 +9,7 @@
  * @copyright 2009 Lucky
  * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
  * @licence MIT
- * @version 1.8.0
+ * @version 1.9.0
  * @link https://github.com/jkroepke/2Moons
  */
 
@@ -181,7 +181,7 @@ CREATE TABLE `%PREFIX%config` (
   `noobprotection` int(11) NOT NULL DEFAULT '0',
   `noobprotectiontime` int(11) NOT NULL DEFAULT '5000',
   `noobprotectionmulti` int(11) NOT NULL DEFAULT '5',
-  `forum_url` varchar(128) NOT NULL DEFAULT 'http://2moons.cc',
+  `forum_url` varchar(128) NOT NULL DEFAULT 'http://2moons.de',
   `adm_attack` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `debug` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `lang` varchar(2) NOT NULL DEFAULT '',
@@ -287,6 +287,10 @@ CREATE TABLE `%PREFIX%config` (
   `disclamerMail` text NOT NULL,
   `disclamerNotice` text NOT NULL,
   `alliance_create_min_points` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `jackpot_update` int(11) NOT NULL DEFAULT '0',
+	`jackpot_update1` int(11) NOT NULL DEFAULT '0',
+	`jackpot_code` int(11) NOT NULL DEFAULT '357',
+	`jackpot_prize` double(100,0) NOT NULL DEFAULT '500000',
   PRIMARY KEY (`uni`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -787,6 +791,14 @@ CREATE TABLE `%PREFIX%users` (
   `ref_id` int(11) NOT NULL DEFAULT '0',
   `ref_bonus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `inactive_mail` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `extra_planet` int(11) unsigned NULL DEFAULT '0',
+  `def_bonus_time` int(11) NOT NULL DEFAULT '0',
+  `fleet_bonus_time` int(11) NOT NULL DEFAULT '0',
+  `bonus_page_time2` int(11) NOT NULL DEFAULT '0',
+  `res_bonus_time` int(11) NOT NULL DEFAULT '0',
+  `next_immunity` int(11) NOT NULL DEFAULT '0',
+  `immunity_until` int(11) NOT NULL DEFAULT '0',
+	`jackpot` int(11) NOT NULL DEFAULT '5',
   PRIMARY KEY (`id`),
   KEY `authlevel` (`authlevel`),
   KEY `ref_bonus` (`ref_bonus`),
@@ -924,6 +936,17 @@ CREATE TABLE `%PREFIX%vars_requriements` (
   KEY `elementID` (`elementID`),
   KEY `requireID` (`requireID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/**
+ * Table Addon Mods
+ */
+ CREATE TABLE `%PREFIX%jackpot_logs` (
+	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `date` int(11) NOT NULL DEFAULT '0',
+  `reward` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `%PREFIX%config` (`uni`, `VERSION`, `uni_name`, `game_name`, `close_reason`, `OverviewNewsText`, `moduls`, `disclamerAddress`, `disclamerPhone`, `disclamerMail`, `disclamerNotice`) VALUES
 (1, '%VERSION%', '', '2Moons', '', '', '', '', '', '', '');

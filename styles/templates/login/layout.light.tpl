@@ -1,4 +1,6 @@
 {include file="main.header.tpl"}
 {include file="main.navigation.tpl"}
-{block name="content"}{/block}
+<section>
+    {block name="content"}{/block}
+</section>
 {include file="main.footer.tpl"}

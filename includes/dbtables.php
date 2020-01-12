@@ -64,5 +64,7 @@ $dbTableNames	= array(
 	'VARS'	 			=> DB_PREFIX.'vars',
 	'VARS_RAPIDFIRE'	=> DB_PREFIX.'vars_rapidfire',
 	'VARS_REQUIRE'	 	=> DB_PREFIX.'vars_requriements',
+    // Mods
+    'JACKPOT_LOGS'	 	=> DB_PREFIX.'jackpot_logs',
 );
 // MOD-TABLES

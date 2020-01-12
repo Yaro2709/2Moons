@@ -30,6 +30,17 @@
 		{if isModuleAvailable($smarty.const.MODULE_SIMULATOR)}<li><a href="game.php?page=battleSimulator">{$LNG.lm_battlesim}</a></li>{/if}
 
 		<li class="menucat3-head"></li>
+		<a style="color:green;" href="game.php?page=moonBuy">Extra Moon</a>
+		<a style="color:green;" href="game.php?page=extraPlanet">Purchase Planet</a>
+		<a style="color:green;" href="game.php?page=defBonus">Defense Bonus</a>
+		<a style="color:green;" href="game.php?page=fleetBonus">Fleet Bonus</a>
+		<a style="color:green;" href="game.php?page=lucky">Lucky 7 Days Package</a>
+		<a style="color:green;" href="game.php?page=resBonus">Resources Bonus</a>
+		<a style="color:green;" href="game.php?page=immunity">Immunity</a>
+		<a style="color:green;" href="game.php?page=jackpot">Jackpot</a>
+		<a style="color:green;" href="game.php?page=relocate">Relocate</a>
+
+		<li class="menucat3-head"></li>
 		{if isModuleAvailable($smarty.const.MODULE_MESSAGES)}<li><a href="game.php?page=messages">{$LNG.lm_messages}{nocache}{if $new_message > 0}<span id="newmes"> (<span id="newmesnum">{$new_message}</span>)</span>{/if}{/nocache}</a></li>{/if}
 		{if isModuleAvailable($smarty.const.MODULE_NOTICE)}<li><a href="javascript:OpenPopup('?page=notes', 'notes', 720, 300);">{$LNG.lm_notes}</a></li>{/if}
 		{if isModuleAvailable($smarty.const.MODULE_BUDDYLIST)}<li><a href="game.php?page=buddyList">{$LNG.lm_buddylist}</a></li>{/if}

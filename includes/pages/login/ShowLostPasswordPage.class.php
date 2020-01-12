@@ -23,6 +23,7 @@ class ShowLostPasswordPage extends AbstractLoginPage
 	function __construct() 
 	{
 		parent::__construct();
+        $this->setWindow('light');
 	}
 	
 	function show() 

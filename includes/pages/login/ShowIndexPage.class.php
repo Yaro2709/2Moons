@@ -48,6 +48,24 @@ class ShowIndexPage extends AbstractLoginPage
 			$loginCode	= $LNG['login_error_'.$Code];
 		}
 
+        $sql = "SELECT date, title, text, user FROM %%NEWS%% ORDER BY id DESC LIMIT 2;";
+        $newsResult = Database::get()->select($sql);
+
+        $newsList	= array();
+
+        foreach ($newsResult as $newsRow)
+        {
+            $newsList[]	= array(
+                'title' => $newsRow['title'],
+                'from' 	=> sprintf($LNG['news_from'], _date($LNG['php_tdformat'], $newsRow['date']), $newsRow['user']),
+                'text' 	=> makebr($newsRow['text']),
+            );
+        }
+
+        $this->assign(array(
+            'newsList'	=> $newsList,
+        ));
+
 		$config				= Config::get();
 		$this->assign(array(
 			'universeSelect'		=> $universeSelect,

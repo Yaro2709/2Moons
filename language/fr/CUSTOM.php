@@ -29,5 +29,12 @@
  
 // If you have custom lang vars, you can include them here. The file ll be not overwrite by updatemanager
 // Also you can overwrite exists var, too. You use the same key.
+
+$LNG['extraone']     = 'Vous pouvez acheter une nouvelle planète après avoir colonisé %s planètes (nombre maximum de planètes autorisées)';
+$LNG['extratwo'] = 'Vous avez bien acheté une planète';
+$LNG['extratree'] = '%s planètes';
+$LNG['extrafour'] = 'Vous devez envoyer une nouvelle mission de colonisation afin d\'utiliser votre nouvelle planète ';
+$LNG['extrafive'] = 'Acheter une planète pour %s DM';
+$LNG['error_3']= 'Vous n\'avez pas assez de matière noir!!';
  
 ?>

@@ -1,6 +1,8 @@
-<footer>
-	<a href="index.php?page=disclamer">{$LNG.menu_disclamer}</a><br>Powered by <a href="http://2moons.cc" title="2Moons" target="copy">2Moons</a> 2009-2013
-</footer>
+<div class="container">
+	<footer>
+		<p class="pull-right"><a href="#">Back to top</a></p>
+		<p>© 2017 {$gameName}, Inc. · <a href="http://2moons.de">by 2moons.de</a> · <a href="https://github.com/HikeGame/2moons-1.9">github</a></p>
+	</footer>
 </div>
 <div id="dialog" style="display:none;"></div>
 <script>

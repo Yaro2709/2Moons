@@ -1,21 +1,21 @@
 <?php
 /**
- *  2Moons 
+ *  2Moons
  *   by Jan-Otto Kröpke 2009-2016
  *
  * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan-Otto Kröpke <slaver7@gmail.com>
- * @copyright 2009 Lucky
- * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @author mvw <mvgadmin@gmail.com>
+ * @copyright 2017
+ * @copyright 2017 mvw <mvgadmin@gmail.com>
  * @licence MIT
- * @version 1.8.0
- * @link https://github.com/jkroepke/2Moons
+ * @version 1.9.0
+ * @link https://github.com/HikeGame/2moons-1.9
  */
 
-// Translated into English by QwataKayean . All rights reversed (C) 2012
-// 2Moons - Copyright (C) 2010-2012 Slaver
+// Translated into English by mvw . All rights reversed (C) 2017
+// 2Moons - Copyright (C) 2010-2017
 
 
 $LNG['shortNames'] = array (
@@ -58,21 +58,21 @@ $LNG['bonus'] = array(
 	'Shield'			=> 'Shield',
 	'BuildTime'			=> 'Construction Time',
 	'ResearchTime'		=> 'Research time',
-	'ShipTime'			=> 'Ship Building time',
-	'DefensiveTime'		=> 'Defense Building time',
-	'Resource'			=> 'Production of Resources',
-	'Energy'			=> 'Production of Energy',
-	'ResourceStorage'	=> 'Resource storage',
-	'ShipStorage'		=> 'Ships storage',
-	'FlyTime'			=> 'Flying time',
+	'ShipTime'			=> 'Ship Construction time',
+	'DefensiveTime'		=> 'Defense Construction time',
+	'Resource'			=> 'Resource Production',
+	'Energy'			=> 'Energy Production',
+	'ResourceStorage'	=> 'Resource Storage capacity',
+	'ShipStorage'		=> 'Ships Storage capacity',
+	'FlyTime'			=> 'Flight time',
 	'FleetSlots'		=> 'Fleet Slots',
 	'Planets'			=> 'Planets',
 	'SpyPower'			=> 'Espionage power',
 	'Expedition'		=> 'Expeditions',
-	'GateCoolTime'		=> 'Jump gate charging time',
+	'GateCoolTime'		=> 'Jump Gate charge time',
 	'MoreFound'			=> 'Expedition Found',
 );
-					
+
 $LNG['tech'] = array(
   0 => 'Buildings',
   1 => 'Metal Mine',
@@ -191,15 +191,15 @@ $LNG['tech'] = array(
 );
 
 $LNG['shortDescription'] = array(
-1 => 'Used in the extraction of metal ore, metal mines are of primary importance to all emerging and established empires.',
-2 => 'Crystals are the main resource used to build electronic circuits and form certain alloy compounds.',
-3 => 'Deuterium is used as fuel for spaceships and is harvested in the deep sea. Deuterium is a rare substance and is thus relatively expensive.',
-4 => 'Solar power plants absorb energy from solar radiation. All mines need energy to operate.',
+1 => 'Used to extract Metal Ore, Metal Mines are of primary importance to all emerging and established empires',
+2 => 'Crystal is the main resource used to build electronic circuits and form certain alloy compounds',
+3 => 'Deuterium is used as fuel on spaceships and is harvested in the deep oceans. Deuterium is a rare substance and is thus relatively expensive.',
+4 => 'Solar power plants absorb energy from solar radiation. All mines need energy to operate efficiently',
 6 => 'Shortens research time each level by 8%.',
-12 => 'The fusion reactor uses deuterium to produce energy.',
-14 => 'Robotic factories provide construction robots to aid in the construction of buildings. Each level increases the speed of the upgrade of buildings',
+12 => 'The fusion reactor uses Deuterium to produce energy.',
+14 => 'RoboT Factories provide construction robots to aid in the construction of buildings. Each level increases the speed of the upgrade of buildings',
 15 => 'This is the ultimate in robotics technology. Each level cuts the construction time for buildings, ships, and defenses',
-21 => 'All types of ships and defensive facilities are built in the planetary shipyard',
+21 => 'All types of ships and defensive facilities are built in the planetary shipyard. Each upgrade provides more facilities to construct ships',
 22 => 'Provides storage for excess Metal.',
 23 => 'Provides storage for excess Crystal.',
 24 => 'Provides storage for excess Deuterium',
