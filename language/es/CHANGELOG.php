@@ -22,7 +22,7 @@
  * @author Jan <slaver7@gmail.com>
  * @copyright 2011 Jan <slaver7@gmail.com> (Fork/2Moons)
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -78,7 +78,7 @@ $LNG['changelog']   = array(
 - 0000304: [User errors] Settings - Number spy probe (Jan) - resolved.
 - 0000300: [User errors] Bei Mondversuch erhalte ich bei bestimmten angriffen folgende fehlermeldung (Jan) - resolved.
 - 0000307: [Langauge] ru/email/email_inactive.txt: failed to open stream (Jan) - resolved.
-- 0000306: [User errors] SQL Error: Unknown column 'Array' (Jan) - resolved.
+- 0000306: [User errors] SQL Error: Unknown column \'Array\' (Jan) - resolved.
 - 0000231: [Feature request] The name of the object in the battle report. (Jan) - resolved.
 - 0000105: [Feature request] Create a MySQL Backup solution (Jan) - resolved.
 - 0000179: [Officier] ExtraDM 705 does not add energy (Jan) - resolved.

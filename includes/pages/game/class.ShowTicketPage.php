@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -93,15 +93,13 @@ class ShowTicketPage extends AbstractPage
 		
 		if(empty($ticketID)) {
 			$ticketID	= $this->ticketObj->createTicket($USER['id'], $categoryID, $subject);
+		} else {
+			$ticketDetail	= $GLOBALS['DATABASE']->getFirstCell("SELECT status FROM ".TICKETS." WHERE ticketID = ".$ticketID.";");
+			if ($ticketDetail['status'] == 2)
+				$this->printMessage($LNG['ti_error_closed']);
 		}
-		
-		$ticketDetail	= $GLOBALS['DATABASE']->getFirstCell("SELECT status FROM ".TICKETS." WHERE ticketID = ".$ticketID.";");
-		if ($ticketDetail['status'] == 2)
-			$this->printMessage($LNG['ti_error_closed']);
 			
-		$subject		= "RE: ".$subject;
-		
-		$this->ticketObj->createAnswer($ticketID, $USER['id'], $USER['username'], $subject, $message, 0);
+		$this->ticketObj->createAnswer($ticketID, $USER['id'], $USER['username'], '', $message, 0);
 		$this->redirectTo('game.php?page=ticket&mode=view&id='.$ticketID);
 	}
 	

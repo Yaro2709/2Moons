@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -85,20 +85,20 @@ function ShowResetPage()
 		}
 		
 		if ($_POST['planets'] == 'on')
-			$GLOBALS['DATABASE']->multi_query("DELETE FROM ".PLANETS." WHERE `universe` = ".$_SESSION['adminuni']." AND `id` NOT IN (SELECT id_planet FROM ".USERS."  WHERE `universe` = ".$_SESSION['adminuni'].");UPDATE ".PLANETS." SET `id_luna` = '0' WHERE `universe` = ".$_SESSION['adminuni'].";");
+			$GLOBALS['DATABASE']->multi_query("DELETE FROM ".PLANETS." WHERE `universe` = ".$_SESSION['adminuni']." AND `id` NOT IN (SELECT id_planet FROM ".USERS." WHERE `universe` = ".$_SESSION['adminuni'].");UPDATE ".PLANETS." SET `id_luna` = '0' WHERE `universe` = ".$_SESSION['adminuni'].";");
 			
 		if ($_POST['moons']	== 'on'){
 			$GLOBALS['DATABASE']->multi_query("DELETE FROM ".PLANETS." WHERE `planet_type` = '3' AND `universe` = ".$_SESSION['adminuni'].";UPDATE ".PLANETS." SET `id_luna` = '0' WHERE `universe` = ".$_SESSION['adminuni'].";");}
 
 		// HANGARES Y DEFENSAS
 		if ($_POST['defenses']	==	'on')
-			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET ".implode(", ",$dbcol['defense'])." AND `universe` = ".$_SESSION['adminuni'].";");
+			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET ".implode(", ",$dbcol['defense'])." WHERE `universe` = ".$_SESSION['adminuni'].";");
 	
 		if ($_POST['ships']	==	'on')
-			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET ".implode(", ",$dbcol['fleet'])." AND `universe` = ".$_SESSION['adminuni'].";");
+			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET ".implode(", ",$dbcol['fleet'])." WHERE `universe` = ".$_SESSION['adminuni'].";");
 	
 		if ($_POST['h_d']	==	'on')
-			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET `b_hangar` = '0', `b_hangar_id` = '' AND `universe` = ".$_SESSION['adminuni'].";");
+			$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET `b_hangar` = '0', `b_hangar_id` = '' WHERE `universe` = ".$_SESSION['adminuni'].";");
 	
 
 		// EDIFICIOS

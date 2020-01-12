@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -1124,6 +1124,7 @@ $LNG['ti_submit']							= 'Absenden';
 $LNG['ti_read']								= 'Ticket lesen';
 $LNG['ti_answer']							= 'Antwort schreiben';
 $LNG['ti_create']							= 'Ticket erstellt am';
+$LNG['ti_msgtime']							= 'Nachricht geschrieben am';
 $LNG['ti_responded']							= 'Ticket antworteten am ';
 $LNG['ti_not_exist']						= 'Das Ticket #%d existiert nicht!';
 $LNG['ti_from']								= 'von';

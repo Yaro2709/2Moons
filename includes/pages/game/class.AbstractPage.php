@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -154,7 +154,7 @@ abstract class AbstractPage
 			'current_pid'		=> $PLANET['id'],
 			'image'				=> $PLANET['image'],
 			'resourceTable'		=> $resourceTable,
-			'shortlyNumber'		=> $themeSettings['TOPNAV_SHORTLY_NUBMER'],
+			'shortlyNumber'		=> $themeSettings['TOPNAV_SHORTLY_NUMBER'],
 			'closed'			=> !Config::get('game_disable'),
 			'hasBoard'			=> filter_var(Config::get('forum_url'), FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED),
 			'hasAdminAccess'	=> isset($_SESSION['admin_login']),

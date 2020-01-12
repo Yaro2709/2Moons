@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -48,6 +48,11 @@ class FacebookAuth extends Facebook {
 		if($this->getUser() != 0)
 		{
 			return $this->getUser();
+		}
+		
+		if(!empty($_GET['error_reason']))
+		{
+			HTTP::redirectTo('index.php');
 		}
 		
 		HTTP::sendHeader('Location', $this->getLoginUrl(array(

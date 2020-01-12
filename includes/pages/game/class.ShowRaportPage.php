@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -154,7 +154,7 @@ class ShowRaportPage extends AbstractPage
 		}
 
 		$CombatRaport			= unserialize($raportData['raport']);
-		if($isAttacker && $CombatRaport['result'] == 'r' && count($CombatRaport['rounds']) <= 2) {
+		if($isAttacker && !$isDefender && $CombatRaport['result'] == 'r' && count($CombatRaport['rounds']) <= 2) {
 			$this->printMessage($LNG['sys_raport_lost_contact']);
 		}
 		

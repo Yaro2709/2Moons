@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -238,22 +238,8 @@ class ShowFleetStep3Page extends AbstractPage
 			}
 		}
 
-		if ($targetMission == 5) {
-		
-			if($targetType == 3)
-			{
-				$ally_deposit	= $GLOBALS['DATABASE']->getFirstCell("SELECT ally_deposit FROM ".PLANETS." WHERE id_luna = ".$targetPlanetData['id'].";");
-				if ($ally_deposit < 1) {
-					$this->printMessage($LNG['fl_no_hold_depot']);
-				}
-			}
-			else
-			{
-				if ($targetPlanetData['ally_deposit'] < 1) {
-					$this->printMessage($LNG['fl_no_hold_depot']);
-				}
-			}
-					
+		if ($targetMission == 5)
+		{	
 			if($targetPlayerData['ally_id'] != $USER['ally_id']) {
 				$buddy	= $GLOBALS['DATABASE']->getFirstCell("
 				SELECT COUNT(*) FROM ".BUDDY." 

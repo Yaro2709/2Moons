@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $Id$
  * @link http://2moons.cc/
  */
@@ -76,7 +76,7 @@ class BuildFunctions
 	public static function getElementPrice($USER, $PLANET, $Element, $forDestroy = false, $forLevel = NULL) { 
 		global $pricelist, $resource, $reslist;
 
-       	if (in_array($Element, $reslist['fleet']) || in_array($Element, $reslist['defense'])) {
+       	if (in_array($Element, $reslist['fleet']) || in_array($Element, $reslist['defense']) || in_array($Element, $reslist['missile'])) {
 			$elementLevel = $forLevel;
 		} elseif (isset($forLevel)) {
 			$elementLevel = $forLevel;
@@ -106,7 +106,7 @@ class BuildFunctions
 				$price[$resType]	*= pow($pricelist[$Element]['factor'], $elementLevel);
 			}
 			
-			if($forLevel && (in_array($Element, $reslist['fleet']) || in_array($Element, $reslist['defense']))) {
+			if($forLevel && (in_array($Element, $reslist['fleet']) || in_array($Element, $reslist['defense']) || in_array($Element, $reslist['missile']))) {
 				$price[$resType]	*= $elementLevel;
 			}
 			

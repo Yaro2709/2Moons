@@ -21,7 +21,7 @@
  * @author Jan Kröpke <info@2moons.cc>
  * @copyright 2012 Jan Kröpke <info@2moons.cc>
  * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.1 (2013-01-18)
+ * @version 1.7.2 (2013-03-18)
  * @info $universe: ShowUniversePage.php 2152 2012-03-16 20:52:20Z slaver7 $
  * @link http://2moons.cc/
  */
@@ -99,18 +99,31 @@ function ShowUniversePage() {
 					$_SESSION['adminuni']	= $USER['universe'];
 				}
 				
-				$CONFIG	= Config::init();
+				Config::init();
+				$CONFIG	= Config::getAll(NULL);
 				
 				if(count($CONFIG) == 1)
 				{
 					// Hack The Session
 					setcookie(session_name(), session_id(), SESSION_LIFETIME, HTTP_BASE, NULL, HTTPS, true);
+					HTTP::redirectTo("admin.php?reload=r");
 				}
 			}
 		break;
 		case 'create':
+			Config::init();
+			$CONFIG	= Config::getAll(NULL);
+			
 			// Check Multiuniverse Support
-			$ch	= curl_init(PROTOCOL.HTTP_HOST.HTTP_BASE."uni".ROOT_UNI."/");
+			$ch	= curl_init();
+			if(count($CONFIG) == 1)
+			{
+				curl_setopt($ch, CURLOPT_URL, PROTOCOL.HTTP_HOST.HTTP_BASE."uni".ROOT_UNI."/");
+			}
+			else
+			{
+				curl_setopt($ch, CURLOPT_URL, PROTOCOL.HTTP_HOST.HTTP_BASE);
+			}
 			curl_setopt($ch, CURLOPT_HTTPGET, true);
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
@@ -123,6 +136,7 @@ function ShowUniversePage() {
 			));
 			curl_exec($ch);
 			$httpCode	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			
 			curl_close($ch);
 			if($httpCode != 302)
 			{
@@ -157,7 +171,8 @@ function ShowUniversePage() {
 		
 			$GLOBALS['DATABASE']->query("INSERT INTO ".CONFIG." SET ".implode(', ', $configSQL).";");
 			$newUniverse	= $GLOBALS['DATABASE']->GetInsertID();
-			$CONFIG	= Config::init();
+			Config::init();
+			$CONFIG	= Config::getAll(NULL);
 			
 			list($userID, $planetID) = PlayerUtil::createPlayer($newUniverse, $USER['username'], '', $USER['email'], $USER['lang'], 1, 1, 1, NULL, AUTH_ADM);
 			$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET password = '".$USER['password']."' WHERE id = ".$userID.";");
@@ -166,6 +181,7 @@ function ShowUniversePage() {
 			{
 				// Hack The Session
 				setcookie(session_name(), session_id(), SESSION_LIFETIME, HTTP_ROOT.'uni'.$USER['universe'].'/', NULL, HTTPS, true);
+				HTTP::redirectTo("admin.php?reload=r");
 			}
 		break;
 	}
