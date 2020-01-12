@@ -1,4 +1,18 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 // Traduzido por QwataKayean. Todos os Direitos Reservados © 2010-2012
 // Texto escrito conforme o Acordo Ortográfico a ser inserido em 2011 pelo Ministério da Educação de Portugal - convertido pelo Lince.         
@@ -15,30 +29,27 @@ $LNG['loading']								= 'A carregar ...';
 
 $LNG['invalid_action']						= 'Ação Invalida!!';
 
-$LNG['type_mission'][1]  					= 'Atacar';
-$LNG['type_mission'][2]  					= 'ACS - Ataque em Cooperação';
-$LNG['type_mission'][3]  					= 'Transportar';
-$LNG['type_mission'][4]  					= 'Estação';
-$LNG['type_mission'][5]  					= 'Transferir';
-$LNG['type_mission'][6]  					= 'Espiar';
-$LNG['type_mission'][7]  					= 'Colonizar';
-$LNG['type_mission'][8]  					= 'Reciclar';
-$LNG['type_mission'][9]  					= 'Destruir';
-$LNG['type_mission'][10]  					= 'Ataque de Misseis';
-$LNG['type_mission'][11]  					= 'Investigação de Matéria Negra ';
-$LNG['type_mission'][15] 					= 'Expedição';
+$LNG['type_mission_1']  					= 'Atacar';
+$LNG['type_mission_2']  					= 'ACS - Ataque em Cooperação';
+$LNG['type_mission_3']  					= 'Transportar';
+$LNG['type_mission_4']  					= 'Estação';
+$LNG['type_mission_5']  					= 'Transferir';
+$LNG['type_mission_6']  					= 'Espiar';
+$LNG['type_mission_7']  					= 'Colonizar';
+$LNG['type_mission_8']  					= 'Reciclar';
+$LNG['type_mission_9']  					= 'Destruir';
+$LNG['type_mission_10']  					= 'Ataque de Misseis';
+$LNG['type_mission_11']  					= 'Investigação de Matéria Negra ';
+$LNG['type_mission_15'] 					= 'Expedição';
 
-$LNG['type_planet'][1]  					= 'Planeta';
-$LNG['type_planet'][2]  					= 'Campo de Destroços';
-$LNG['type_planet'][3]  					= 'Lua';
+$LNG['type_planet_1']  					= 'Planeta';
+$LNG['type_planet_2']  					= 'Campo de Destroços';
+$LNG['type_planet_3']  					= 'Lua';
 
-$LNG['user_level'] = array (
-	'0' => 'Jogador',
-	'1' => 'Moderador',
-	'2' => 'Operador',
-	'3' => 'Administrador',
-);
-
+$LNG['user_level_0']                        = 'Jogador';
+$LNG['user_level_1']                        = 'Moderador';
+$LNG['user_level_2']                        = 'Operador';
+$LNG['user_level_3']                        = 'Administrador';
 
 $LNG['page_doesnt_exist']					= 'Esta página não existe';
 $LNG['bad_forum_url']				    	= 'O link de Forum é incorreto!';
@@ -375,7 +386,7 @@ $LNG['bd_lab_required']					    = 'Primeiro tens de construir um laboratorio de 
 $LNG['bd_building_lab']					    = 'Não se pode fazer pesquisas quando se esta a subir o laboratório de nível';
 $LNG['bd_max_lvl']                          = 'Nível Max.:';
 $LNG['bd_lvl']								= 'Nível';
-$$LNG['bd_research']						= 'Pesquisa para';
+$LNG['bd_research']						    = 'Pesquisa para';
 $LNG['bd_shipyard_required']				= 'Terás de construir um hangar primeiro!';
 $LNG['bd_building_shipyard']				= 'Não podes construir naves enquanto estiveres a subir o hangar de nível';
 $LNG['bd_available']						= 'Disponível: ';
@@ -406,6 +417,8 @@ $LNG['sys_nomore_level'] 					= 'Estás a tentar destruir um edifício que já n
 $LNG['sys_buildlist'] 						= "Lista de construção";
 $LNG['sys_techlist'] 						= 'Lista de Pesquisa';
 $LNG['sys_buildlist_fail'] 				    = "Impossível construir";
+$LNG['sys_back']							= 'Atrás';
+$LNG['sys_forward']							= 'Próximo';
 
 //----------------------------------------------------------------------------//
 // Recursos
@@ -455,7 +468,7 @@ $LNG['tt_lvl']								= 'Nivel ';
 //----------------------------------------------------------------------------//
 // Infos
 $LNG['in_jump_gate_no_target']				= 'Sem alvo disponivel';
-$LNG['in_jump_gate_done']					='O portal de salto foi usado, poderás voltar a usá-lo em:';
+$LNG['in_jump_gate_done']					= 'O portal de salto foi usado, poderás voltar a usá-lo em:';
 $LNG['in_jump_gate_error_data']			    = 'Erro, coordenadas para salto não estão corretas!';
 $LNG['in_jump_gate_not_ready_target']		= 'O portal não está pronto na lua de destino, Estará pronto em ';
 $LNG['in_jump_gate_doesnt_have_one']		= 'Não tens outro portal para efetuar o salto!';
@@ -749,6 +762,8 @@ $LNG['al_rank_desc']['DIPLOMATIC']			= 'Pode gerenciar a Diplomacia';
 $LNG['al_rank_desc']['RANKS']				= 'Pode configurar os Ranks';
 $LNG['al_rank_desc']['MANAGEUSERS']			= 'Pode gerenciar os membros';
 $LNG['al_rank_desc']['EVENTS']			= 'Pode ver eventos';
+$LNG['al_invalid_rank_name']				= 'No nome de Rank, é apenas permitido números, letras, espaços, _, -.';
+$LNG['al_make_ally_insufficient_points']	= 'Não tens pontos suficientes para criar uma Aliança.<br>São requeridos %s pontos, mas possuis %s pontos.';
 
 //----------------------------------------------------------------------------//
 // Lista de Amigos

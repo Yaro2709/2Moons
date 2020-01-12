@@ -1,34 +1,21 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan <info@2moons.cc>
- * @copyright 2006 Perberos <ugamela@perberos.com.ar> (UGamela)
- * @copyright 2008 Chlorel (XNova)
- * @copyright 2012 Jan <info@2moons.cc> (2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 2.0.$Revision: 2242 $ (2012-11-31)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
-class ShowBanListPage extends AbstractPage 
+class ShowBanListPage extends AbstractLoginPage
 {
 	public static $requireModule = MODULE_BANLIST;
 
@@ -39,35 +26,43 @@ class ShowBanListPage extends AbstractPage
 
 	function show()
 	{		
-		$universeSelect	= array();
-		
+		global $LNG;
+
+		$db = Database::get();
+
 		$page  		= HTTP::_GP('side', 1);
-		$banCount	= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".BANNED." WHERE universe = ".$GLOBALS['UNI']." ORDER BY time DESC;");
-		
+
+		$sql = "SELECT COUNT(*) as count FROM %%BANNED%% WHERE universe = :universe ORDER BY time DESC;";
+		$banCount = $db->selectSingle($sql, array(
+			':universe'	=> Universe::current(),
+		), 'count');
+
 		$maxPage	= ceil($banCount / BANNED_USERS_PER_PAGE);
 		$page		= max(1, min($page, $maxPage));
 		
-		$banResult	= $GLOBALS['DATABASE']->query("SELECT * FROM ".BANNED." WHERE universe = ".$GLOBALS['UNI']." ORDER BY time DESC LIMIT ".(($page - 1) * BANNED_USERS_PER_PAGE).", ".BANNED_USERS_PER_PAGE.";");
+		$sql = "SELECT * FROM %%BANNED%% WHERE universe = :universe ORDER BY time DESC LIMIT :offset, :limit;";
+		$banResult = $db->select($sql, array(
+			':universe'	=> Universe::current(),
+			':offset'	=> (($page - 1) * BANNED_USERS_PER_PAGE),
+			':limit'	=> BANNED_USERS_PER_PAGE
+		));
+
 		$banList	= array();
 		
-		while($banRow = $GLOBALS['DATABASE']->fetchArray($banResult))
+		foreach($banResult as $banRow)
 		{
 			$banList[]	= array(
 				'player'	=> $banRow['who'],
 				'theme'		=> $banRow['theme'],
-				'from'		=> _date(t('php_tdformat'), $banRow['time'], Config::get('timezone')),
-				'to'		=> _date(t('php_tdformat'), $banRow['longer'], Config::get('timezone')),
+				'from'		=> _date($LNG['php_tdformat'], $banRow['time'], Config::get()->timezone),
+				'to'		=> _date($LNG['php_tdformat'], $banRow['longer'], Config::get()->timezone),
 				'admin'		=> $banRow['author'],
 				'mail'		=> $banRow['email'],
-				'info'		=> t('bn_writemail', $banRow['author']),
+				'info'		=> sprintf($LNG['bn_writemail'], $banRow['author']),
 			);
 		}
-		
-		$uniAllConfig	= Config::getAll('universe');
-		foreach($uniAllConfig as $uniID => $uniConfig)
-		{
-			$universeSelect[$uniID]	= $uniConfig['uni_name'];
-		}
+
+		$universeSelect	= $this->getUniverseSelector();
 		
 		$this->assign(array(
 			'universeSelect'	=> $universeSelect,
@@ -77,6 +72,6 @@ class ShowBanListPage extends AbstractPage
 			'maxPage'			=> $maxPage,
 		));
 		
-		$this->render('page.banList.default.tpl');
+		$this->display('page.banList.default.tpl');
 	}
 }

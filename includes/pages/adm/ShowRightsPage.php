@@ -1,35 +1,24 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__)) || $_GET['sid'] != session_id()) exit;
 function ShowRightsPage()
 {
-	global $LNG, $CONF, $USER;
+	global $LNG, $USER;
 	$mode	= HTTP::_GP('mode', '');
 	switch($mode)
 	{
@@ -66,7 +55,7 @@ function ShowRightsPage()
 					'Files'						=> $Files, 
 					'Rights'					=> $Rights['rights'], 
 					'id'						=> $id, 
-					'yesorno'					=> $LNG['one_is_yes'], 
+					'yesorno'					=> array(1 => $LNG['one_is_yes_1'], 0 => $LNG['one_is_yes_0']),
 					'ad_authlevel_title'		=> $LNG['ad_authlevel_title'], 
 					'button_submit'				=> $LNG['button_submit'],  
 					'sid'						=> session_id(), 
@@ -86,15 +75,15 @@ function ShowRightsPage()
 				$WHEREUSERS	=	"AND `authlevel` = '".AUTH_USR."'";			
 				
 				
-			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
+			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".Universe::getEmulated()."'".$WHEREUSERS.";");
 				
 			$UserList	= "";
 			while ($List = $GLOBALS['DATABASE']->fetch_array($QueryUsers)) {
-				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank'][$List['authlevel']].')</option>';
+				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank_'.$List['authlevel']].')</option>';
 			}	
 
 			$template->assign_vars(array(	
-				'Selector'					=> array(0 => $LNG['rank'][0], 1 => $LNG['rank'][1], 2 => $LNG['rank'][2], 3 => $LNG['rank'][3]), 
+				'Selector'					=> array(0 => $LNG['rank_0'], 1 => $LNG['rank_1'], 2 => $LNG['rank_2'], 3 => $LNG['rank_3']),
 				'UserList'					=> $UserList, 
 				'ad_authlevel_title'		=> $LNG['ad_authlevel_title'], 
 				'bo_select_title'			=> $LNG['bo_select_title'], 
@@ -144,15 +133,15 @@ function ShowRightsPage()
 			elseif ($_GET['get'] == 'pla')
 				$WHEREUSERS	=	"AND `authlevel` = '".AUTH_USR."'";	
 				
-			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".$WHEREUSERS.";");
+			$QueryUsers	=	$GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `universe` = '".Universe::getEmulated()."'".$WHEREUSERS.";");
 				
 			$UserList	= "";
 			while ($List = $GLOBALS['DATABASE']->fetch_array($QueryUsers)) {
-				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank'][$List['authlevel']].')</option>';
+				$UserList	.=	'<option value="'.$List['id'].'">'.$List['username'].'&nbsp;&nbsp;('.$LNG['rank_'.$List['authlevel']].')</option>';
 			}	
 
 			$template->assign_vars(array(	
-				'Selector'					=> array(0 => $LNG['rank'][0], 1 => $LNG['rank'][1], 2 => $LNG['rank'][2], 3 => $LNG['rank'][3]), 
+				'Selector'					=> array(0 => $LNG['rank_0'], 1 => $LNG['rank_1'], 2 => $LNG['rank_2'], 3 => $LNG['rank_3']),
 				'UserList'					=> $UserList, 
 				'ad_authlevel_title'		=> $LNG['ad_authlevel_title'], 
 				'bo_select_title'			=> $LNG['bo_select_title'], 

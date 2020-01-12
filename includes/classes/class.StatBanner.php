@@ -1,56 +1,43 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 class StatBanner {
 
 	private $source = "styles/resource/images/banner.jpg";
-	
-	// Function to center text in the created banner
-	private function CenterTextBanner($X, $String, $Font, $Size) {
-		
-		$boxSize	= imagettfbbox($Size, 0, $Font, $String);
-		
-		$minX 		= min(array($boxSize[0], $boxSize[2], $boxSize[4], $boxSize[6])); 
-		$maxX 		= max(array($boxSize[0], $boxSize[2], $boxSize[4], $boxSize[6])); 
-		
-		$boxWidth	= $maxX - $minX;
-		return $X - ($boxWidth * 0.7);
-	}
 
 	public function GetData($id)
 	{
-		return $GLOBALS['DATABASE']->getFirstRow("SELECT a.username, a.wons, a.loos, a.draws, b.total_points, b.total_rank, c.name, c.galaxy, c.system, c.planet, d.game_name, d.users_amount, d.ttf_file FROM ".USERS." as a, ".STATPOINTS." as b, ".PLANETS." as c ,".CONFIG." as d WHERE a.id = '".$id."' AND b.stat_type = '1' AND b.id_owner = '".$id."' AND c.id = a.id_planet AND d.uni = a.universe;");
+		$sql = 'SELECT user.username, user.wons, user.loos, user.draws,
+		stat.total_points, stat.total_rank,
+		planet.name, planet.galaxy, planet.system, planet.planet, config.game_name,
+		config.users_amount, config.ttf_file
+		FROM %%USERS%% as user, %%STATPOINTS%% as stat, %%PLANETS%% as planet, %%CONFIG%% as config
+		WHERE user.id = :userId AND stat.stat_type = :statType AND stat.id_owner = :userId
+		AND planet.id = user.id_planet AND config.uni = user.universe;';
+
+		return Database::get()->selectSingle($sql, array(
+			':userId'	=> $id,
+			':statType'	=> 1
+		));
 	}
 	
 	public function CreateUTF8Banner($data) {
 		global $LNG;
 		$image  	= imagecreatefromjpeg($this->source);
-		$date  		= _date($LNG['php_dateformat'], TIMESTAMP);
 
 		$Font		= $data['ttf_file'];
 		if(!file_exists($Font))
@@ -82,21 +69,22 @@ class StatBanner {
 		
 		imagettftext($image, 11, 0, 250, 81, $shadow, $Font, $LNG['ub_quote'].': '.html_entity_decode(shortly_number($quote, 2)).'%');
 		imagettftext($image, 11, 0, 250, 80, $color, $Font, $LNG['ub_quote'].': '.html_entity_decode(shortly_number($quote, 2)).'%');
-				
+		
 		if(!isset($_GET['debug']))
+		{
 			HTTP::sendHeader('Content-type', 'image/jpg');
-			
-		ImageJPEG($image);
+		}
+
+		imagejpeg($image);
 		imagedestroy($image);
 	}
 	
 	function BannerError($Message) {
 		HTTP::sendHeader('Content-type', 'image/jpg');
-		$im	 = ImageCreate(450, 80);
-		$background_color = ImageColorAllocate ($im, 255, 255, 255);
-		$text_color = ImageColorAllocate($im, 233, 14, 91);
-		ImageString ($im, 3, 5, 5, $Message, $text_color);
-		ImageJPEG($im);
+		$im	 = imagecreate(450, 80);
+		$text_color = imagecolorallocate($im, 233, 14, 91);
+		imagestring($im, 3, 5, 5, $Message, $text_color);
+		imagejpeg($im);
 		imagedestroy($im);
 		exit;
 	}

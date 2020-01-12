@@ -1,45 +1,35 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto KrÃ¶pke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto KrÃ¶pke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto KrÃ¶pke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 
-class TeamspeakBuildCache
+class TeamspeakBuildCache implements BuildCache
 {
 	function buildCache()
 	{		
 		$teamspeakData	= array();
+		$config	= Config::get();
 		
-		switch(Config::get('ts_version'))
+		switch($config->ts_version)
 		{
 			case 2:
-				require 'includes/libs/teamspeak/cyts/cyts.class.php';
+                require_once 'includes/libs/teamspeak/cyts/cyts.class.php';
 				$ts = new cyts();
-				
-				if($ts->connect(Config::get('ts_server'), Config::get('ts_tcpport'), Config::get('ts_udpport'), Config::get('ts_timeout'))) {
+
+				if($ts->connect($config->ts_server, $config->ts_tcpport, $config->ts_udpport, $config->ts_timeout)) {
 					$serverInfo	= $ts->info_serverInfo();
 					$teamspeakData	= array(
 						'password'	=> '', // NO Server-API avalible.
@@ -48,25 +38,26 @@ class TeamspeakBuildCache
 					);
 					$ts->disconnect();
 				} else {
-					throw new Exception('Teamspeak-Error: '.$ts->debug());
+					$error	= $ts->debug();
+					throw new Exception('Teamspeak-Error: '.implode("<br>\r\n", $error));
 				}
 			break;
 			case 3:
-				require 'includes/libs/teamspeak/class.teamspeak3.php';
-				$tsAdmin 	= new ts3admin(Config::get('ts_server'), Config::get('ts_udpport'), Config::get('ts_timeout'));
+                require_once 'includes/libs/teamspeak/ts3admin/ts3admin.class.php';
+				$tsAdmin 	= new ts3admin($config->ts_server, $config->ts_udpport, $config->ts_timeout);
 				$connected	= $tsAdmin->connect();				
 				if(!$connected['success'])
 				{
 					throw new Exception('Teamspeak-Error: '.implode("<br>\r\n", $connected['errors']));
 				}
 				
-				$selected	= $tsAdmin->selectServer(Config::get('ts_tcpport'), 'port', true);
+				$selected	= $tsAdmin->selectServer($config->ts_tcpport, 'port', true);
 				if(!$selected['success'])
 				{
 					throw new Exception('Teamspeak-Error: '.implode("<br>\r\n", $selected['errors']));
 				}
 					
-				$loggedIn	= $tsAdmin->login(Config::get('ts_login'), Config::get('ts_password'));
+				$loggedIn	= $tsAdmin->login($config->ts_login, $config->ts_password);
 				if(!$loggedIn['success'])
 				{
 					throw new Exception('Teamspeak-Error: '.implode("<br>\r\n", $loggedIn['errors']));

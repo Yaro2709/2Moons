@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 $LNG['and']									= 'und';
@@ -202,22 +191,22 @@ $LNG['sys_destruc_null']        		   	= 'Die Todessterne können ihre volle Leis
 $LNG['fcp_colony']							= 'Kolonie';
 $LNG['fl_simulate']							= 'Simulieren';
 
-$LNG['type_mission'][1]  					= 'Angreifen';
-$LNG['type_mission'][2]  					= 'Verbandsangriff';
-$LNG['type_mission'][3]  					= 'Transport';
-$LNG['type_mission'][4]  					= 'Stationieren';
-$LNG['type_mission'][5]  					= 'Halten';
-$LNG['type_mission'][6]  					= 'Spionieren';
-$LNG['type_mission'][7]  					= 'Kolonisieren';
-$LNG['type_mission'][8]  					= 'Abbauen';
-$LNG['type_mission'][9]  					= 'Zerstören';
-$LNG['type_mission'][11]  					= 'DM Untersuchung';
-$LNG['type_mission'][15] 					= 'Expedition';
+$LNG['type_mission_1']  					= 'Angreifen';
+$LNG['type_mission_2']  					= 'Verbandsangriff';
+$LNG['type_mission_3']  					= 'Transport';
+$LNG['type_mission_4']  					= 'Stationieren';
+$LNG['type_mission_5']  					= 'Halten';
+$LNG['type_mission_6']  					= 'Spionieren';
+$LNG['type_mission_7']  					= 'Kolonisieren';
+$LNG['type_mission_8']  					= 'Abbauen';
+$LNG['type_mission_9']  					= 'Zerstören';
+$LNG['type_mission_11']  					= 'DM Untersuchung';
+$LNG['type_mission_15'] 					= 'Expedition';
 
-$LNG['type_planet_short'][1]  				= 'P';
-$LNG['type_planet_short'][2]  				= 'T';
-$LNG['type_planet_short'][3]  				= 'M';
+$LNG['type_planet_short_1']  				= 'P';
+$LNG['type_planet_short_2']  				= 'T';
+$LNG['type_planet_short_3']  				= 'M';
 
-$LNG['type_planet'][1]  					= 'Planet';
-$LNG['type_planet'][2]  					= 'Trümmerfeld';
-$LNG['type_planet'][3]  					= 'Mond';
+$LNG['type_planet_1']  					= 'Planet';
+$LNG['type_planet_2']  					= 'Trümmerfeld';
+$LNG['type_planet_3']  					= 'Mond';

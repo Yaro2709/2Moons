@@ -1,50 +1,45 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowFacebookPage() {
+
 	global $LNG;
-	
+
+	$config = Config::get(Universe::getEmulated());
+
 	if ($_POST)
 	{
 		$fb_on		= isset($_POST['fb_on']) && $_POST['fb_on'] == 'on' && !empty($_POST['fb_skey']) && !empty($_POST['fb_apikey']) ? 1 : 0;
 		$fb_apikey	= HTTP::_GP('fb_apikey', '');
 		$fb_skey 	= HTTP::_GP('fb_skey', '');
-	
-		Config::update(array(
-			'fb_on'		=> $fb_on,
-			'fb_apikey'	=> $fb_apikey,
-			'fb_skey'	=> $fb_skey
-		));
+
+
+		foreach(array(
+					'fb_on'		=> $fb_on,
+					'fb_apikey'	=> $fb_apikey,
+					'fb_skey'	=> $fb_skey
+		) as $key => $value) {
+			$config->$key	= $value;
+		}
+		
+		$config->save();
 	}
-	
-	$CONF	= Config::getAll(NULL, $_SESSION['adminuni']);
 	
 	$template	= new template();
 	$template->assign_vars(array(
@@ -54,9 +49,9 @@ function ShowFacebookPage() {
 		'fb_api_key'			=> $LNG['fb_api_key'],
 		'fb_active'				=> $LNG['fb_active'],
 		'fb_settings'			=> $LNG['fb_settings'],
-		'fb_on'					=> $CONF['fb_on'],
-		'fb_apikey'				=> $CONF['fb_apikey'],
-		'fb_skey'				=> $CONF['fb_skey'],
+		'fb_on'					=> $config->fb_on,
+		'fb_apikey'				=> $config->fb_apikey,
+		'fb_skey'				=> $config->fb_skey,
 		'fb_curl'				=> function_exists('curl_init') ? 1 : 0,
 		'fb_curl_info'			=> function_exists('curl_init') ? $LNG['fb_curl_yes'] : $LNG['fb_curl_no'],
 	));

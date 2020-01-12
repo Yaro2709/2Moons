@@ -50,6 +50,7 @@
 	
 	#content {
 		color:#CCC;
+        position: inherit;
 	}
 	#content h1 {
 		color:#CCC;
@@ -68,8 +69,14 @@
 	#content #chatList, #content #onlineListContainer, #content #helpContainer, #content #settingsContainer, #content #bbCodeContainer, #content #colorCodesContainer, #content #emoticonsContainer {
 		background: #0D1014;
 		background: rgba(13, 16, 20, 0.95);
-		border: 0px;
+		border: 0;
 	}
+
+    #content #onlineListContainer #onlineList div > a {
+        padding-bottom: 2px;
+        padding-top: 4px;
+    }
+
 	.statusContainerOn {
 		background-image: url('../img/loading.png');
 	}
@@ -79,10 +86,14 @@
 	.statusContainerAlert {
 		background-image: url('../img/loading-trouble.png');
 	}
-	#content #bbCodeContainer input, #content #logoutButton, #content #submitButton {
+	#content #bbCodeContainer input, #content #submitButton {
 		margin:2px;
 		text-align:center;
 	}
+    #content #logoutChannelContainer {
+        display:none;
+    }
+
 	#content #colorCodesContainer a {
 		border-color:black;
 	}
@@ -156,8 +167,15 @@
 	#onlineListContainer h3 {
 		padding:2px 3px;
 	}
-	#content #settingsContainer #settingsList input.playback {
+	#content #settingsContainer > #settingsList input.playback {
 	    background:url('../img/playback.png') no-repeat;
 	}
-	
+	#content #settingsContainer,
+	#content #helpContainer {
+		width: 200px;
+	}
+	#content #settingsContainer > #settingsList,
+	#content #helpContainer > #helpList{
+		padding: 10px;
+	}
 }

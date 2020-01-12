@@ -1,61 +1,55 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowDisclamerPage()
 {
-	global $LNG, $USER;
-	
-	$CONF	= Config::getAll(NULL, $_SESSION['adminuni']);
+	global $LNG;
+
+
+	$config = Config::get(Universe::getEmulated());
+
 	if (!empty($_POST))
 	{
 		$config_before = array(	
-			'disclamerAddress'	=> $CONF['disclamerAddress'],
-			'disclamerPhone'	=> $CONF['disclamerPhone'],
-			'disclamerMail'		=> $CONF['disclamerMail'],
-			'disclamerNotice'	=> $CONF['disclamerNotice'],
+			'disclamerAddress'	=> $config->disclamerAddress,
+			'disclamerPhone'	=> $config->disclamerPhone,
+			'disclamerMail'	=> $config->disclamerMail,
+			'disclamerNotice'	=> $config->disclamerNotice,
 		);
 		
-		$disclamerAddress	= HTTP::_GP('disclamerAddress', '', true);
-		$disclamerPhone		= HTTP::_GP('disclamerPhone', '', true);
-		$disclamerMail		= HTTP::_GP('disclamerMail', '', true);
-		$disclamerNotice	= HTTP::_GP('disclamerNotice', '', true);
+		$disclaimerAddress	= HTTP::_GP('disclaimerAddress', '', true);
+		$disclaimerPhone	= HTTP::_GP('disclaimerPhone', '', true);
+		$disclaimerMail		= HTTP::_GP('disclaimerMail', '', true);
+		$disclaimerNotice	= HTTP::_GP('disclaimerNotice', '', true);
 		
 		$config_after = array(	
-			'disclamerAddress'	=> $disclamerAddress,
-			'disclamerPhone'	=> $disclamerPhone,
-			'disclamerMail'		=> $disclamerMail,
-			'disclamerNotice'	=> $disclamerNotice,
+			'disclamerAddress'	=> $disclaimerAddress,
+			'disclamerPhone'	=> $disclaimerPhone,
+			'disclamerMail'		=> $disclaimerMail,
+			'disclamerNotice'	=> $disclaimerNotice,
 		);
-		
-		Config::update($config_after);
-		$CONF	= Config::getAll(NULL, $_SESSION['adminuni']);
+
+		foreach($config_after as $key => $value)
+		{
+			$config->$key	= $value;
+		}
+		$config->save();
 		
 		$LOG = new Log(3);
 		$LOG->target = 5;
@@ -69,16 +63,16 @@ function ShowDisclamerPage()
 	$template->execscript('$(\'textarea\').autosize();');
 
 	$template->assign_vars(array(
-		'disclamerAddress'		=> $CONF['disclamerAddress'],
-		'disclamerPhone'		=> $CONF['disclamerPhone'],
-		'disclamerMail'			=> $CONF['disclamerMail'],
-		'disclamerNotice'		=> $CONF['disclamerNotice'],
-		'se_server_parameters'	=> $LNG['mu_disclamer'],
+		'disclaimerAddress'		=> $config->disclamerAddress,
+		'disclaimerPhone'		=> $config->disclamerPhone,
+		'disclaimerMail'		=> $config->disclamerMail,
+		'disclaimerNotice'		=> $config->disclamerNotice,
+		'se_server_parameters'	=> $LNG['mu_disclaimer'],
 		'se_save_parameters'	=> $LNG['se_save_parameters'],
-		'se_disclamerAddress'	=> $LNG['se_disclamerAddress'],
-		'se_disclamerPhone'		=> $LNG['se_disclamerPhone'],
-		'se_disclamerMail'		=> $LNG['se_disclamerMail'],
-		'se_disclamerNotice'	=> $LNG['se_disclamerNotice'],
+		'se_disclaimerAddress'	=> $LNG['se_disclaimerAddress'],
+		'se_disclaimerPhone'	=> $LNG['se_disclaimerPhone'],
+		'se_disclaimerMail'		=> $LNG['se_disclaimerMail'],
+		'se_disclaimerNotice'	=> $LNG['se_disclaimerNotice'],
 	));
 	
 	$template->show('DisclamerConfigBody.tpl');

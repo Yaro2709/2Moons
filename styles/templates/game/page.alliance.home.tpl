@@ -6,7 +6,7 @@
 	</tr>
 	{if $ally_image}
 	<tr>
-		<td colspan="2"><img src="{$ally_image}"></td>
+		<td colspan="2"><img style="max-width: 1024px;" src="{$ally_image}"></td>
 	</tr>
 	{/if}
 	<tr>
@@ -25,9 +25,11 @@
 		<td>{$LNG.al_rank}</td>
 		<td>{$rankName}{if $rights.ADMIN} (<a href="?page=alliance&amp;mode=admin">{$LNG.al_manage_alliance}</a>){/if}</td>
 	</tr>
+    {if isModuleAvailable($smarty.const.MODULE_CHAT)}
 	<tr>
 		<td colspan="2"><a href="#" onclick="return Dialog.AllianceChat();">{$LNG.al_goto_chat}</a></td>
-	</tr> 
+	</tr>
+    {/if}
 	{if $rights.SEEAPPLY && $applyCount > 0}		
 	<tr>
 		<td>{$LNG.al_requests}</td><td><a href="?page=alliance&amp;mode=admin&amp;action=mangeApply">{$requests}</a></td>

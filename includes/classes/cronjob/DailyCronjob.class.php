@@ -1,33 +1,23 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2011 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
  * @copyright 2009 Lucky
- * @copyright 2011 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.0 (2011-12-10)
- * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
-class DailyCronJob
+require_once 'includes/classes/cronjob/CronjobTask.interface.php';
+
+class DailyCronJob implements CronjobTask
 {
 	function run()
 	{
@@ -39,18 +29,25 @@ class DailyCronJob
 	
 	function optimizeTables()
 	{
-		$tables	= $GLOBALS['DATABASE']->query("SHOW TABLE STATUS FROM ".DB_NAME.";");
-		$SQL 	= array();
-		while($table = $GLOBALS['DATABASE']->fetch_array($tables)){
-			$prefix = explode("_", $table['Name']);  
-			
-			if($prefix[0].'_' === DB_PREFIX && $prefix[1] !== 'session')
-				$SQL[]	= $table['Name'];
+		$sql			= "SHOW TABLE STATUS FROM `".DB_NAME."`;";
+		$sqlTableRaw	= Database::get()->nativeQuery($sql);
+
+		$prefixCounts	= strlen(DB_PREFIX);
+		$dbTables		= array();
+
+		foreach($sqlTableRaw as $table)
+		{
+			if (DB_PREFIX == substr($table['Name'], 0, $prefixCounts)) {
+				$dbTables[] = $table['Name'];
+			}
 		}
 
-		$GLOBALS['DATABASE']->query("OPTIMIZE TABLE ".implode(', ',$SQL).";");
+		if(!empty($dbTables))
+		{
+			Database::get()->nativeQuery("OPTIMIZE TABLE ".implode(', ', $dbTables).";");
+		}
 	}
-	
+
 	function clearCache()
 	{
 		ClearCache();
@@ -63,6 +60,7 @@ class DailyCronJob
 	
 	function clearEcoCache()
 	{
-		$GLOBALS['DATABASE']->query("UPDATE ".PLANETS." SET eco_hash = '';");
+		$sql	= "UPDATE %%PLANETS%% SET eco_hash = '';";
+		Database::get()->update($sql);
 	}
 }

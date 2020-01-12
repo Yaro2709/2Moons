@@ -1,36 +1,25 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowQuickEditorPage()
 {
-	global $USER, $LNG, $reslist, $resource, $pricelist;
+	global $USER, $LNG, $reslist, $resource;
 	$action	= HTTP::_GP('action', '');
 	$edit	= HTTP::_GP('edit', '');
 	$id 	= HTTP::_GP('id', 0);
@@ -39,6 +28,8 @@ function ShowQuickEditorPage()
 	{
 		case 'planet':
 			$DataIDs	= array_merge($reslist['fleet'], $reslist['build'], $reslist['defense']);
+			$SpecifyItemsPQ	= "";
+
 			foreach($DataIDs as $ID)
 			{
 				$SpecifyItemsPQ	.= "`".$resource[$ID]."`,";
@@ -67,7 +58,7 @@ function ShowQuickEditorPage()
 				$SQL	.= "`field_max` = '".HTTP::_GP('field_max', 0)."', ";
 				$SQL	.= "`name` = '".$GLOBALS['DATABASE']->sql_escape(HTTP::_GP('name', '', UTF8_SUPPORT))."', ";
 				$SQL	.= "`eco_hash` = '' ";
-				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';";
+				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".Universe::getEmulated()."';";
 					
 				$GLOBALS['DATABASE']->query($SQL);
 				
@@ -88,7 +79,7 @@ function ShowQuickEditorPage()
 		
 				exit(sprintf($LNG['qe_edit_planet_sucess'], $PlanetData['name'], $PlanetData['galaxy'], $PlanetData['system'], $PlanetData['planet']));
 			}
-			$UserInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `username` FROM ".USERS." WHERE `id` = '".$PlanetData['id_owner']."' AND `universe` = '".$_SESSION['adminuni']."';");
+			$UserInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `username` FROM ".USERS." WHERE `id` = '".$PlanetData['id_owner']."' AND `universe` = '".Universe::getEmulated()."';");
 
 			$build = $defense = $fleet	= array();
 			
@@ -138,9 +129,9 @@ function ShowQuickEditorPage()
 				'field_max'		=> $PlanetData['field_max'],
 				'temp_min'		=> $PlanetData['temp_min'],
 				'temp_max'		=> $PlanetData['temp_max'],
-				'metal'			=> floattostring($PlanetData['metal']),
-				'crystal'		=> floattostring($PlanetData['crystal']),
-				'deuterium'		=> floattostring($PlanetData['deuterium']),
+				'metal'			=> floatToString($PlanetData['metal']),
+				'crystal'		=> floatToString($PlanetData['crystal']),
+				'deuterium'		=> floatToString($PlanetData['deuterium']),
 				'metal_c'		=> pretty_number($PlanetData['metal']),
 				'crystal_c'		=> pretty_number($PlanetData['crystal']),
 				'deuterium_c'	=> pretty_number($PlanetData['deuterium']),
@@ -149,6 +140,8 @@ function ShowQuickEditorPage()
 		break;
 		case 'player':
 			$DataIDs	= array_merge($reslist['tech'], $reslist['officier']);
+			$SpecifyItemsPQ	= "";
+
 			foreach($DataIDs as $ID)
 			{
 				$SpecifyItemsPQ	.= "`".$resource[$ID]."`,";
@@ -164,10 +157,11 @@ function ShowQuickEditorPage()
 				}
 				$SQL	.= "`darkmatter` = '".max(HTTP::_GP('darkmatter', 0), 0)."', ";
 				if(!empty($_POST['password']) && $ChangePW)
-					$SQL	.= "`password` = '".cryptPassword(HTTP::_GP('password', '', true))."', ";
+					$SQL	.= "`password` = '".PlayerUtil::cryptPassword(HTTP::_GP('password', '', true))."', ";
+
 				$SQL	.= "`username` = '".$GLOBALS['DATABASE']->sql_escape(HTTP::_GP('name', '', UTF8_SUPPORT))."', ";
 				$SQL	.= "`authattack` = '".($UserData['authlevel'] != AUTH_USR && HTTP::_GP('authattack', '') == 'on' ? $UserData['authlevel'] : 0)."' ";
-				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".$_SESSION['adminuni']."';";
+				$SQL	.= "WHERE `id` = '".$id."' AND `universe` = '".Universe::getEmulated()."';";
 				$GLOBALS['DATABASE']->query($SQL);
 				
 				$old = array();
@@ -207,7 +201,7 @@ function ShowQuickEditorPage()
 				
 				exit(sprintf($LNG['qe_edit_player_sucess'], $UserData['username'], $id));
 			}
-			$PlanetInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `name` FROM ".PLANETS." WHERE `id` = '".$UserData['id_planet']."' AND `universe` = '".$_SESSION['adminuni']."';");
+			$PlanetInfo				= $GLOBALS['DATABASE']->getFirstRow("SELECT `name` FROM ".PLANETS." WHERE `id` = '".$UserData['id_planet']."' AND `universe` = '".Universe::getEmulated()."';");
 
 			$tech		= array();
 			$officier	= array();
@@ -246,7 +240,8 @@ function ShowQuickEditorPage()
 				'authattack'	=> $UserData['authattack'],
 				'multi'			=> $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MULTI." WHERE userID = ".$id.";"),
 				'ChangePW'		=> $ChangePW,
-				'darkmatter'	=> floattostring($UserData['darkmatter']),
+                'yesorno'		=> array(1 => $LNG['one_is_yes_1'], 0 => $LNG['one_is_yes_0']),
+				'darkmatter'	=> floatToString($UserData['darkmatter']),
 				'darkmatter_c'	=> pretty_number($UserData['darkmatter']),
 			));
 			$template->show('QuickEditorUser.tpl');

@@ -1,42 +1,33 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 function ShowTopnavPage()
 {
-	global $LNG, $USER, $UNI, $CONF;
+	global $LNG, $USER;
 	$template	= new template();
 
-	$AvailableUnis[Config::get('uni')]	= Config::get('uni_name').' (ID: '.Config::get('uni').')';
-	$Query	= $GLOBALS['DATABASE']->query("SELECT `uni`, `uni_name` FROM ".CONFIG." WHERE `uni` != '".$UNI."' ORDER BY `uni` DESC;");
-	while($Unis	= $GLOBALS['DATABASE']->fetch_array($Query)) {
-		$AvailableUnis[$Unis['uni']]	= $Unis['uni_name'].' (ID: '.$Unis['uni'].')';
+	$universeSelect	= array();
+	foreach(Universe::availableUniverses() as $uniId)
+	{
+		$config = Config::get($uniId);
+		$universeSelect[$uniId]	= sprintf('%s (ID: %d)', $config->uni_name, $uniId);
 	}
-	ksort($AvailableUnis);
+
+	ksort($universeSelect);
 	$template->assign_vars(array(	
 		'ad_authlevel_title'	=> $LNG['ad_authlevel_title'],
 		're_reset_universe'		=> $LNG['re_reset_universe'],
@@ -48,8 +39,8 @@ function ShowTopnavPage()
 		'sid'					=> session_id(),
 		'id'					=> $USER['id'],
 		'authlevel'				=> $USER['authlevel'],
-		'AvailableUnis'			=> $AvailableUnis,
-		'UNI'					=> $_SESSION['adminuni'],
+		'AvailableUnis'			=> $universeSelect,
+		'UNI'					=> Universe::getEmulated(),
 	));
 	
 	$template->show('ShowTopnavPage.tpl');

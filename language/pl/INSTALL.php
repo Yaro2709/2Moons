@@ -1,30 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2011 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
  * @copyright 2009 Lucky
- * @copyright 2011 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.5 (2011-07-31)
- * @info $Id$
- * @link http://2moons.cc/
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 $LNG['back']					= 'Wróć';
@@ -35,16 +23,16 @@ $LNG['login']					= 'Login';
 $LNG['menu_intro']				= 'Intro';
 $LNG['menu_install']			= 'Instalacja';
 $LNG['menu_license']			= 'Licencja';
-$LNG['menu_upgrade']			= 'Uktualizacja';
+$LNG['menu_upgrade']			= 'Aktualizacja';
 
 $LNG['title_install']			= 'Instalator';
 
 $LNG['intro_lang']				= 'Język';
 $LNG['intro_install']			= 'Przejdź do instalacji';
 $LNG['intro_welcome']			= 'Serdecznie witamy w 2Moons!';
-$LNG['intro_text']				= '2Moons to najlepszy klon Ogame.<br>2Moons to najnowsza i najbardziej stabilna wersja Xnova, jaka kiedykolwiek powstała. Cechuje ją przyjazność, elastyczność i dynamiczność jak również jakość obsługi. Mamy nadzieję że jak zawsze sprawimy się lepiej niż oczekiwaliście. System przeprowadzi Cię przez proces instalacji, lub też aktualizacji aktualnej wersji do najnowszej. Jeśli masz jakiekolwiek problemy nie wachaj się zadać pytania na naszym forum poświęconemu rozwojowi i wsparciu.<br><br>2Moons podlega licencji GNU GPL v3. Licencje przeczytasz po kliknięciu odpowiedniego linku w menu.<br><br>Przed instalacją skrypt sprawdzi czy twój serwer spełnia minimalne wymagania.';
+$LNG['intro_text']				= '2Moons to najlepszy klon Ogame.<br>2Moons to najnowsza i najbardziej stabilna wersja Xnova, jaka kiedykolwiek powstała. Cechuje ją przyjazność, elastyczność i dynamiczność, jak również najwyższa jakość obsługi. System przeprowadzi Cię przez proces instalacji lub też aktualizacji aktualnej wersji do najnowszej. Jeśli masz jakiekolwiek problemy nie wahaj się zadać pytania na naszym forum poświęconemu rozwojowi i wsparciu.<br><br>2Moons podlega licencji GNU GPL v3. Licencje przeczytasz po kliknięciu odpowiedniego linku w menu.<br><br>Przed instalacją skrypt sprawdzi, czy twój serwer spełnia minimalne wymagania.';
 $LNG['intro_upgrade_head']		= 'Zainstalować 2Moons?';
-$LNG['intro_upgrade_text']		= '<p>2Moons zainstalowane, chcesz teraz sprawdzić aktualizację?</p><p>Aktulizacje!</p>';
+$LNG['intro_upgrade_text']		= '<p>2Moons zainstalowane, chcesz teraz sprawdzić aktualizacje?</p><p>Aktualizacje!</p>';
 
 $LNG['upgrade_success']			= 'Aktualizacja przebiegła pomyślnie, baza danych została zaktualizowana do %s.';
 $LNG['upgrade_nothingtodo']		= 'Baza danych aktualna z wersją %s.';

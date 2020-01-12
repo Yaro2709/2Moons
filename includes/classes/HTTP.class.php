@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 class HTTP {
@@ -40,12 +29,17 @@ class HTTP {
 		}
 		exit;
 	}
-	
+
 	static public function sendHeader($name, $value = NULL)
 	{
 		header($name.(!is_null($value) ? ': '.$value : ''));
 	}
-	
+
+	static public function redirectToUniverse($universe)
+	{
+		HTTP::redirectTo(PROTOCOL.HTTP_HOST.HTTP_BASE."uni".$universe."/".HTTP_FILE, true);
+	}
+
 	static public function sendCookie($name, $value = "", $toTime = NULL)
 	{
 		setcookie($name, $value, $toTime);
@@ -57,41 +51,69 @@ class HTTP {
 		{
 			return $default;
 		}
+
+		if(is_float($default) || $highnum)
+		{
+			return (float) $_REQUEST[$name];
+		}
 		
 		if(is_int($default))
 		{
 			return (int) $_REQUEST[$name];			
 		}
-		
-		if(is_float($default))
-		{
-			return (float) $_REQUEST[$name];			
-		}
-		
+
 		if(is_string($default))
 		{
-			$var = trim(htmlspecialchars(str_replace(array("\r\n", "\r", "\0"), array("\n", "\n", ''), $_REQUEST[$name]), ENT_QUOTES, 'UTF-8'));
-			
-			if (empty($var)) {
-				return $default;				
-			}
-			
-			if ($multibyte) {
-				if (!preg_match('/^./u', $var)) {
-					$var = '';
-				}
-			} else {
-				$var = preg_replace('/[\x80-\xFF]/', '?', $var); // no multibyte, allow only ASCII (0-127)
-			}
-			
-			return $var;
+			return self::_quote($_REQUEST[$name], $multibyte);
 		}
 		
-		if(is_array($default))
+		if(is_array($default) && is_array($_REQUEST[$name]))
 		{
-			return (array) $_REQUEST[$name];
+			return self::_quoteArray($_REQUEST[$name], $multibyte, !empty($default) && $default[0] === 0);
 		}
 		
 		return $default;
+	}
+
+	private static function _quoteArray($var, $multibyte, $onlyNumbers = false)
+	{
+		$data	= array();
+		foreach($var as $key => $value)
+		{
+			if(is_array($value))
+			{
+				$data[$key]	= self::_quoteArray($value, $multibyte);
+			}
+			elseif($onlyNumbers)
+			{
+				$data[$key]	= (int) $value;
+			}
+			else
+			{
+				$data[$key]	= self::_quote($value, $multibyte);
+			}
+		}
+
+		return $data;
+	}
+
+	private static function _quote($var, $multibyte)
+	{
+		$var	= str_replace(array("\r\n", "\r", "\0"), array("\n", "\n", ''), $var);
+		$var	= htmlspecialchars($var, ENT_QUOTES, 'UTF-8');
+		$var	= trim($var);
+
+		if ($multibyte) {
+			if (!preg_match('/^./u', $var))
+			{
+				$var = '';
+			}
+		}
+		else
+		{
+			$var = preg_replace('/[\x80-\xFF]/', '?', $var); // no multibyte, allow only ASCII (0-127)
+		}
+
+		return $var;
 	}
 }

@@ -1,44 +1,36 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowInformationPage()
 {
-	global $LNG, $CONF, $USER;
+	global $LNG, $USER;
 
-	if(file_exists(ini_get('error_log')))
+	$config = Config::get();
+
+	// @ for open_basedir
+	if(@file_exists(ini_get('error_log')))
 		$Lines	= count(file(ini_get('error_log')));
 	else
 		$Lines	= 0;
 	
 	try {
-		$dateTimeZoneServer = new DateTimeZone(Config::get('timezone'));
+		$dateTimeZoneServer = new DateTimeZone($config->timezone);
 	} catch (Exception $e) {
 		$dateTimeZoneServer	= new DateTimeZone(date_default_timezone_get());
 	}
@@ -58,14 +50,18 @@ function ShowInformationPage()
 	$dateTimeServer		= new DateTime("now", $dateTimeZoneServer);
 	$dateTimeUser		= new DateTime("now", $dateTimeZoneUser);
 	$dateTimePHP		= new DateTime("now", $dateTimeZonePHP);
-	
+
+    $sql	= "SELECT dbVersion FROM %%SYSTEM%%;";
+
+    $dbVersion	= Database::get()->selectSingle($sql, array(), 'dbVersion');
+
 	$template	= new template();
 	$template->assign_vars(array(
-		'info_information'	=> sprintf($LNG['info_information'], 'http://tracker.2moons.cc/'),
+		'info_information'	=> sprintf($LNG['info_information'], 'https://github.com/jkroepke/2Moons/issues'),
 		'info'				=> $_SERVER['SERVER_SOFTWARE'],
 		'vPHP'				=> PHP_VERSION,
 		'vAPI'				=> PHP_SAPI,
-		'vGame'				=> Config::get('VERSION'),
+		'vGame'				=> $config->VERSION.(file_exists(ROOT_PATH.'/.git/ORIG_HEAD') ? ' ('.trim(file_get_contents(ROOT_PATH.'/.git/ORIG_HEAD')).')': ''),
 		'vMySQLc'			=> $GLOBALS['DATABASE']->getVersion(),
 		'vMySQLs'			=> $GLOBALS['DATABASE']->getServerVersion(),
 		'root'				=> $_SERVER['SERVER_NAME'],
@@ -80,6 +76,7 @@ function ShowInformationPage()
 		'log_errors'		=> ini_get('log_errors') ? 'Aktiv' : 'Inaktiv',
 		'errorlog'			=> ini_get('error_log'),
 		'errorloglines'		=> $Lines,
+        'dbVersion'         => $dbVersion,
 		'php_tz'			=> $dateTimePHP->getOffset() / 3600,
 		'conf_tz'			=> $dateTimeServer->getOffset() / 3600,
 		'user_tz'			=> $dateTimeUser->getOffset() / 3600,

@@ -3,7 +3,7 @@
 {block name="content"}
 <table class="table519">
 	<tr>
-		<th colspan="3"><a href="#" onclick="return Dialog.PlanetAction();" title="{$LNG.ov_planetmenu}">{$LNG.type_planet.$planet_type} "<span class="planetname">{$planetname}</span>"</a> ({$username})</th>
+		<th colspan="3"><a href="#" onclick="return Dialog.PlanetAction();" title="{$LNG.ov_planetmenu}">{$LNG["type_planet_{$planet_type}"]} "<span class="planetname">{$planetname}</span>"</a> ({$username})</th>
 	</tr>
 	{if $messages}
 	<tr>
@@ -54,7 +54,7 @@
 		</td>
 		<td>
 		{if $AllPlanets}
-		<table>
+		<table id="planetList">
 			{foreach $AllPlanets as $PlanetRow}
 			{if ($PlanetRow@iteration % $themeSettings.PLANET_ROWS_ON_OVERVIEW) === 1}<tr style="height:20px;">{/if}
 			<td class="transparent">{$PlanetRow.name}<br><a href="game.php?page=overview&amp;cp={$PlanetRow.id}" title="{$PlanetRow.name}"><img src="{$dpath}planeten/small/s_{$PlanetRow.image}.jpg" alt="{$PlanetRow.name}"></a><br>{$PlanetRow.build}</td>
@@ -82,18 +82,16 @@
 		<td>{$LNG.ov_position}</td>
 		<td colspan="2"><a href="game.php?page=galaxy&amp;galaxy={$galaxy}&amp;system={$system}">[{$galaxy}:{$system}:{$planet}]</a></td>
 	</tr>
-	{if isModulAvalible(25)}
 	<tr>
 		<td>{$LNG.ov_points}</td>
 		<td colspan="2">{$rankInfo}</td>
 	</tr>
-	{/if}
 	{if $ref_active}
 	<tr>
-		<th colspan="3">{$LNG.ov_reflink}</th>
+		<th colspan="3"><label for="referral">{$LNG.ov_reflink}</label></th>
 	</tr>
 	<tr>
-		<td colspan="3"><input type="text" value="{$path}index.php?ref={$userid}" readonly="readonly" style="width:450px;"></td>
+		<td colspan="3"><input id="referral" type="text" value="{$path}index.php?ref={$userid}" readonly="readonly" style="width:450px;" /></td>
 	</tr>
 	{foreach $RefLinks as $RefID => $RefLink}
 	<tr>
@@ -107,4 +105,7 @@
 	{/foreach}
 	{/if}
 </table>
+{/block}
+{block name="script" append}
+    <script src="scripts/game/overview.js"></script>
 {/block}

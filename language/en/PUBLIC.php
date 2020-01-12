@@ -1,7 +1,21 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 // Translated into English by QwataKayean . All rights reversed (C) 2012
-// 2Moons - Copyright (C) 2010-2012 J�n Kropke
+// 2Moons - Copyright (C) 2010-2012 J�n Kropke
 
 // Site Title
 $LNG['siteTitleIndex']				= 'Index';
@@ -35,12 +49,7 @@ $LNG['buttonScreenshot']			= 'Screenshots';
 $LNG['buttonLostPassword']			= 'Lost Password?';
 
 // Start
-$LNG['gameInformations']			= array(
-	'A space strategy game in real time.',
-	'Game with hundreds of users.',
-	'No download, it only requires a standard browser.',
-	'Free registration',
-);
+$LNG['gameInformations']    		= "A space strategy game in real time.\nGame with hundreds of users.\nNo download, it only requires a standard browser.\nFree registration";
 
 // Login
 $LNG['loginHeader']					= 'Login';

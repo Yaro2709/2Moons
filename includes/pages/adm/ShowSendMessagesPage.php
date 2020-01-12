@@ -1,37 +1,25 @@
-
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 
 function ShowSendMessagesPage() {
-	global $USER, $LNG, $CONF;
+	global $USER, $LNG;
 	
 	$ACTION	= HTTP::_GP('action', '');
 	if ($ACTION == 'send')
@@ -47,38 +35,41 @@ function ShowSendMessagesPage() {
 			case AUTH_ADM:
 				$class = 'admin';
 			break;
+			default:
+				$class = '';
+			break;
 		}
 
 		$Subject	= HTTP::_GP('subject', '', true);
 		$Message 	= HTTP::_GP('text', '', true);
 		$Mode	 	= HTTP::_GP('mode', 0);
-		$Lang	 	= HTTP::_GP('lang', '');
+		$Lang		= HTTP::_GP('globalmessagelang', '');
 
 		if (!empty($Message) && !empty($Subject))
 		{
-			require_once('includes/functions/BBCode.php');
+			require 'includes/classes/BBCode.class.php';
 			if($Mode == 0 || $Mode == 2) {
-				$Time    	= TIMESTAMP;
-				$From    	= '<span class="'.$class.'">'.$LNG['user_level'][$USER['authlevel']].' '.$USER['username'].'</span>';
+				$From    	= '<span class="'.$class.'">'.$LNG['user_level_'.$USER['authlevel']].' '.$USER['username'].'</span>';
 				$pmSubject 	= '<span class="'.$class.'">'.$Subject.'</span>';
-				$pmMessage 	= '<span class="'.$class.'">'.bbcode($Message).'</span>';
-				$USERS		= $GLOBALS['DATABASE']->query("SELECT `id`, `username` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".(!empty($Lang) ? " AND `lang` = '".$GLOBALS['DATABASE']->sql_escape($Lang)."'": "").";");
+				$pmMessage 	= '<span class="'.$class.'">'.BBCode::parse($Message).'</span>';
+				$USERS		= $GLOBALS['DATABASE']->query("SELECT `id`, `username` FROM ".USERS." WHERE `universe` = '".Universe::getEmulated()."'".(!empty($Lang) ? " AND `lang` = '".$GLOBALS['DATABASE']->sql_escape($Lang)."'": "").";");
 				while($UserData = $GLOBALS['DATABASE']->fetch_array($USERS))
 				{
 					$sendMessage = str_replace('{USERNAME}', $UserData['username'], $pmMessage);
-					SendSimpleMessage($UserData['id'], $USER['id'], TIMESTAMP, 50, $From, $pmSubject, $sendMessage);
+					PlayerUtil::sendMessage($UserData['id'], $USER['id'], $From, 50, $pmSubject, $sendMessage, TIMESTAMP, NULL, 1, Universe::getEmulated());
 				}
 			}
+
 			if($Mode == 1 || $Mode == 2) {
 				require 'includes/classes/Mail.class.php';
 				$userList	= array();
 				
-				$USERS		= $GLOBALS['DATABASE']->query("SELECT `email`, `username` FROM ".USERS." WHERE `universe` = '".$_SESSION['adminuni']."'".(!empty($Lang) ? " AND `lang` = '".$GLOBALS['DATABASE']->sql_escape($Lang)."'": "").";");
+				$USERS		= $GLOBALS['DATABASE']->query("SELECT `email`, `username` FROM ".USERS." WHERE `universe` = '".Universe::getEmulated()."'".(!empty($Lang) ? " AND `lang` = '".$GLOBALS['DATABASE']->sql_escape($Lang)."'": "").";");
 				while($UserData = $GLOBALS['DATABASE']->fetch_array($USERS))
 				{				
 					$userList[$UserData['email']]	= array(
 						'username'	=> $UserData['username'],
-						'body'		=> bbcode(str_replace('{USERNAME}', $UserData['username'], $Message))
+						'body'		=> BBCode::parse(str_replace('{USERNAME}', $UserData['username'], $Message))
 					);
 				}
 				
@@ -92,7 +83,7 @@ function ShowSendMessagesPage() {
 	
 	$sendModes	= $LNG['ma_modes'];
 	
-	if(Config::get('mail_active') == 0)
+	if(Config::get()->mail_active == 0)
 	{
 		unset($sendModes[1]);
 		unset($sendModes[2]);

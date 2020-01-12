@@ -1,36 +1,25 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowMessageListPage()
 {
-	global $LNG;
+	global $LNG, $USER;
 	$page		= HTTP::_GP('side', 1);
 	$type		= HTTP::_GP('type', 100);
 	$sender		= HTTP::_GP('sender', '', UTF8_SUPPORT);
@@ -81,11 +70,11 @@ function ShowMessageListPage()
 	
 	if ($type != 100)
 	{
-		$MessageCount	= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MESSAGES.$countJoinSQL." WHERE message_type = ".$type." AND message_universe = ".$_SESSION['adminuni'].$dateWhereSQL.$userWhereSQL.";");
+		$MessageCount	= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MESSAGES.$countJoinSQL." WHERE message_type = ".$type." AND message_universe = ".Universe::getEmulated().$dateWhereSQL.$userWhereSQL.";");
 	}
 	else
 	{
-		$MessageCount	= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MESSAGES.$countJoinSQL." WHERE message_universe = ".$_SESSION['adminuni'].$dateWhereSQL.$userWhereSQL.";");
+		$MessageCount	= $GLOBALS['DATABASE']->getFirstCell("SELECT COUNT(*) FROM ".MESSAGES.$countJoinSQL." WHERE message_universe = ".Universe::getEmulated().$dateWhereSQL.$userWhereSQL.";");
 	}
 	
 	$maxPage	= max(1, ceil($MessageCount / $perSide));
@@ -99,7 +88,7 @@ function ShowMessageListPage()
 		FROM ".MESSAGES." as m 
 		LEFT JOIN ".USERS." as u ON m.message_owner = u.id 
 		LEFT JOIN ".USERS." as us ON m.message_sender = us.id
-		WHERE m.message_universe = ".$_SESSION['adminuni']." 
+		WHERE m.message_universe = ".Universe::getEmulated()."
 		".$dateWhereSQL."
 		".$userWhereSQL."
 		ORDER BY message_time DESC, message_id DESC
@@ -109,7 +98,7 @@ function ShowMessageListPage()
 		FROM ".MESSAGES." as m
 		LEFT JOIN ".USERS." as u ON m.message_owner = u.id
 		LEFT JOIN ".USERS." as us ON m.message_sender = us.id
-		WHERE m.message_type = ".$type." AND message_universe = ".$_SESSION['adminuni']."
+		WHERE m.message_type = ".$type." AND message_universe = ".Universe::getEmulated()."
 		".$dateWhereSQL."
 		".$userWhereSQL."
 		ORDER BY message_time DESC, message_id DESC
@@ -124,6 +113,7 @@ function ShowMessageListPage()
 			'subject'	=> $messageRow['message_subject'],
 			'text'		=> $messageRow['message_text'],
 			'type'		=> $messageRow['message_type'],
+			'deleted'	=> $messageRow['message_deleted'] != NULL,
 			'time'		=> str_replace(' ', '&nbsp;', _date($LNG['php_tdformat'], $messageRow['message_time']), $USER['timezone']),
 		);
 	}	

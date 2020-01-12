@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
@@ -37,11 +26,11 @@ function ShowAccountDataPage()
 	$id_u	= HTTP::_GP('id_u', 0);
 	if (!empty($id_u))
 	{
-		$OnlyQueryLogin 	= $GLOBALS['DATABASE']->getFirstRow("SELECT `id`, `authlevel` FROM ".USERS." WHERE `id` = '".$id_u."' AND `universe` = '".$_SESSION['adminuni']."';");
+		$OnlyQueryLogin 	= $GLOBALS['DATABASE']->getFirstRow("SELECT `id`, `authlevel` FROM ".USERS." WHERE `id` = '".$id_u."' AND `universe` = '".Universe::getEmulated()."';");
 
 		if(!isset($OnlyQueryLogin))
 		{
-			exit($template->message($LNG['ac_username_doesnt'], '?page=accoutdata'));
+			$template->message($LNG['ac_username_doesnt'], '?page=accoutdata');
 		}
 		else
 		{
@@ -56,7 +45,7 @@ function ShowAccountDataPage()
 			 urlaubs_until,u.ally_id,a.ally_name,".$SpecifyItemsUQ."
 			 u.ally_register_time,u.ally_rank_id,u.bana,u.banaday";
 			
-			$UserQuery 	= 	$GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsU." FROM ".USERS." as u LEFT JOIN ".SESSION." as s ON s.userID = u.id LEFT JOIN ".ALLIANCE." a ON a.id = u.ally_id WHERE u.`id` = '".$id_u."';");
+			$UserQuery 	= 	$GLOBALS['DATABASE']->getFirstRow("SELECT ".$SpecifyItemsU." FROM ".USERS." as u LEFT JOIN ".ALLIANCE." a ON a.id = u.ally_id WHERE u.`id` = '".$id_u."';");
 
 			
 			$reg_time		= _date($LNG['php_tdformat'], $UserQuery['register_time'], $USER['timezone']);
@@ -73,9 +62,9 @@ function ShowAccountDataPage()
 			$p				= $UserQuery['planet'];
 			$info			= $UserQuery['user_ua'];
 			$alianza		= $UserQuery['ally_name'];
-			$nivel			= $LNG['rank'][$UserQuery['authlevel']];
-			$vacas 			= $LNG['one_is_yes'][$UserQuery['urlaubs_modus']];
-			$suspen 		= $LNG['one_is_yes'][$UserQuery['bana']]; 
+			$nivel			= $LNG['rank_'.$UserQuery['authlevel']];
+			$vacas 			= $LNG['one_is_yes_'.$UserQuery['urlaubs_modus']];
+			$suspen 		= $LNG['one_is_yes_'.$UserQuery['bana']];
 
 
 			$mo	= "<a title=\"".pretty_number($UserQuery['darkmatter'])."\">".shortly_number($UserQuery['darkmatter'])."</a>";
@@ -151,7 +140,7 @@ function ShowAccountDataPage()
 			}
 			elseif ($alianza != NULL && $AliID != 0)
 			{
-				include_once('includes/functions/BBCode.php');	
+				include_once('includes/classes/BBCode.class.php');	
 				
 				$AllianceHave	= '<a href="#" onclick="$(\'#alianza\').slideToggle();return false" class="link">
 							<img src="./styles/resource/images/admin/arrowright.png" width="16" height="10"> '.$LNG['ac_alliance'].'</a>';
@@ -177,7 +166,7 @@ function ShowAccountDataPage()
 					
 				if($AllianceQuery['ally_description'] != NULL)
 				{
-					$ali_ext2 = bbcode($AllianceQuery['ally_description']);
+					$ali_ext2 = BBCode::parse($AllianceQuery['ally_description']);
 					$ali_ext  = "<a href=\"#\" rel=\"toggle[externo]\">".$LNG['ac_view_text_ext']."</a>";
 				}
 				else
@@ -188,7 +177,7 @@ function ShowAccountDataPage()
 					
 				if($AllianceQuery['ally_text'] != NULL)
 				{
-					$ali_int2 = bbcode($AllianceQuery['ally_text']);
+					$ali_int2 = BBCode::parse($AllianceQuery['ally_text']);
 					$ali_int  = "<a href=\"#\" rel=\"toggle[interno]\">".$LNG['ac_view_text_int']."</a>";
 				}
 				else
@@ -199,7 +188,7 @@ function ShowAccountDataPage()
 					
 				if($AllianceQuery['ally_request'] != NULL)
 				{
-					$ali_sol2 = bbcode($AllianceQuery['ally_request']);
+					$ali_sol2 = BBCode::parse($AllianceQuery['ally_request']);
 					$ali_sol  = "<a href=\"#\" rel=\"toggle[solicitud]\">".$LNG['ac_view_text_sol']."</a>";
 				}
 				else
@@ -366,7 +355,6 @@ function ShowAccountDataPage()
 				'point_tecno'					=> $point_tecno,
 				'count_tecno'					=> $count_tecno,
 				'ranking_tecno'					=> $ranking_tecno,
-				'defenses_title'				=> $defenses_title,
 				'point_def'						=> $point_def,
 				'count_def'						=> $count_def,
 				'ranking_def'					=> $ranking_def,
@@ -416,7 +404,7 @@ function ShowAccountDataPage()
 				'id_ali'						=> $id_ali,
 				'ip'							=> $ip,
 				'ip2'							=> $ip2,
-				'ipcheck'						=> true,
+				'ipcheck'						=> $LNG['one_is_yes_1'],
 				'reg_time'						=> $reg_time,
 				'onlinetime'					=> $onlinetime,
 				'id_p'							=> $id_p,
@@ -433,7 +421,6 @@ function ShowAccountDataPage()
 				'techoffi'						=> $techoffi,
 				'canedit'						=> allowedTo('ShowQuickEditorPage'),
 				
-				'buildings_title'				=> $LNG['buildings_title'],
 				'buildings_title'				=> $LNG['buildings_title'],
 				'researchs_title	'			=> $LNG['researchs_title'],
 				'ships_title'					=> $LNG['ships_title'],
@@ -462,7 +449,6 @@ function ShowAccountDataPage()
 				'ac_see_ranking'				=> $LNG['ac_see_ranking'],
 				'ac_user_ranking'				=> $LNG['ac_user_ranking'],
 				'ac_points_count'				=> $LNG['ac_points_count'],
-				'ac_ranking'					=> $LNG['ac_ranking'],
 				'ac_total_points'				=> $LNG['ac_total_points'],
 				'ac_suspended_title'			=> $LNG['ac_suspended_title'],
 				'ac_suspended_time'				=> $LNG['ac_suspended_time'],
@@ -479,35 +465,23 @@ function ShowAccountDataPage()
 				'ac_image'						=> $LNG['ac_image'],
 				'ac_ally_web'					=> $LNG['ac_ally_web'],
 				'ac_total_members'				=> $LNG['ac_total_members'],
-				'ac_ranking'					=> $LNG['ac_ranking'],
-				'ac_see_ranking'				=> $LNG['ac_see_ranking'],
 				'ac_view_image'					=> $LNG['ac_view_image'],
 				'ac_urlnow'						=> $LNG['ac_urlnow'],
 				'ac_ally_ranking'				=> $LNG['ac_ally_ranking'],
-				'ac_points_count'				=> $LNG['ac_points_count'],
-				'ac_ranking'					=> $LNG['ac_ranking'],
-				'ac_total_points'				=> $LNG['ac_total_points'],
 				'ac_id_names_coords'			=> $LNG['ac_id_names_coords'],
-				'ac_name'						=> $LNG['ac_name'],
 				'ac_diameter'					=> $LNG['ac_diameter'],
 				'ac_fields'						=> $LNG['ac_fields'],
 				'ac_temperature'				=> $LNG['ac_temperature'],
 				'se_search_edit'				=> $LNG['se_search_edit'],
 				'resources_title'				=> $LNG['resources_title'],
-				'ac_name'						=> $LNG['ac_name'],
 				'Metal'							=> $LNG['tech'][901],
 				'Crystal'						=> $LNG['tech'][902],
 				'Deuterium'						=> $LNG['tech'][903],
 				'Energy'						=> $LNG['tech'][911],
 				'Darkmatter'					=> $LNG['tech'][921],
-				'buildings_title'				=> $LNG['buildings_title'],
-				'ships_title'					=> $LNG['ships_title'],
-				'defenses_title'				=> $LNG['defenses_title'],
 				'ac_officier_research'			=> $LNG['ac_officier_research'],
 				'researchs_title'				=> $LNG['researchs_title'],
 				'officiers_title'				=> $LNG['officiers_title'],
-				'ac_name'						=> $LNG['ac_name'],
-				'input_id'						=> $LNG['input_id'],
 				'ac_coords'						=> $LNG['ac_coords'],
 				'ac_time_destruyed'				=> $LNG['ac_time_destruyed'],
 			));					
@@ -516,10 +490,10 @@ function ShowAccountDataPage()
 		exit;
 	}
 	$Userlist	= "";
-	$UserWhileLogin	= $GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".$_SESSION['adminuni']."' ORDER BY `username` ASC;");
+	$UserWhileLogin	= $GLOBALS['DATABASE']->query("SELECT `id`, `username`, `authlevel` FROM ".USERS." WHERE `authlevel` <= '".$USER['authlevel']."' AND `universe` = '".Universe::getEmulated()."' ORDER BY `username` ASC;");
 	while($UserList	= $GLOBALS['DATABASE']->fetch_array($UserWhileLogin))
 	{
-		$Userlist	.= "<option value=\"".$UserList['id']."\">".$UserList['username']."&nbsp;&nbsp;(".$LNG['rank'][$UserList['authlevel']].")</option>";
+		$Userlist	.= "<option value=\"".$UserList['id']."\">".$UserList['username']."&nbsp;&nbsp;(".$LNG['rank_'.$UserList['authlevel']].")</option>";
 	}
 
 	$template->loadscript('filterlist.js');

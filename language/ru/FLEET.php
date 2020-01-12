@@ -1,7 +1,21 @@
 <?php
 
-// 2Moons - Copyright © 2012 Jan Kröpke <info@2moons.cc>
-// Translation into Russian - Copyright © 2012 InquisitorEA <support@moon-hunt.ru>
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
+
+// Translation into Russian - Copyright © 2010-2013 InquisitorEA <support@moon-hunt.ru>
 
 $LNG['and']                           = 'и';
 
@@ -173,22 +187,22 @@ $LNG['sys_stat_mess']                 = 'Ваш флот достиг плане
 $LNG['fcp_colony']                    = 'Планета';
 $LNG['fl_simulate']                   = 'Симулировать';
 
-$LNG['type_mission'][1]               = 'Атака';
-$LNG['type_mission'][2]               = 'Совместная атака';
-$LNG['type_mission'][3]               = 'Транспорт';
-$LNG['type_mission'][4]               = 'Оставить';
-$LNG['type_mission'][5]               = 'Держаться';
-$LNG['type_mission'][6]               = 'Шпионаж';
-$LNG['type_mission'][7]               = 'Колонизировать';
-$LNG['type_mission'][8]               = 'Переработать';
-$LNG['type_mission'][9]               = 'Уничтожить';
-$LNG['type_mission'][11]              = 'Поиск ТМ';
-$LNG['type_mission'][15]              = 'Экспедиция';
+$LNG['type_mission_1']               = 'Атака';
+$LNG['type_mission_2']               = 'Совместная атака';
+$LNG['type_mission_3']               = 'Транспорт';
+$LNG['type_mission_4']               = 'Оставить';
+$LNG['type_mission_5']               = 'Держаться';
+$LNG['type_mission_6']               = 'Шпионаж';
+$LNG['type_mission_7']               = 'Колонизировать';
+$LNG['type_mission_8']               = 'Переработать';
+$LNG['type_mission_9']               = 'Уничтожить';
+$LNG['type_mission_11']              = 'Поиск ТМ';
+$LNG['type_mission_15']              = 'Экспедиция';
 
-$LNG['type_planet_short'][1]          = 'П';
-$LNG['type_planet_short'][2]          = 'ПО';
-$LNG['type_planet_short'][3]          = 'Л';
+$LNG['type_planet_short_1']          = 'П';
+$LNG['type_planet_short_2']          = 'ПО';
+$LNG['type_planet_short_3']          = 'Л';
 
-$LNG['type_planet'][1]                = 'Планета';
-$LNG['type_planet'][2]                = 'Поле обломков';
-$LNG['type_planet'][3]                = 'Луна';
+$LNG['type_planet_1']                = 'Планета';
+$LNG['type_planet_2']                = 'Поле обломков';
+$LNG['type_planet_3']                = 'Луна';

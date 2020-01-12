@@ -1,4 +1,18 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 $LNG['Messages']							= 'Mensajes';
 $LNG['write_message']						= 'Escribir mensaje';
@@ -10,29 +24,27 @@ $LNG['loading']								= 'Cargando ...';
 
 $LNG['invalid_action']						= 'Acción no valida!';
 
-$LNG['type_mission'][1]  					= 'Atacar';
-$LNG['type_mission'][2]  					= 'Ataque grupal';
-$LNG['type_mission'][3]  					= 'Transportar';
-$LNG['type_mission'][4]  					= 'Desplegar';
-$LNG['type_mission'][5]  					= 'Mantener posición';
-$LNG['type_mission'][6]  					= 'Espiar';
-$LNG['type_mission'][7]  					= 'Colonizar';
-$LNG['type_mission'][8]  					= 'Reciclar';
-$LNG['type_mission'][9]  					= 'Destruir';
-$LNG['type_mission'][10]  					= 'Ataque con Misiles';
-$LNG['type_mission'][11]  					= 'Investigación DM';
-$LNG['type_mission'][15] 					= 'Expedición';
+$LNG['type_mission_1']  					= 'Atacar';
+$LNG['type_mission_2']  					= 'Ataque grupal';
+$LNG['type_mission_3']  					= 'Transportar';
+$LNG['type_mission_4']  					= 'Desplegar';
+$LNG['type_mission_5']  					= 'Mantener posición';
+$LNG['type_mission_6']  					= 'Espiar';
+$LNG['type_mission_7']  					= 'Colonizar';
+$LNG['type_mission_8']  					= 'Reciclar';
+$LNG['type_mission_9']  					= 'Destruir';
+$LNG['type_mission_10']  					= 'Ataque con Misiles';
+$LNG['type_mission_11']  					= 'Investigación DM';
+$LNG['type_mission_15'] 					= 'Expedición';
 
-$LNG['type_planet'][1]  					= 'Planeta';
-$LNG['type_planet'][2]  					= 'Escombros';
-$LNG['type_planet'][3]  					= 'Luna';
+$LNG['type_planet_1']  					= 'Planeta';
+$LNG['type_planet_2']  					= 'Escombros';
+$LNG['type_planet_3']  					= 'Luna';
 
-$LNG['user_level'] = array (
-	'0' => 'Jugador',
-	'1' => 'Moderador',
-	'2' => 'Operador',
-	'3' => 'Administrador',
-);
+$LNG['user_level_0']                        = 'Jugador';
+$LNG['user_level_1']                        = 'Moderador';
+$LNG['user_level_2']                        = 'Operador';
+$LNG['user_level_3']                        = 'Administrador';
 
 // GAME.PHP
 $LNG['page_doesnt_exist']					= 'La página solicitada no existe.';
@@ -939,7 +951,7 @@ $LNG['cff_no_fleet_data']					= 'No hay datos de la flota';
 $LNG['cff_acs_fleet']						= 'flota sac';
 $LNG['cff_fleet_own']						= 'Flota';
 $LNG['cff_fleet_target']					= 'Flota';
-$LNG['cff_mission_acs']						= 'Una  %s de %s %s %s se dirige a %s %s %s %s. Misi&oacute;n: %s';
+$LNG['cff_mission_acs']						= 'Una  %s de %s %s %s se dirige a %s %s %s. Misi&oacute;n: %s';
 $LNG['cff_mission_own_0']					= 'Una  %s de %s %s %s se dirige a %s %s %s. Misi&oacute;n: %s.';
 $LNG['cff_mission_own_1']					= 'Tu %s Vuelve de %s %s %s a %s %s %s. Misi&oacute;n: %s.';
 $LNG['cff_mission_own_2']					= 'Una  %s de %s %s %s esta en Orbita de %s %s %s. Misi&oacute;n: %s';
@@ -949,9 +961,9 @@ $LNG['cff_mission_own_expo_1']				= 'Una %s Vuelve de %s  hacia %s %s %s. Misi&o
 $LNG['cff_mission_own_expo_2']				= 'Una %s de %s %s %s va de expedici&oacute;n m&aacute;s alla de la posici&oacute;n %s. Misi&oacute;n: %s';
 $LNG['cff_mission_own_recy_0']				= 'Una %s de %s %s %s se dirige al campo de escombros en la posici&oacute;n %s. Misi&oacute;n: %s';
 $LNG['cff_mission_own_recy_1']				= 'Una %s vuelve del campo de escombros en la posici&oacute;n %s hacia %s %s %s. Misi&oacute;n: %s';
-$LNG['cff_mission_target_bad']				= 'Una %s hostil del jugador %s de %s %s %s espia la posici&oacute;n %s %s %s %s. Misi&oacute;n: %s';
-$LNG['cff_mission_target_good']				= 'Una %s hostil del jugador %s de %s %s %s espia la posici&oacute;n %s %s %s %s. Misi&oacute;n: %s';
-$LNG['cff_mission_target_stay']				= 'Una %s pac&iacute;fica del jugador %s de %s %s %s esta en orbita en %s %s %s %s. Misi&oacute;n: %s';
+$LNG['cff_mission_target_bad']				= 'Una %s hostil del jugador %s de %s %s %s espia la posici&oacute;n %s %s %s. Misi&oacute;n: %s';
+$LNG['cff_mission_target_good']				= 'Una %s hostil del jugador %s de %s %s %s espia la posici&oacute;n %s %s %s. Misi&oacute;n: %s';
+$LNG['cff_mission_target_stay']				= 'Una %s pac&iacute;fica del jugador %s de %s %s %s esta en orbita en %s %s %s. Misi&oacute;n: %s';
 $LNG['cff_mission_target_mip']				= 'Ataque con Misiles (%d) del jugador %s de %s %s %s a la posici&oacute;n %s %s %s.';
 
 //----------------------------------------------------------------------------//

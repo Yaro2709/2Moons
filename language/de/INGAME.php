@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 $LNG['Messages']							= 'Nachrichten';
@@ -36,29 +25,27 @@ $LNG['loading']								= 'Lade ...';
 
 $LNG['invalid_action']						= 'Ungültige Aktion!';
 
-$LNG['type_mission'][1]  					= 'Angreifen';
-$LNG['type_mission'][2]  					= 'Verbandsangriff';
-$LNG['type_mission'][3]  					= 'Transport';
-$LNG['type_mission'][4]  					= 'Stationieren';
-$LNG['type_mission'][5]  					= 'Halten';
-$LNG['type_mission'][6]  					= 'Spionieren';
-$LNG['type_mission'][7]  					= 'Kolonisieren';
-$LNG['type_mission'][8]  					= 'Abbauen';
-$LNG['type_mission'][9]  					= 'Zerstören';
-$LNG['type_mission'][10]  					= 'Raketenangriff';
-$LNG['type_mission'][11]  					= 'DM Untersuchung';
-$LNG['type_mission'][15] 					= 'Expedition';
+$LNG['type_mission_1']  					= 'Angreifen';
+$LNG['type_mission_2']  					= 'Verbandsangriff';
+$LNG['type_mission_3']  					= 'Transport';
+$LNG['type_mission_4']  					= 'Stationieren';
+$LNG['type_mission_5']  					= 'Halten';
+$LNG['type_mission_6']  					= 'Spionieren';
+$LNG['type_mission_7']  					= 'Kolonisieren';
+$LNG['type_mission_8']  					= 'Abbauen';
+$LNG['type_mission_9']  					= 'Zerstören';
+$LNG['type_mission_10']  					= 'Raketenangriff';
+$LNG['type_mission_11']  					= 'DM Untersuchung';
+$LNG['type_mission_15'] 					= 'Expedition';
 
-$LNG['type_planet'][1]  					= 'Planet';
-$LNG['type_planet'][2]  					= 'Trümmerfeld';
-$LNG['type_planet'][3]  					= 'Mond';
+$LNG['type_planet_1']  					= 'Planet';
+$LNG['type_planet_2']  					= 'Trümmerfeld';
+$LNG['type_planet_3']  					= 'Mond';
 
-$LNG['user_level'] = array (
-	'0' => 'Spieler',
-	'1' => 'Moderator',
-	'2' => 'Operator',
-	'3' => 'Administrator',
-);
+$LNG['user_level_0']                        = 'Spieler';
+$LNG['user_level_1']                        = 'Moderator';
+$LNG['user_level_2']                        = 'Operator';
+$LNG['user_level_3']                        = 'Administrator';
 
 // GAME.PHP
 $LNG['page_doesnt_exist']					= 'Die Aufgerufene Seite existiert nicht';
@@ -71,7 +58,7 @@ $LNG['admin_access_2']				    	= ', wenn Sie ihn nicht länger benötigen.';
 //----------------------------------------------------------------------------//
 //TOPNAV
 $LNG['tn_vacation_mode']					= 'Sie sind im Urlaubsmodus ';
-$LNG['tn_delete_mode']						= 'Ihr Account wir am %s automatisch gelöscht!';
+$LNG['tn_delete_mode']						= 'Ihr Account wird am %s automatisch gelöscht!';
 
 //----------------------------------------------------------------------------//
 //LEFT MENU
@@ -670,6 +657,7 @@ $LNG['al_inside_section']					= 'Interner Bereich';
 $LNG['al_make_alliance']					= 'Eine Allianz gründen';
 $LNG['al_make_ally_tag_required']			= 'Allianz Tag (3-8 Zeichen)';
 $LNG['al_make_ally_name_required']			= 'Allianz Name (3-30 Zeichen)';
+$LNG['al_make_ally_insufficient_points']	= 'Du hast nicht genug Punkte, um eine Allianz zu gründen.<br>Du benötigst mindestenst %s Punkte, dir fehlern %s Punkte.';
 $LNG['al_make_submit']						= 'Gründen';
 $LNG['al_find_alliances']					= 'Allianz suchen';
 $LNG['al_find_text']						= 'Suche nach';
@@ -768,7 +756,9 @@ $LNG['al_rank_desc']['KICK']				= 'Kann Mitglieder entfernen';
 $LNG['al_rank_desc']['DIPLOMATIC']			= 'Kann Diplomatie verwalten';
 $LNG['al_rank_desc']['RANKS']				= 'Rangverwaltung';
 $LNG['al_rank_desc']['MANAGEUSERS']			= 'Kann Mitglieder verwalten';
-$LNG['al_rank_desc']['EVENTS']				= 'Kann Ereignisse im internen Bereich sehen';$LNG['bu_request_exists']					= 'Spieler bereits in der Buddyliste!';
+$LNG['al_rank_desc']['EVENTS']				= 'Kann Ereignisse im internen Bereich sehen';
+$LNG['al_invalid_rank_name']				= 'Im Ranknamen sind nur Zahlen, Buchstaben, Leerzeichen, _, -, . erlaubt!';
+
 
 //----------------------------------------------------------------------------//
 //BUDDY
@@ -997,6 +987,9 @@ $LNG['sys_refferal_text']        	 		= 'Der von dir geworbene Spieler %s hat nun
 $LNG['sys_closed_game']        	 			= 'Das Universum ist zur Zeit nicht verfügbar:';
 $LNG['spec_mail_inactive_title']  			= '%s - Erinnerung';
 
+$LNG['sys_back']							= 'Zurück';
+$LNG['sys_forward']							= 'Weiter';
+
 //----------------------------------------------------------------------------//
 // CombatReport.php
 $LNG['cr_lost_contact']						= 'Der Kontakt ist mit den Flotten verloren gegangen.';
@@ -1112,7 +1105,6 @@ $LNG['ti_status_answer'] 					= 'Beantwortet';
 $LNG['ti_error_closed'] 					= 'Auf dieses Ticket kann keine Antwort erstellt werden, da es bereits geschlossen wurde!';
 $LNG['ti_admin_open'] 						= 'Ticket wurde geöffnet!';
 $LNG['ti_admin_close'] 						= 'Ticket wurde geschlossen!';
-
 $LNG['ti_create_info']						= '<p>Bitte vergeben Sie beim Erstellen einer neuen Anfrage einen möglichst aussagekräftigen Betreff und schildern Sie Ihr Anliegen so detailliert wie möglich.</p>
 <p>Eine genaue Beschreibung Ihrer Anfrage ermöglicht kurze Bearbeitungszeiten und vermeidet zeitaufwendige Rückfragen auf beiden Seiten.</p>
 <p>Bei accountbezogenen Fragen erleichtert die Angabe des entsprechenden Kundenaccounts die Zuordnung und verkürzt ebenfalls die Bearbeitungsdauer.</p>';

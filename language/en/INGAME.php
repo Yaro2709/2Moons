@@ -1,4 +1,18 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 // Translated into English by QwataKayean . All rights reversed (C) 2012
 // 2Moons - Copyright (C) 2010-2012 Slaver
@@ -16,29 +30,27 @@ $LNG['loading']								= 'Loading ...';
 
 $LNG['invalid_action']						= 'Action Invalidated!!';
 
-$LNG['type_mission'][1]  					= 'Attack';
-$LNG['type_mission'][2]  					= 'ACS - Attack on cooperation';
-$LNG['type_mission'][3]  					= 'Transport';
-$LNG['type_mission'][4]  					= 'Deploy';
-$LNG['type_mission'][5]  					= 'Transfer';
-$LNG['type_mission'][6]  					= 'Spying';
-$LNG['type_mission'][7]  					= 'Colonize';
-$LNG['type_mission'][8]  					= 'Recycle';
-$LNG['type_mission'][9]  					= 'Destroy';
-$LNG['type_mission'][10]  					= 'Missile attack';
-$LNG['type_mission'][11]  					= 'Research of Dark matter ';
-$LNG['type_mission'][15] 					= 'Expedition';
+$LNG['type_mission_1']  					= 'Attack';
+$LNG['type_mission_2']  					= 'ACS - Attack on cooperation';
+$LNG['type_mission_3']  					= 'Transport';
+$LNG['type_mission_4']  					= 'Deploy';
+$LNG['type_mission_5']  					= 'Transfer';
+$LNG['type_mission_6']  					= 'Spying';
+$LNG['type_mission_7']  					= 'Colonize';
+$LNG['type_mission_8']  					= 'Recycle';
+$LNG['type_mission_9']  					= 'Destroy';
+$LNG['type_mission_10']  					= 'Missile attack';
+$LNG['type_mission_11']  					= 'Research of Dark matter ';
+$LNG['type_mission_15'] 					= 'Expedition';
 
-$LNG['type_planet'][1]  					= 'Planet';
-$LNG['type_planet'][2]  					= 'Debris Field';
-$LNG['type_planet'][3]  					= 'Moon';
+$LNG['type_planet_1']  					= 'Planet';
+$LNG['type_planet_2']  					= 'Debris Field';
+$LNG['type_planet_3']  					= 'Moon';
 
-$LNG['user_level'] = array (
-	'0' => 'Player',
-	'1' => 'Moderator',
-	'2' => 'Operator',
-	'3' => 'Administrator',
-);
+$LNG['user_level_0']                        = 'Player';
+$LNG['user_level_1']                        = 'Moderator';
+$LNG['user_level_2']                        = 'Operator';
+$LNG['user_level_3']                        = 'Administrator';
 
 
 $LNG['page_doesnt_exist']					= 'This page does not exist';
@@ -130,7 +142,7 @@ $LNG['ov_developed_fields']					= 'Fields used';
 $LNG['ov_max_developed_fields']				= 'Max. Permitted fields';
 $LNG['ov_fleet']							= 'Fleets';
 $LNG['ov_admins_online']					= 'Active Admins';
-$LNG['ov_no_admins_online']					= 'Currently, there is no any online administrator';
+$LNG['ov_no_admins_online']					= 'Currently, there is no administrator online';
 $LNG['ov_userbanner']						= "Player's Banner";
 $LNG['ov_userrank_info']					= '%s (%s <a href="game.php?page=statistics&amp;range=%d">%d</a> %s %s)';
 $LNG['ov_teamspeak_not_online']				= 'The Teamspeak server not active this';
@@ -400,9 +412,9 @@ $LNG['bd_jump_gate_action']                 = 'Jump';
 $LNG['bd_cancel_warning']                   = 'ATTENTION! <br> If you cancel only will receive 60% of your resources s invested.';
 $LNG['bd_cancel_send']                      = 'Cancel construction';
 $LNG['bd_destroy_time'] 					= 'Duration';
-$LNG['bd_max_ships']                                            = 'max';
-$LNG['bd_max_ships_long']                                       = 'Maximum possible units to build';
-$LNG['sys_notenough_money'] 				= 'You dont have avaliable resources in %s <a href="./game.php?page=buildings&amp;cp=%d&amp;re=0">[%d:%d:%d]</a> for building what you wanted to do. <br>Your ressources is %s %s , %s %s and %s %s. <br>The cost of construction  is %s %s , %s %s and %s %s.';
+$LNG['bd_max_ships']                        = 'max';
+$LNG['bd_max_ships_long']					= 'Maximum possible units to build';
+$LNG['sys_notenough_money'] 				= 'You dont have enough resources on %s <a href="./game.php?page=buildings&amp;cp=%d&amp;re=0">[%d:%d:%d]</a> to build %s. <br>Your ressources are: %s %s , %s %s and %s %s. <br>The cost of construction is %s %s , %s %s and %s %s.';
 $LNG['sys_nomore_level'] 					= "You're trying to destroy a building that no longer have ( %s ).";
 $LNG['sys_buildlist'] 						= "List of construction";
 $LNG['sys_techlist'] 						= 'Research list';
@@ -456,7 +468,7 @@ $LNG['tt_lvl']								= 'Level ';
 //----------------------------------------------------------------------------//
 // Infos
 $LNG['in_jump_gate_no_target']				= 'No target jump available.';
-$LNG['in_jump_gate_done']					='The jump portal was used, you can use it in:';
+$LNG['in_jump_gate_done']					= 'The jump portal was used, you can use it in:';
 $LNG['in_jump_gate_error_data']			    = 'Error, coordinates to jump are not correct!';
 $LNG['in_jump_gate_not_ready_target']		= 'The portal is not ready in destination Moon, will be ready in ';
 $LNG['in_jump_gate_doesnt_have_one']		= 'Dont you have another portal to make the jump!';
@@ -751,6 +763,8 @@ $LNG['al_rank_desc']['DIPLOMATIC']			= 'Can manage the Diplomacy';
 $LNG['al_rank_desc']['RANKS']				= 'Can configure the Ranks';
 $LNG['al_rank_desc']['MANAGEUSERS']			= 'Can manage members';
 $LNG['al_rank_desc']['EVENTS']			= 'Can see events';
+$LNG['al_invalid_rank_name']				= 'In the Rank name are only numbers, letters, spaces, _, -. allowed!';
+$LNG['al_make_ally_insufficient_points']	= 'You have not enough points to create an Alliance.<br>It is required %s points, and you have %s points.';
 
 //----------------------------------------------------------------------------//
 // Lista de Amigos
@@ -979,6 +993,9 @@ $LNG['sys_refferal_title']        	 		= 'Player Bonus %s';
 $LNG['sys_refferal_text']        	 		= 'The player %s recruited by you reached %s points.<br><br>You invite a player active, will be rewarded %s %s';
 $LNG['sys_closed_game']        	 			= 'The game is currently not available:';
 $LNG['spec_mail_inactive_title']  			= '%s - Reminder';
+$LNG['sys_back']							= 'Back';
+$LNG['sys_forward']							= 'Next';
+
 //----------------------------------------------------------------------------//
 // Relatório de Combate
 $LNG['cr_lost_contact']                     = 'Lost touch with your fleet.';

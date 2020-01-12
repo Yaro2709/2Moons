@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author FC92
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) exit;
@@ -67,19 +56,38 @@ function checkPostData($column,$max)
 
 function ShowCronjob()
 {
-	if ($_POST)
-		ShowCronjobEdit();
-	elseif (!isset($_GET['detail']))
-		ShowCronjobOverview();
-	else
-		ShowCronjobDetail(HTTP::_GP('detail', 0));
+    $cronId = HTTP::_GP('id', 0);
+
+    switch (HTTP::_GP('action', 'overview')) {
+        case 'edit':
+		    ShowCronjobEdit($cronId);
+        break;
+        case 'delete':
+		    ShowCronjobDelete($cronId);
+        break;
+        case 'lock':
+		    ShowCronjobLock($cronId);
+        break;
+        case 'unlock':
+		    ShowCronjobUnlock($cronId);
+        break;
+        case 'detail':
+		    ShowCronjobDetail($cronId);
+        break;
+        case 'enable':
+		    ShowCronjobEnable($cronId);
+        break;
+        case 'overview':
+        default:
+		    ShowCronjobOverview();
+        break;
+    }
 }
 
-function ShowCronjobEdit() 
+function ShowCronjobEdit($post_id)
 {
 	global $LNG;
-	
-	$post_id 		= 	HTTP::_GP('id', 0);
+
 	$post_name 		= 	HTTP::_GP('name', '');
 	$post_min 		= 	checkPostData('min', 59);
 	$post_hours 	= 	checkPostData('hours', 23);
@@ -112,19 +120,36 @@ function ShowCronjobEdit()
 			$GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET name = '".$GLOBALS['DATABASE']->sql_escape($post_name)."', min = '".$post_min."', hours = '".$post_hours."', month = '".$post_month."', dow = '".$post_dow."', dom = '".$post_dom."', class = '".$GLOBALS['DATABASE']->sql_escape($post_class)."' WHERE cronjobID = $post_id;");
 		else
 			$GLOBALS['DATABASE']->query("INSERT INTO ".CRONJOBS." SET name = '".$GLOBALS['DATABASE']->sql_escape($post_name)."', min = '".$post_min."', hours = '".$post_hours."', month = '".$post_month."', dow = '".$post_dow."', dom = '".$post_dom."', class = '".$GLOBALS['DATABASE']->sql_escape($post_class)."';");
-		ShowCronjobOverview();
+
+		HTTP::redirectTo('admin.php?page=cronjob');
 	} else {
 		ShowCronjobDetail($post_id,$error_msg);
 	}
 }
 
+function ShowCronjobDelete($cronjobId) {
+    $GLOBALS['DATABASE']->query("DELETE FROM ".CRONJOBS." WHERE cronjobID = ".$cronjobId.";");
+    $GLOBALS['DATABASE']->query("DELETE FROM ".CRONJOBS_LOG." WHERE cronjobId = ".$cronjobId.";");
+    HTTP::redirectTo('admin.php?page=cronjob');
+}
+
+function ShowCronjobLock($cronjobId) {
+    $GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET `lock` = MD5(UNIX_TIMESTAMP()) WHERE cronjobID = ".$cronjobId.";");
+    HTTP::redirectTo('admin.php?page=cronjob');
+}
+
+function ShowCronjobUnlock($cronjobId) {
+    $GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET `lock` = NULL WHERE cronjobID = ".$cronjobId.";");
+    HTTP::redirectTo('admin.php?page=cronjob');
+}
+
+function ShowCronjobEnable($cronjobId) {
+    $GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET `isActive` = ".HTTP::_GP('enable', 0)." WHERE cronjobID = ".$cronjobId.";");
+    HTTP::redirectTo('admin.php?page=cronjob');
+}
+
 function ShowCronjobOverview() 
 {
-	if (isset($_GET['lock']))
-		$GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET `lock` = ".(HTTP::_GP('lock', 0)?'MD5(UNIX_TIMESTAMP())':'NULL')." WHERE cronjobID = ".HTTP::_GP('id', 0).";");
-	if (isset($_GET['active']))
-		$GLOBALS['DATABASE']->query("UPDATE ".CRONJOBS." SET `isActive` = ".HTTP::_GP('active', 0)." WHERE cronjobID = ".HTTP::_GP('id', 0).";");
-	
 	$data    = $GLOBALS['DATABASE']->query("SELECT * FROM ".CRONJOBS.";");
 
 	$template	= new template();	
@@ -164,7 +189,7 @@ function ShowCronjobDetail($detail,$error_msg=NULL)
 	
 	$dir = new DirectoryIterator('includes/classes/cronjob/');
 	foreach ($dir as $fileinfo) {
-		if ($fileinfo->isFile()) {
+		if ($fileinfo->isFile() && $fileinfo->getBasename('.class.php') != $fileinfo->getFilename()) {
 			$avalibleCrons[]	= $fileinfo->getBasename('.class.php');
 		}
 	}

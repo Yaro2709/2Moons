@@ -1,35 +1,22 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan <info@2moons.cc>
- * @copyright 2006 Perberos <ugamela@perberos.com.ar> (UGamela)
- * @copyright 2008 Chlorel (XNova)
- * @copyright 2012 Jan <info@2moons.cc> (2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 2.0.$Revision: 2242 $ (2012-11-31)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 
-class ShowLoginPage extends AbstractPage
+class ShowLoginPage extends AbstractLoginPage
 {
 	public static $requireModule = 0;
 
@@ -43,11 +30,18 @@ class ShowLoginPage extends AbstractPage
 		if (empty($_POST)) {
 			HTTP::redirectTo('index.php');	
 		}
-		
+
+		$db = Database::get();
+
 		$username = HTTP::_GP('username', '', UTF8_SUPPORT);
 		$password = HTTP::_GP('password', '', true);
-		
-		$loginData = $GLOBALS['DATABASE']->getFirstRow("SELECT id, password FROM ".USERS." WHERE universe = ".$GLOBALS['UNI']." AND username = '".$GLOBALS['DATABASE']->escape($username)."';");
+
+		$sql = "SELECT id, password FROM %%USERS%% WHERE universe = :universe AND username = :username;";
+		$loginData = $db->selectSingle($sql, array(
+			':universe'	=> Universe::current(),
+			':username'	=> $username
+		));
+
 		if (isset($loginData))
 		{
 			$hashedPassword = PlayerUtil::cryptPassword($password);
@@ -55,18 +49,26 @@ class ShowLoginPage extends AbstractPage
 			{
 				// Fallback pre 1.7
 				if($loginData['password'] == md5($password)) {
-					$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET password = '".$hashedPassword."' WHERE id = ".$loginData['id'].";");
+					$sql = "UPDATE %%USERS%% SET password = :hashedPassword WHERE id = :loginID;";
+					$db->update($sql, array(
+						':hashedPassword'	=> $hashedPassword,
+						':loginID'			=> $loginData['id']
+					));
 				} else {
 					HTTP::redirectTo('index.php?code=1');	
 				}
 			}
-			
-			Session::create($loginData['id']);
+
+			$session	= Session::create();
+			$session->userId		= (int) $loginData['id'];
+			$session->adminAccess	= 0;
+			$session->save();
+
 			HTTP::redirectTo('game.php');	
 		}
 		else
 		{
-			Session::redirectCode(1);	
+			HTTP::redirectTo('index.php?code=1');
 		}
 	}
 }

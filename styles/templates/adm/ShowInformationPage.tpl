@@ -6,7 +6,7 @@
     </tr>
     <tr>
 		<td>
-<pre class="left">-- Server Info --
+<pre class="left">```-- Server Info --
 Server Infos: {$info}
 PHP-Version: {$vPHP} ({$vAPI})
 JSON Verfügbar: {$json}
@@ -19,13 +19,15 @@ MySQL-Server-Version: {$vMySQLs}
 ErrorLog: {$errorlog} ({$errorloglines}, {$log_errors})
 Timezone(PHP/CONF/USER): {$php_tz} / {$conf_tz} / {$user_tz}
 Suhosin: {$suhosin}
+DB Version: {$dbVersion}
 
 -- Game --
 Game Version: 2Moons {$vGame}
 Game Addresse: http://{$root}/
 Game Pfad: http://{$gameroot}/index.php
 
-Browser: {$browser}</pre>
+Browser: {$browser}
+```</pre>
 		</td>
     </tr>
 </table>

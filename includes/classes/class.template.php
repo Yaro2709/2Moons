@@ -1,30 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2011  Slaver
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Slaver <slaver7@gmail.com>
- * @copyright 2009 Lucky <lucky@xgproyect.net> (XGProyecto)
- * @copyright 2011 Slaver <slaver7@gmail.com> (Fork/2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.6.1 (2011-11-19)
- * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 require('includes/libs/Smarty/Smarty.class.php');
@@ -32,48 +20,51 @@ require('includes/libs/Smarty/Smarty.class.php');
 class template extends Smarty
 {
 	protected $window	= 'full';
-	protected $jsscript	= array();
-	protected $script	= array();
+	public $jsscript	= array();
+	public $script		= array();
 	
 	function __construct()
 	{	
 		parent::__construct();
 		$this->smartySettings();
 	}
-	
-	function smartySettings()
-	{	
-		$this->force_compile 			= false;
-		$this->caching 					= true; #Set true for production!
-		$this->merge_compiled_includes	= true;
-		$this->compile_check			= true; #Set false for production!
-		$this->php_handling				= Smarty::PHP_REMOVE;
-		
-		$this->setCompileDir(is_writable(ROOT_PATH.'cache/') ? ROOT_PATH.'cache/' : $this->getTempPath());
-		$this->setCacheDir(ROOT_PATH.'cache/templates');
-		$this->setTemplateDir(ROOT_PATH.'styles/templates/');
-	}
-	
-	public function loadscript($script)
+
+	private function smartySettings()
 	{
-		$this->jsscript[]			= substr($script, 0, -3);
+		$this->php_handling = Smarty::PHP_REMOVE;
+
+		$this->setForceCompile(false);
+		$this->setMergeCompiledIncludes(true);
+		$this->setCompileCheck(true);#Set false for production!
+		$this->setCacheLifetime(604800);
+		$this->setCaching(Smarty::CACHING_LIFETIME_CURRENT);
+		$this->setCompileDir(is_writable(CACHE_PATH) ? CACHE_PATH : $this->getTempPath());
+		$this->setCacheDir($this->getCompileDir().'templates');
+		$this->setTemplateDir('styles/templates/');
 	}
-	
-	public function execscript($script)
+
+	private function getTempPath()
 	{
-		$this->script[]				= $script;
-	}
-	
-	public function getTempPath()
-	{
-		$this->force_compile 		= true;
-		include 'includes/libs/wcf/BasicFileUtil.class.php';
+		$this->setForceCompile(true);
+		$this->setCaching(Smarty::CACHING_OFF);
+
+		require_once 'includes/libs/wcf/BasicFileUtil.class.php';
 		return BasicFileUtil::getTempFolder();
 	}
 		
 	public function assign_vars($var, $nocache = true) 
 	{		
 		parent::assign($var, NULL, $nocache);
+	}
+
+	public function loadscript($script)
+	{
+		$this->jsscript[]			= substr($script, 0, -3);
+	}
+
+	public function execscript($script)
+	{
+		$this->script[]				= $script;
 	}
 	
 	private function adm_main()
@@ -90,16 +81,18 @@ class template extends Smarty
 		} else {
 			$dateTimeUser	= $dateTimeServer;
 		}
-		
+
+		$config	= Config::get();
+
 		$this->assign_vars(array(
 			'scripts'			=> $this->script,
-			'title'				=> Config::get('game_name').' - '.$LNG['adm_cp_title'],
+			'title'				=> $config->game_name.' - '.$LNG['adm_cp_title'],
 			'fcm_info'			=> $LNG['fcm_info'],
             'lang'    			=> $LNG->getLanguage(),
-			'REV'				=> substr(Config::get('VERSION'), -4),
+			'REV'				=> substr($config->VERSION, -4),
 			'date'				=> explode("|", date('Y\|n\|j\|G\|i\|s\|Z', TIMESTAMP)),
 			'Offset'			=> $dateTimeUser->getOffset() - $dateTimeServer->getOffset(),
-			'VERSION'			=> Config::get('VERSION'),
+			'VERSION'			=> $config->VERSION,
 			'dpath'				=> 'styles/theme/gow/',
 			'bodyclass'			=> 'full'
 		));
@@ -107,11 +100,13 @@ class template extends Smarty
 	
 	public function show($file)
 	{		
-		global $USER, $PLANET, $LNG, $THEME;
+		global $LNG, $THEME;
 
 		if($THEME->isCustomTPL($file))
+		{
 			$this->setTemplateDir($THEME->getTemplatePath());
-			
+		}
+
 		$tplDir	= $this->getTemplateDir();
 			
 		if(MODE === 'INSTALL') {
@@ -135,7 +130,7 @@ class template extends Smarty
 		parent::display($file);
 	}
 	
-	public function display($file)
+	public function display($file = NULL, $cache_id = NULL, $compile_id = NULL, $parent = NULL)
 	{
 		global $LNG;
 		$this->compile_id	= $LNG->getLanguage();
@@ -182,11 +177,11 @@ class template extends Smarty
     public function __get($name)
     {
         $allowed = array(
-        'template_dir' => 'getTemplateDir',
-        'config_dir' => 'getConfigDir',
-        'plugins_dir' => 'getPluginsDir',
-        'compile_dir' => 'getCompileDir',
-        'cache_dir' => 'getCacheDir',
+			'template_dir' => 'getTemplateDir',
+			'config_dir' => 'getConfigDir',
+			'plugins_dir' => 'getPluginsDir',
+			'compile_dir' => 'getCompileDir',
+			'cache_dir' => 'getCacheDir',
         );
 
         if (isset($allowed[$name])) {
@@ -199,11 +194,11 @@ class template extends Smarty
     public function __set($name, $value)
     {
         $allowed = array(
-        'template_dir' => 'setTemplateDir',
-        'config_dir' => 'setConfigDir',
-        'plugins_dir' => 'setPluginsDir',
-        'compile_dir' => 'setCompileDir',
-        'cache_dir' => 'setCacheDir',
+			'template_dir' => 'setTemplateDir',
+			'config_dir' => 'setConfigDir',
+			'plugins_dir' => 'setPluginsDir',
+			'compile_dir' => 'setCompileDir',
+			'cache_dir' => 'setCacheDir',
         );
 
         if (isset($allowed[$name])) {

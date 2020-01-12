@@ -1,4 +1,18 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 // Translated into Espanish by Orion . All rights reversed (C) 2012
 // 2Moons - Copyright (C) 2010-2012 Jän Kropke
@@ -35,12 +49,7 @@ $LNG['buttonScreenshot']			= 'Imagenes del Juego';
 $LNG['buttonLostPassword']			= 'Recuperar contraseña?';
 
 // Start
-$LNG['gameInformations']			= array(
-	"Un juego de estrategia espacial en tiempo real.",
-	"Juega junto con cientos de jugadores.",
-	"Nada de descarga, s&oacute;lo se requiere un navegador est&aacute;ndar.",
-	"Registro Gratuito",
-);
+$LNG['gameInformations']			= "Un juego de estrategia espacial en tiempo real.\nJuega junto con cientos de jugadores.\nNada de descarga, s&oacute;lo se requiere un navegador est&aacute;ndar.\nRegistro Gratuito";
 
 // Login
 $LNG['loginHeader']					= 'Iniciar Sesión';

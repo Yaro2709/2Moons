@@ -1,107 +1,97 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowConfigUniPage()
 {
-	global $LNG, $USER;
-	
-	$CONF	= Config::getAll(NULL, $_SESSION['adminuni']);
+	global $LNG;
+
+	$config = Config::get(Universe::getEmulated());
 	
 	if (!empty($_POST))
 	{
 		$config_before = array(
-			'noobprotectiontime'	=> $CONF['noobprotectiontime'],
-			'noobprotectionmulti'	=> $CONF['noobprotectionmulti'],
-			'noobprotection'		=> $CONF['noobprotection'],
-			'Defs_Cdr'				=> $CONF['Defs_Cdr'],
-			'Fleet_Cdr'				=> $CONF['Fleet_Cdr'],
-			'game_disable'			=> $CONF['game_disable'],
-			'close_reason'			=> $CONF['close_reason'],
-			'OverviewNewsFrame'		=> $CONF['OverviewNewsFrame'],
-			'reg_closed'			=> $CONF['reg_closed'],
-			'OverviewNewsText'		=> $CONF['OverviewNewsText'],
-			'uni_name'				=> $CONF['uni_name'],
-			'forum_url'				=> $CONF['forum_url'],
-			'game_speed'			=> $CONF['game_speed'],
-			'fleet_speed'			=> $CONF['fleet_speed'],
-			'resource_multiplier'	=> $CONF['resource_multiplier'],
-			'halt_speed'			=> $CONF['halt_speed'],
-			'energySpeed'			=> $CONF['energySpeed'],
-			'initial_fields'		=> $CONF['initial_fields'],
-			'metal_basic_income'	=> $CONF['metal_basic_income'],
-			'crystal_basic_income'	=> $CONF['crystal_basic_income'],
-			'deuterium_basic_income'=> $CONF['deuterium_basic_income'],
-			'debug'					=> $CONF['debug'],
-			'adm_attack'			=> $CONF['adm_attack'],
-			'lang'					=> $CONF['lang'],
-			'min_build_time'		=> $CONF['min_build_time'],
-			'user_valid'			=> $CONF['user_valid'],
-			'trade_charge'			=> $CONF['trade_charge'],
-			'trade_allowed_ships'	=> $CONF['trade_allowed_ships'],
-			'game_name'				=> $CONF['game_name'],
-			'capaktiv'				=> $CONF['capaktiv'],
-			'capprivate'			=> $CONF['capprivate'],
-			'cappublic'				=> $CONF['cappublic'],
-			'max_galaxy'			=> $CONF['max_galaxy'],
-			'max_system'			=> $CONF['max_system'],
-			'max_planets'			=> $CONF['max_planets'],
-			'min_player_planets'	=> $CONF['min_player_planets'],
-			'planets_tech'			=> $CONF['planets_tech'],
-			'planets_officier'		=> $CONF['planets_officier'],
-			'planets_per_tech'		=> $CONF['planets_per_tech'],
-			'planet_factor'			=> $CONF['planet_factor'],
-			'max_elements_build'	=> $CONF['max_elements_build'],
-			'max_elements_tech'		=> $CONF['max_elements_tech'],
-			'max_elements_ships'	=> $CONF['max_elements_ships'],
-            'max_fleet_per_build'   => $CONF['max_fleet_per_build'],
-			'max_overflow'			=> $CONF['max_overflow'],
-			'moon_factor'			=> $CONF['moon_factor'],
-			'moon_chance'			=> $CONF['moon_chance'],
-			'darkmatter_cost_trader'=> $CONF['darkmatter_cost_trader'],
-			'factor_university'		=> $CONF['factor_university'],
-			'max_fleets_per_acs'	=> $CONF['max_fleets_per_acs'],
-			'vmode_min_time'		=> $CONF['vmode_min_time'],
-			'gate_wait_time'		=> $CONF['gate_wait_time'],
-			'metal_start'			=> $CONF['metal_start'],
-			'crystal_start'			=> $CONF['crystal_start'],
-			'deuterium_start'		=> $CONF['deuterium_start'],
-			'darkmatter_start'		=> $CONF['darkmatter_start'],
-			'debris_moon'			=> $CONF['debris_moon'],
-			'deuterium_cost_galaxy'	=> $CONF['deuterium_cost_galaxy'],
-			'ref_active'			=> $CONF['ref_active'],
-			'ref_bonus'				=> $CONF['ref_bonus'],
-			'ref_minpoints'			=> $CONF['ref_minpoints'],
-			'ref_max_referals'		=> $CONF['ref_max_referals'],
-			'silo_factor'			=> $CONF['silo_factor'],
-			'max_dm_missions'		=> $CONF['max_dm_missions'],
-			'alliance_create_min_points' => $CONF['alliance_create_min_points']
+			'noobprotectiontime'	=> $config->noobprotectiontime,
+			'noobprotectionmulti'	=> $config->noobprotectionmulti,
+			'noobprotection'		=> $config->noobprotection,
+			'Defs_Cdr'				=> $config->Defs_Cdr,
+			'Fleet_Cdr'				=> $config->Fleet_Cdr,
+			'game_disable'			=> $config->game_disable,
+			'close_reason'			=> $config->close_reason,
+			'OverviewNewsFrame'		=> $config->OverviewNewsFrame,
+			'reg_closed'			=> $config->reg_closed,
+			'OverviewNewsText'		=> $config->OverviewNewsText,
+			'uni_name'				=> $config->uni_name,
+			'forum_url'				=> $config->forum_url,
+			'game_speed'			=> $config->game_speed,
+			'fleet_speed'			=> $config->fleet_speed,
+			'resource_multiplier'	=> $config->resource_multiplier,
+			'storage_multiplier'	=> $config->storage_multiplier,
+			'halt_speed'			=> $config->halt_speed,
+			'energySpeed'			=> $config->energySpeed,
+			'initial_fields'		=> $config->initial_fields,
+			'metal_basic_income'	=> $config->metal_basic_income,
+			'crystal_basic_income'	=> $config->crystal_basic_income,
+			'deuterium_basic_income'=> $config->deuterium_basic_income,
+			'debug'					=> $config->debug,
+			'adm_attack'			=> $config->adm_attack,
+			'lang'					=> $config->lang,
+			'min_build_time'		=> $config->min_build_time,
+			'user_valid'			=> $config->user_valid,
+			'trade_charge'			=> $config->trade_charge,
+			'trade_allowed_ships'	=> $config->trade_allowed_ships,
+			'game_name'				=> $config->game_name,
+			'capaktiv'				=> $config->capaktiv,
+			'capprivate'			=> $config->capprivate,
+			'cappublic'				=> $config->cappublic,
+			'max_galaxy'			=> $config->max_galaxy,
+			'max_system'			=> $config->max_system,
+			'max_planets'			=> $config->max_planets,
+			'min_player_planets'	=> $config->min_player_planets,
+			'planets_tech'			=> $config->planets_tech,
+			'planets_officier'		=> $config->planets_officier,
+			'planets_per_tech'		=> $config->planets_per_tech,
+			'planet_factor'			=> $config->planet_factor,
+			'max_elements_build'	=> $config->max_elements_build,
+			'max_elements_tech'		=> $config->max_elements_tech,
+			'max_elements_ships'	=> $config->max_elements_ships,
+			'max_overflow'			=> $config->max_overflow,
+			'moon_factor'			=> $config->moon_factor,
+			'moon_chance'			=> $config->moon_chance,
+			'darkmatter_cost_trader'=> $config->darkmatter_cost_trader,
+			'factor_university'		=> $config->factor_university,
+			'max_fleets_per_acs'	=> $config->max_fleets_per_acs,
+			'vmode_min_time'		=> $config->vmode_min_time,
+			'gate_wait_time'		=> $config->gate_wait_time,
+			'metal_start'			=> $config->metal_start,
+			'crystal_start'			=> $config->crystal_start,
+			'deuterium_start'		=> $config->deuterium_start,
+			'darkmatter_start'		=> $config->darkmatter_start,
+			'debris_moon'			=> $config->debris_moon,
+			'deuterium_cost_galaxy'	=> $config->deuterium_cost_galaxy,
+			'ref_active'			=> $config->ref_active,
+			'ref_bonus'				=> $config->ref_bonus,
+			'ref_minpoints'			=> $config->ref_minpoints,
+			'ref_max_referals'		=> $config->ref_max_referals,
+			'silo_factor'			=> $config->silo_factor,
+			'max_dm_missions'		=> $config->max_dm_missions,
+			'alliance_create_min_points' => $config->alliance_create_min_points,
+			'max_fleet_per_build'   => $config->max_fleet_per_build,
 		);
 		
 		$game_disable			= isset($_POST['closed']) && $_POST['closed'] == 'on' ? 1 : 0;
@@ -121,6 +111,7 @@ function ShowConfigUniPage()
 		$game_speed 			= (2500 * HTTP::_GP('game_speed', 0.0));
 		$fleet_speed 			= (2500 * HTTP::_GP('fleet_speed', 0.0));
 		$resource_multiplier	= HTTP::_GP('resource_multiplier', 0.0);
+        $storage_multiplier   	= HTTP::_GP('storage_multiplier', 0.0);
 		$halt_speed				= HTTP::_GP('halt_speed', 0.0);
 		$energySpeed			= HTTP::_GP('energySpeed', 0.0);
 		$initial_fields			= HTTP::_GP('initial_fields', 0);
@@ -183,6 +174,7 @@ function ShowConfigUniPage()
 			'game_speed'			=> $game_speed,
 			'fleet_speed'			=> $fleet_speed,
 			'resource_multiplier'	=> $resource_multiplier,
+			'storage_multiplier'	=> $storage_multiplier,
 			'halt_speed'			=> $halt_speed,
 			'energySpeed'			=> $energySpeed,
 			'initial_fields'		=> $initial_fields,
@@ -207,7 +199,6 @@ function ShowConfigUniPage()
 			'max_elements_build'	=> $max_elements_build,
 			'max_elements_tech'		=> $max_elements_tech,
 			'max_elements_ships'	=> $max_elements_ships,
-            'max_fleet_per_build'   => $max_fleet_per_build,
 			'max_overflow'			=> $max_overflow,
 			'moon_factor'			=> $moon_factor,
 			'moon_chance'			=> $moon_chance,
@@ -228,11 +219,16 @@ function ShowConfigUniPage()
 			'ref_max_referals'		=> $ref_max_referals,
 			'silo_factor'			=> $silo_factor,
 			'max_dm_missions'		=> $max_dm_missions,
-			'alliance_create_min_points' => $alliance_create_min_points
-		);
-		
-		Config::update($config_after, $_SESSION['adminuni']);
-		$CONF	= Config::getAll(NULL, $_SESSION['adminuni']);
+			'alliance_create_min_points' => $alliance_create_min_points,
+			'max_fleet_per_build'	=> $max_fleet_per_build
+        );
+
+
+		foreach($config_after as $key => $value)
+		{
+			$config->$key	= $value;
+		}
+		$config->save();
 		
 		$LOG = new Log(3);
 		$LOG->target = 1;
@@ -240,8 +236,8 @@ function ShowConfigUniPage()
 		$LOG->new = $config_after;
 		$LOG->save();
 
-		if($CONF['adm_attack'] == 0)
-			$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET `authattack` = '0' WHERE `universe` = '".$_SESSION['adminuni']."';");
+		if($config->adm_attack == 0)
+			$GLOBALS['DATABASE']->query("UPDATE ".USERS." SET `authattack` = '0' WHERE `universe` = '".Universe::getEmulated()."';");
 	}
 	
 	$template	= new template();
@@ -261,6 +257,7 @@ function ShowConfigUniPage()
 		'se_normal_speed'				=> $LNG['se_normal_speed'],
 		'se_normal_speed_fleet'			=> $LNG['se_normal_speed_fleet'],
 		'se_resources_producion_speed'	=> $LNG['se_resources_producion_speed'],
+		'se_storage_producion_speed'	=> $LNG['se_storage_producion_speed'],
 		'se_normal_speed_resoruces'		=> $LNG['se_normal_speed_resoruces'],
 		'se_normal_speed_halt'			=> $LNG['se_normal_speed_halt'],
 		'se_forum_link'					=> $LNG['se_forum_link'	],
@@ -390,85 +387,86 @@ function ShowConfigUniPage()
 		'se_silo_factor_info'			=> $LNG['se_silo_factor_info'],
 		'se_max_dm_missions'			=> $LNG['se_max_dm_missions'],
 		'se_alliance_create_min_points' => $LNG['se_alliance_create_min_points'],
-		'game_name'						=> $CONF['game_name'],
-		'uni_name'						=> $CONF['uni_name'],
-		'game_speed'					=> ($CONF['game_speed'] / 2500),
-		'fleet_speed'					=> ($CONF['fleet_speed'] / 2500),
-		'resource_multiplier'			=> $CONF['resource_multiplier'],
-		'halt_speed'					=> $CONF['halt_speed'],
-		'energySpeed'					=> $CONF['energySpeed'],
-		'forum_url'						=> $CONF['forum_url'],
-		'initial_fields'				=> $CONF['initial_fields'],
-		'metal_basic_income'			=> $CONF['metal_basic_income'],
-		'crystal_basic_income'			=> $CONF['crystal_basic_income'],
-		'deuterium_basic_income'		=> $CONF['deuterium_basic_income'],
-		'game_disable'					=> $CONF['game_disable'],
-		'close_reason'					=> $CONF['close_reason'],
-		'debug'							=> $CONF['debug'],
-		'adm_attack'					=> $CONF['adm_attack'],
-		'defenses'						=> $CONF['Defs_Cdr'],
-		'shiips'						=> $CONF['Fleet_Cdr'],
-		'noobprot'						=> $CONF['noobprotection'],
-		'noobprot2'						=> $CONF['noobprotectiontime'],
-		'noobprot3'						=> $CONF['noobprotectionmulti'],
-		'mail_active'					=> $CONF['mail_active'],
-		'mail_use'						=> $CONF['mail_use'],
-		'smail_path'					=> $CONF['smail_path'],
-		'smtp_host' 					=> $CONF['smtp_host'],
-		'smtp_port' 					=> $CONF['smtp_port'],
-		'smtp_user' 					=> $CONF['smtp_user'],
-		'smtp_pass' 					=> $CONF['smtp_pass'],
-		'smtp_sendmail' 				=> $CONF['smtp_sendmail'],
-		'smtp_ssl'						=> $CONF['smtp_ssl'],
-		'user_valid'           	 		=> $CONF['user_valid'],
-	    'newsframe'                 	=> $CONF['OverviewNewsFrame'],
-        'reg_closed'                	=> $CONF['reg_closed'],
-        'NewsTextVal'               	=> $CONF['OverviewNewsText'],  
-		'capprivate' 					=> $CONF['capprivate'],
-		'cappublic' 	   				=> $CONF['cappublic'],
-		'capaktiv'      	           	=> $CONF['capaktiv'],
-		'min_build_time'    	        => $CONF['min_build_time'],
-		'trade_allowed_ships'        	=> $CONF['trade_allowed_ships'],
-		'trade_charge'		        	=> $CONF['trade_charge'],
+		'game_name'						=> $config->game_name,
+		'uni_name'						=> $config->uni_name,
+		'game_speed'					=> ($config->game_speed / 2500),
+		'fleet_speed'					=> ($config->fleet_speed / 2500),
+		'resource_multiplier'			=> $config->resource_multiplier,
+		'storage_multiplier'			=> $config->storage_multiplier,
+		'halt_speed'					=> $config->halt_speed,
+		'energySpeed'					=> $config->energySpeed,
+		'forum_url'						=> $config->forum_url,
+		'initial_fields'				=> $config->initial_fields,
+		'metal_basic_income'			=> $config->metal_basic_income,
+		'crystal_basic_income'			=> $config->crystal_basic_income,
+		'deuterium_basic_income'		=> $config->deuterium_basic_income,
+		'game_disable'					=> $config->game_disable,
+		'close_reason'					=> $config->close_reason,
+		'debug'							=> $config->debug,
+		'adm_attack'					=> $config->adm_attack,
+		'defenses'						=> $config->Defs_Cdr,
+		'shiips'						=> $config->Fleet_Cdr,
+		'noobprot'						=> $config->noobprotection,
+		'noobprot2'						=> $config->noobprotectiontime,
+		'noobprot3'						=> $config->noobprotectionmulti,
+		'mail_active'					=> $config->mail_active,
+		'mail_use'						=> $config->mail_use,
+		'smail_path'					=> $config->smail_path,
+		'smtp_host' 					=> $config->smtp_host,
+		'smtp_port' 					=> $config->smtp_port,
+		'smtp_user' 					=> $config->smtp_user,
+		'smtp_pass' 					=> $config->smtp_pass,
+		'smtp_sendmail' 				=> $config->smtp_sendmail,
+		'smtp_ssl'						=> $config->smtp_ssl,
+		'user_valid'           	 		=> $config->user_valid,
+	    'newsframe'                 	=> $config->OverviewNewsFrame,
+        'reg_closed'                	=> $config->reg_closed,
+        'NewsTextVal'               	=> $config->OverviewNewsText,  
+		'capprivate' 					=> $config->capprivate,
+		'cappublic' 	   				=> $config->cappublic,
+		'capaktiv'      	           	=> $config->capaktiv,
+		'min_build_time'    	        => $config->min_build_time,
+		'trade_allowed_ships'        	=> $config->trade_allowed_ships,
+		'trade_charge'		        	=> $config->trade_charge,
 		'Selector'						=> array(
 			'langs' => $LNG->getAllowedLangs(false), 
-			'mail' => $LNG['se_mail_sel'], 
+			'mail'  => array(0 => $LNG['se_mail_sel_0'], 1 => $LNG['se_mail_sel_1'], 2 => $LNG['se_mail_sel_2']),
 			'encry' => array('' => $LNG['se_smtp_ssl_1'], 'ssl' => $LNG['se_smtp_ssl_2'], 'tls' => $LNG['se_smtp_ssl_3'])
 		),
-		'lang'							=> $CONF['lang'],
-		'max_galaxy'					=> $CONF['max_galaxy'],
-		'max_system'					=> $CONF['max_system'],
-		'max_planets'					=> $CONF['max_planets'],
-		'min_player_planets'			=> $CONF['min_player_planets'],
-		'planets_tech'					=> $CONF['planets_tech'],
-		'planets_officier'				=> $CONF['planets_officier'],
-		'planets_per_tech'				=> $CONF['planets_per_tech'],
-		'planet_factor'					=> $CONF['planet_factor'],
-		'max_elements_build'			=> $CONF['max_elements_build'],
-		'max_elements_tech'				=> $CONF['max_elements_tech'],
-		'max_elements_ships'			=> $CONF['max_elements_ships'],
-		'max_fleet_per_build'			=> $CONF['max_fleet_per_build'],
-		'max_overflow'					=> $CONF['max_overflow'],
-		'moon_factor'					=> $CONF['moon_factor'],
-		'moon_chance'					=> $CONF['moon_chance'],
-		'darkmatter_cost_trader'		=> $CONF['darkmatter_cost_trader'],
-		'factor_university'				=> $CONF['factor_university'],
-		'max_fleets_per_acs'			=> $CONF['max_fleets_per_acs'],
-		'vmode_min_time'				=> $CONF['vmode_min_time'],
-		'gate_wait_time'				=> $CONF['gate_wait_time'],
-		'metal_start'					=> $CONF['metal_start'],
-		'crystal_start'					=> $CONF['crystal_start'],
-		'deuterium_start'				=> $CONF['deuterium_start'],
-		'darkmatter_start'				=> $CONF['darkmatter_start'],
-		'debris_moon'					=> $CONF['debris_moon'],
-		'deuterium_cost_galaxy'			=> $CONF['deuterium_cost_galaxy'],
-		'ref_active'					=> $CONF['ref_active'],
-		'ref_bonus'						=> $CONF['ref_bonus'],
-		'ref_minpoints'					=> $CONF['ref_minpoints'],
-		'ref_max_referals'				=> $CONF['ref_max_referals'],
-		'silo_factor'					=> $CONF['silo_factor'],
-		'max_dm_missions'				=> $CONF['max_dm_missions'],
-		'alliance_create_min_points' 	=> $CONF['alliance_create_min_points']
+		'lang'							=> $config->lang,
+		'max_galaxy'					=> $config->max_galaxy,
+		'max_system'					=> $config->max_system,
+		'max_planets'					=> $config->max_planets,
+		'min_player_planets'			=> $config->min_player_planets,
+		'planets_tech'					=> $config->planets_tech,
+		'planets_officier'				=> $config->planets_officier,
+		'planets_per_tech'				=> $config->planets_per_tech,
+		'planet_factor'					=> $config->planet_factor,
+		'max_elements_build'			=> $config->max_elements_build,
+		'max_elements_tech'				=> $config->max_elements_tech,
+		'max_elements_ships'			=> $config->max_elements_ships,
+		'max_fleet_per_build'			=> $config->max_fleet_per_build,
+		'max_overflow'					=> $config->max_overflow,
+		'moon_factor'					=> $config->moon_factor,
+		'moon_chance'					=> $config->moon_chance,
+		'darkmatter_cost_trader'		=> $config->darkmatter_cost_trader,
+		'factor_university'				=> $config->factor_university,
+		'max_fleets_per_acs'			=> $config->max_fleets_per_acs,
+		'vmode_min_time'				=> $config->vmode_min_time,
+		'gate_wait_time'				=> $config->gate_wait_time,
+		'metal_start'					=> $config->metal_start,
+		'crystal_start'					=> $config->crystal_start,
+		'deuterium_start'				=> $config->deuterium_start,
+		'darkmatter_start'				=> $config->darkmatter_start,
+		'debris_moon'					=> $config->debris_moon,
+		'deuterium_cost_galaxy'			=> $config->deuterium_cost_galaxy,
+		'ref_active'					=> $config->ref_active,
+		'ref_bonus'						=> $config->ref_bonus,
+		'ref_minpoints'					=> $config->ref_minpoints,
+		'ref_max_referals'				=> $config->ref_max_referals,
+		'silo_factor'					=> $config->silo_factor,
+		'max_dm_missions'				=> $config->max_dm_missions,
+		'alliance_create_min_points' 	=> $config->alliance_create_min_points
 	));
 	
 	$template->show('ConfigBodyUni.tpl');

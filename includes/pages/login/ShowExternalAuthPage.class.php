@@ -1,34 +1,21 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan <info@2moons.cc>
- * @copyright 2006 Perberos <ugamela@perberos.com.ar> (UGamela)
- * @copyright 2008 Chlorel (XNova)
- * @copyright 2012 Jan <info@2moons.cc> (2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 2.0.$Revision: 2242 $ (2012-11-31)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
-class ShowExternalAuthPage extends AbstractPage
+class ShowExternalAuthPage extends AbstractLoginPage
 {
 	public static $requireModule = 0;
 
@@ -41,33 +28,45 @@ class ShowExternalAuthPage extends AbstractPage
 	{
 		$method			= HTTP::_GP('method', '');
 		$method			= strtolower(str_replace(array('_', '\\', '/', '.', "\0"), '', $method));
+		$path			= 'includes/classes/extauth/'.$method.'.class.php';
 		
-		if(!file_exists('includes/extauth/'.$method.'.class.php')) {
+		if(!file_exists($path)) {
 			HTTP::redirectTo('index.php');			
 		}
-		
-		Session::init();
-		
-		require('includes/extauth/'.$method.'.class.php');
+
+		$session	= Session::create();
+
+		require 'includes/classes/extauth/externalAuth.interface.php';
+		require $path;
 		
 		$methodClass	= ucwords($method).'Auth';
+
+		/** @var $authObj externalAuth */
 		$authObj		= new $methodClass;
 		
-		if(!$authObj->isActiveMode()) {
+		if(!$authObj->isActiveMode())
+		{
+			$session->delete();
 			$this->redirectTo('index.php?code=5');
 		}
 		
-		if(!$authObj->isVaild()) {
+		if(!$authObj->isValid())
+		{
+			$session->delete();
 			$this->redirectTo('index.php?code=4');
 		}
 		
 		$loginData	= $authObj->getLoginData();
 		
-		if(empty($loginData)) {
-			$this->redirectTo('index.php?page=register&externalAuth[account]='.$authObj->getAccount().'&externalAuth[method]=facebook');
+		if(empty($loginData))
+		{
+			$session->delete();
+			$this->redirectTo('index.php?page=register&externalAuth[account]='.$authObj->getAccount().'&externalAuth[method]='.$method);
 		}
-		
-		Session::create($loginData['id'], $loginData['id_planet']);
+
+		$session->userId		= (int) $loginData['id'];
+		$session->adminAccess	= 0;
+		$session->save();
 		$this->redirectTo("game.php");	
 	}
 }

@@ -1,29 +1,18 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan Kröpke
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
- * @copyright 2012 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 //---------------	GENERAL	------------------------// 
@@ -47,10 +36,10 @@ $LNG['only_numbers']		= 'Możesz podać tylko liczby!';
 $LNG['select_option']		= 'Wybierz...';
 
 // 	RANGO - RANK - RANGI
-$LNG['rank'][0]	= 'Gracz';
-$LNG['rank'][1]	= 'Moderator';
-$LNG['rank'][2]	= 'Operator';
-$LNG['rank'][3]	= 'Administrator';
+$LNG['rank_0']	= 'Gracz';
+$LNG['rank_1']	= 'Moderator';
+$LNG['rank_2']	= 'Operator';
+$LNG['rank_3']	= 'Administrator';
 
 
 // 	TIEMPO - TIME - CZAS
@@ -60,14 +49,14 @@ $LNG['time_minutes']	= 'Minuta';
 $LNG['time_seconds']	= 'Sekunda';
 //###########################################################//
 
-$LNG['info_information']	= 'Informacje o błędach i nowościach <a href="%s" target="tracker">2Moons Board</a><br>Jeśli usuniesz ten link nie będziesz miał prawa do suportu!!!!';
+$LNG['info_information']	= 'Informacje o błędach i nowościach <a href="%s" target="tracker">2Moons Board</a><br>Jeśli usuniesz ten link, nie będziesz miał prawa do supportu!!!!';
 
 //---------------	¿SI O NO? - YES OR NO? - JA ODER NEIN?	- TAK ALBO NIE------------------------// 
-$LNG['one_is_yes'][1]	= 'Tak';
-$LNG['one_is_yes'][0]	= 'Nie';
+$LNG['one_is_yes_1']	= 'Tak';
+$LNG['one_is_yes_0']	= 'Nie';
 
-$LNG['one_is_no'][1]	= 'Nie';
-$LNG['one_is_no'][0]	= 'Tak';
+$LNG['one_is_no_1']	= 'Nie';
+$LNG['one_is_no_0']	= 'Tak';
 //###########################################################//
 
 
@@ -168,7 +157,7 @@ $LNG['ad_delete_build_success']	= 'Budynek usunięto!';
 $LNG['ad_personal_title']		= 'Dane personalne';
 $LNG['ad_personal_name']		= 'Nazwa';
 $LNG['ad_personal_email']		= 'E-mail';
-$LNG['ad_personal_email2']		= 'Powtórz email';
+$LNG['ad_personal_email2']		= 'Powtórz e-mail';
 $LNG['ad_personal_pass']		= 'Hasło';
 $LNG['ad_personal_succes']		= 'Ustawienia zapisane';
 $LNG['ad_personal_vacat']		= 'Urlop';
@@ -183,7 +172,7 @@ $LNG['ad_ally_text2']		= 'Tekst wewnętrzny';
 $LNG['ad_ally_text3']		= 'Przykład podania';
 $LNG['ad_ally_delete']		= 'Usuń sojusz';
 $LNG['ad_ally_delete_u']	= 'Usuń użytkownika';
-$LNG['ad_ally_user_id']		= 'Podaj id użytkownika';
+$LNG['ad_ally_user_id']		= 'Podaj ID użytkownika';
 $LNG['ad_ally_succes']		= 'Sojusz utworzono';
 $LNG['ad_ally_not_exist3']	= 'Taki użytkownik nie istnieje lub nie ma go w sojuszu';
 $LNG['ad_ally_not_exist']	= 'Taki sojusz nie istnieje';
@@ -230,7 +219,7 @@ $LNG['bo_ban_player']			= 'Banowanie zmień/usuń';
 $LNG['bo_unban_player']			= 'Lista zbanowanych';
 $LNG['bo_user_doesnt_exist']	= 'Gracz nie istnieje!';
 $LNG['bo_user_select']			= 'Wybór..';
-$LNG['bo_select_title']			= 'Wskaż literę od której zaczyna się nazwa użytkownika';
+$LNG['bo_select_title']			= 'Wskaż literę, od której zaczyna się nazwa użytkownika';
 $LNG['bo_suspended_panel']		= 'Zarządzanie banami';
 $LNG['bo_bbb_go_back']			= '[ Powrót ]';
 $LNG['bo_bbb_go_act']			= '[ Przeładuj ]';
@@ -238,7 +227,7 @@ $LNG['bo_permanent']			= 'Ban na stałe';
 $LNG['bo_bbb_title_1']			= 'System Banowania';
 $LNG['bo_bbb_title_2']			= 'Kiedy odbanować';
 $LNG['bo_bbb_title_3']			= 'Zarządzanie banami &bull; <font color=red>Ten gracz już jest zbanowany';
-$LNG['bo_bbb_title_4']			= 'By skrócić czas bana, podaj np. minus w minutach, Np: -5 ';
+$LNG['bo_bbb_title_4']			= 'By skrócić czas bana, podaj np. minus w minutach, np: -5 ';
 $LNG['bo_bbb_title_5']			= 'ban do';
 $LNG['bo_bbb_title_6']			= 'Data zmiany';
 $LNG['bo_characters_1']			= 'dostępne litery ';
@@ -308,14 +297,14 @@ $LNG['ml_page']					= 'Strona';
 //---------------	MENSAJE GLOBAL - GLOBAL MESSAGE - Globale Nachrichten - Globalna wiadomość	------------------------//
 $LNG['ma_message_sended']		= 'Wiadomość wysłano!';
 $LNG['ma_subject_needed']		= 'Musisz podać temat!';
-$LNG['ma_send_global_message']	= 'Wyślij wiadomość do wszystkich użytkownikó';
+$LNG['ma_send_global_message']	= 'Wyślij wiadomość do wszystkich użytkowników';
 $LNG['ma_subject']		        = 'Temat';
 $LNG['ma_characters']			= 'Znaków';
 $LNG['ma_none']					= 'Wiadomość ogólna';
 $LNG['ma_message']				= 'Wiadomość';
 $LNG['ma_mode']					= 'Wyślij w';
 $LNG['ma_all']					= 'Wszystko';
-$LNG['ma_modes']				= array('Wiadomość w grze', 'Wiadomość na email', 'W grze &amp; emailt');
+$LNG['ma_modes']				= array('Wiadomość w grze', 'Wiadomość na e-mail', 'W grze &amp; emailt');
 //###########################################################//
 
 //---------------	PÁGINA DE INICIO - OVERVIEW	 - PODGLĄD------------------------//
@@ -329,7 +318,7 @@ $LNG['ow_forum']					= 'Forum';
 $LNG['ow_proyect_leader']			= 'Zarządzanie projektem';
 $LNG['ow_translator']				= 'Tłumacze';
 $LNG['ow_special_thanks']			= 'Specjalne podziękowania dla';
-$LNG['ow_file_detected']			= 'Znaleziono %s . By gra była aktywna musisz plik usunąć lub zmienić jego nazwę';
+$LNG['ow_file_detected']			= 'Znaleziono %s . By gra była aktywna, musisz plik usunąć lub zmienić jego nazwę';
 $LNG['ow_config_file_writable']		= 'Plik config.php jest zapisywalny.';
 $LNG['ow_database_errors']			= 'Wystąpił błąd!';
 $LNG['ow_smtp_errors']				= 'Ustawienia wysyłania poczty! - chwilowo maile nie są wysyłane!';
@@ -382,9 +371,9 @@ $LNG['se_def_cdr_message']				= 'Procent zniszczonej obrony, która zostanie zam
 $LNG['se_ships_cdr_message']			= 'Procent zniszczonej floty, która zostanie zamieniona w pole zniszczeń.';
 $LNG['se_noob_protect']					= 'Ochrona nowych graczy';
 $LNG['se_noob_protect2']				= 'Ochrona do ilości punktów';
-$LNG['se_noob_protect3']				= 'Mnożnik dla ochorny nowych graczy';
+$LNG['se_noob_protect3']				= 'Mnożnik dla ochrony nowych graczy';
 $LNG['se_noob_protect_e2']				= 'Do tej ilości punktów jest nowy gracz chroniony';
-$LNG['se_noob_protect_e3']				= 'Kliknij tutaj by dowiedzieć się więcej';
+$LNG['se_noob_protect_e3']				= 'Kliknij tutaj, by dowiedzieć się więcej';
 $LNG['se_recaptcha_whats']				= 'Co to reCAPTCHA?';
 $LNG['se_recaptcha_head']				= 'reCAPTCHA - Ustawienie';
 $LNG['se_recaptcha_desc']				= 'reCAPTCHA to darmowe CAPTCHA, służy do ograniczenia możliwości zakładania kont przez boty.<br />By móc używać musisz się zarejstrować na reCAPTCHA.net.';
@@ -393,24 +382,24 @@ $LNG['se_recaptcha_private']			= 'Klucz prywatny';
 $LNG['se_recaptcha_active']				= 'reCAPTCHA aktywuj';
 $LNG['se_reg_closed']					= 'Zamknij rejstrację';
 $LNG['se_min_build_time']				= 'Minimalny czas budowy';
-$LNG['se_min_build_time_info']			= 'Tutaj ustawisz minimalny czas budowy wszystkich obiektów jak i floty. Standardowo 1 sekunda<br>Jeśli ustawisz 0 to tak funkcja będzie nie aktywna<br><font color=orange>Ustawienie tego na 0 może wywoływać bugi!</font>';
+$LNG['se_min_build_time_info']			= 'Tutaj ustawisz minimalny czas budowy wszystkich obiektów i floty. Standardowo 1 sekunda.<br>Jeśli ustawisz 0 to taka funkcja będzie nie aktywna.<br><font color=orange>Ustawienie tego na 0 może wywoływać bugi!</font>';
 $LNG['se_trader_head']					= 'Złomowanie floty - Ustawienia';
 $LNG['se_trader_ships']					= 'Dozwolone jednostki:';
 $LNG['se_trader_charge']				= 'Procent handlarza:';
 $LNG['se_news_head']					= 'Ustawienia news';
 $LNG['se_news_active']					= 'News aktywacja';
 $LNG['se_news_limit']					= 'Maksymalnie 255 znaków!';
-$LNG['se_news_info']					= 'Jeśli nie aktywne, nie będą wyświetlane w podglądzie.';
+$LNG['se_news_info']					= 'Jeśli nieaktywne, nie będą wyświetlane w podglądzie.';
 $LNG['se_news']							= 'News';
-$LNG['se_verfiy_mail']					= 'Walidacja adresu E-Mail';
-$LNG['se_verfiy_mail_info']				= 'Jeśli zaznaczone, każdy użytkownik musi potwierdzić adres email, by móc grać. <br>Dlatego SMTP musi być poprawnie ustawione!';
+$LNG['se_verfiy_mail']					= 'Walidacja adresu e-mail';
+$LNG['se_verfiy_mail_info']				= 'Jeśli zaznaczone, każdy użytkownik musi potwierdzić adres e-mail, by móc grać. <br>Dlatego SMTP musi być poprawnie ustawione!';
 $LNG['se_smtp']							= 'Mail-Ustawienia';
 $LNG['se_smtp_info']					= 'Tutaj możesz ustawić opcje wysyłania maili.';
 $LNG['se_mail_active']					= 'Aktywacja mail';
 $LNG['se_mail_use']						= 'Mail wysyłanie:';
-$LNG['se_mail_sel'][0]					= 'PHP mail() Function';
-$LNG['se_mail_sel'][1]					= 'Sendmail / Qmail';
-$LNG['se_mail_sel'][2]					= 'SMTP Auth';
+$LNG['se_mail_sel_0']					= 'PHP mail() Function';
+$LNG['se_mail_sel_1']					= 'Sendmail / Qmail';
+$LNG['se_mail_sel_2']					= 'SMTP Auth';
 $LNG['se_smail_path']					= 'Ścieżka Sendmail / Qmail';
 $LNG['se_smtp_host']					= 'Mail wysyłanie:';
 $LNG['se_smtp_host']					= 'SMTP Host:';
@@ -425,21 +414,21 @@ $LNG['se_smtp_port_info']				= 'Wpisz tutaj port do połączenia z serwerem.<br>
 $LNG['se_smtp_user']					= 'SMTP Username:';
 $LNG['se_smtp_pass']					= 'SMTP Passwort:';
 $LNG['se_smtp_sendmail']				= 'Adres zwrotny:';
-$LNG['se_smtp_sendmail_info']			= 'Adres zwrotny, powinien być inny niż adres użyty podczas instalacji';
+$LNG['se_smtp_sendmail_info']			= 'Adres zwrotny powinien być inny niż adres użyty podczas instalacji';
 $LNG['se_ftp']							= 'Konfiguracja FTP';
-$LNG['se_ftp_info']						= '2Moons zawiera system aktualizacji po ftp, do tego celu musisz podać dane serwera ftp.<br>Jeśli nie będziesz go używał zostaw to pole puste.';
+$LNG['se_ftp_info']						= '2Moons zawiera system aktualizacji po ftp, do tego celu musisz podać dane serwera ftp.<br>Jeśli nie będziesz go używał, zostaw to pole puste.';
 $LNG['se_ftp_host']						= 'FTP Host:';
 $LNG['se_ftp_user']						= 'FTP User:';
 $LNG['se_ftp_pass']						= 'FTP Passwort:';
 $LNG['se_ftp_dir']						= 'FTP ścieżka do plików serwera';
-$LNG['se_ftp_dir_info']					= 'Tutaj podajesz ścieżkę do plików serwera, bez końcowego slasha czyli <br>Przykłąd: /httpdocs';
+$LNG['se_ftp_dir_info']					= 'Tutaj podajesz ścieżkę do plików serwera bez końcowego slasha, czyli <br>Przykład: /httpdocs';
 $LNG['se_google']						= 'Google Analytics - Konfiguracja';
-$LNG['se_google_info']					= 'Służy do analizy ruchu na twój serwer, daje wgląd w statystyki aktywności jak i skuteczność promocji w google.';
+$LNG['se_google_info']					= 'Służy do analizy ruchu na twój serwer, daje wgląd w statystyki aktywności i skuteczności promocji w Google.';
 $LNG['se_google_active']				= 'Aktywuj?';
 $LNG['se_google_key']					= 'Klucz Analytics';
 $LNG['se_google_key_info']				= 'Klucz przypisany do twojej strony. Zaczyna się zawsze z UA, np.: UA-13185300-3';
 $LNG['se_ttf_file']						= 'Ścieżka do plików TFF';
-$LNG['se_ttf_file_info']				= 'TTF używane do tworzenia statystyk Bannera innymi czcionkami np. chińską';
+$LNG['se_ttf_file_info']				= 'TTF używane do tworzenia statystyk bannera innymi czcionkami np. chińską';
 $LNG['se_max_galaxy']					= 'Max Galaktyk';
 $LNG['se_max_galaxy_info']				= 'Maksymalna liczba galaktyk w universum';
 $LNG['se_max_system']					= 'Maksymalna ilość systemów';
@@ -461,7 +450,7 @@ $LNG['se_max_elements_ships_info']		= 'Liczba jednostek w kolejce do budowy';
 $LNG['se_max_fleet_per_build']			= 'Max. statków do budowy';
 $LNG['se_max_fleet_per_build_info']		= 'Max jednostek w kolejce do budowy';
 $LNG['se_max_overflow']					= 'Przepełnienie magazynów';
-$LNG['se_max_overflow_info']			= 'Określa ile jednostek możesz wydobyć gdy masz pełne magazyny!';
+$LNG['se_max_overflow_info']			= 'Określa ile jednostek możesz wydobyć, gdy masz pełne magazyny!';
 $LNG['se_moon_factor']					= 'Mnożnik na szansę na księżyc';
 $LNG['se_moon_factor_info']				= 'Określa szansę na powstanie księżyca';
 $LNG['se_moon_chance']					= 'Max. szansa na księżyc';
@@ -473,17 +462,17 @@ $LNG['se_factor_university_info']		= 'Określasz o ile zostaną skrócone badani
 $LNG['se_max_fleets_per_acs']	 		= 'Max. Flot w AKS';
 $LNG['se_max_fleets_per_acs_info']		= 'Max ilość flot w jednej akcji aks';
 $LNG['se_vmode_min_time']				= 'Minimalny czas urlopu';
-$LNG['se_vmode_min_time_info']			= 'Poda jak długo użytkownik musi mieć urlop nim będzie go mógł wyłączyć ( w sekundach)';
+$LNG['se_vmode_min_time_info']			= 'Poda jak długo użytkownik musi mieć urlop, nim będzie go mógł wyłączyć (w sekundach)';
 $LNG['se_gate_wait_time']				= 'Ładowanie teleportera';
-$LNG['se_gate_wait_time_info']			= 'Podaj po jakim czasie może zostać ponownie użyty teleporter ( w sekundach)';
+$LNG['se_gate_wait_time_info']			= 'Podaj po jakim czasie może zostać ponownie użyty teleporter (w sekundach)';
 $LNG['se_metal_start']					= 'Start Metal';
-$LNG['se_metal_start_info']				= 'Określ ilość metalu z którą zaczyna nowa planeta.';
+$LNG['se_metal_start_info']				= 'Określ ilość metalu, z którą zaczyna nowa planeta.';
 $LNG['se_crystal_start']				= 'Start Kryształ';
-$LNG['se_crystal_start_info']			= 'Określ ilość kryształu z którą zaczyna nowa planeta.';
+$LNG['se_crystal_start_info']			= 'Określ ilość kryształu, z którą zaczyna nowa planeta.';
 $LNG['se_deuterium_start']				= 'Start Deuterium';
-$LNG['se_deuterium_start_info']			= 'Określ ilość deuterium z którą zaczyna nowa planeta.';
+$LNG['se_deuterium_start_info']			= 'Określ ilość deuterium, z którą zaczyna nowa planeta.';
 $LNG['se_darkmatter_start']				= 'Start Dark Metter';
-$LNG['se_darkmatter_start_info']		= 'Określ ilość Dark Metter z którą zaczyna nowa planeta.';
+$LNG['se_darkmatter_start_info']		= 'Określ ilość Dark Metter, z którą zaczyna nowa planeta.';
 $LNG['se_debris_moon']					= 'Usuń pole zniszczań po powstaniu księżyca';
 $LNG['se_debris_moon_info']	 			= 'Ustaw, czy po powstaniu księżyca pole zniszczeń ma zostać usunięte.';
 $LNG['se_deuterium_cost_galaxy']		= 'Galaktyczny podatek';
@@ -496,41 +485,37 @@ $LNG['se_del_oldstuff_info']			= 'Usuń wiadomości / raporty walk po x dniach.'
 $LNG['se_del_user_manually']			= 'Usuń użytkownika po';
 $LNG['se_del_user_manually_info']		= 'Usuń nie aktywnego użytkownika po x dniach.';
 $LNG['se_del_user_automatic']			= 'Nie aktywnych usuń po';
-$LNG['se_del_user_automatic_info']		= 'Automatycznie usuwa nie aktywnych użytkowników po określonym czasie (0 = Nie aktywne)';
+$LNG['se_del_user_automatic_info']		= 'Automatycznie usuwa nie aktywnych użytkowników po określonym czasie (0 = nieaktywne)';
 $LNG['se_del_user_sendmail']			= 'Wyślij przypomnienie po';
-$LNG['se_del_user_sendmail_info']		= 'Wysyła przypomnienie na emaila po x dniach nie logowania się użytkownika';
+$LNG['se_del_user_sendmail_info']		= 'Wysyła przypomnienie na e-maila po x dniach nielogowania się użytkownika';
 $LNG['se_sendmail_inactive']			= 'Aktywuj przypomnienia';
 $LNG['se_ref']							= 'Link polecający';
 $LNG['se_ref_active']					= 'Aktywuj linki polecające';
-$LNG['se_ref_active_info']				= 'Linki polecające dają graczom możliwość zapraszania innych graczy, w zamian za jakiś bonus lub bez.';
+$LNG['se_ref_active_info']				= 'Linki polecające, dają graczom możliwość zapraszania innych graczy w zamian za jakiś bonus lub bez.';
 $LNG['se_ref_bonus']					= 'Bonus za rejstrację z linku polecającego';
-$LNG['se_ref_bonus_info']				= 'Ilość Dark Metter jaką otrzyma gracz po zaproszeniu nowego aktywnego gracza.';
-$LNG['se_ref_minpoints']				= 'Min. punktów dla Bonusu';
+$LNG['se_ref_bonus_info']				= 'Ilość Dark Metter, jaką otrzyma gracz po zaproszeniu nowego aktywnego gracza.';
+$LNG['se_ref_minpoints']				= 'Min. punktów dla bonusu';
 $LNG['se_ref_minpoints_info']			= 'Określa jaką liczbę punktów musi zdobyć nowy użytkownik, by osoba zapraszająca otrzymała bonus!.';
 $LNG['se_ref_max_referals']				= 'Ma Graczy poleconych';
-$LNG['se_ref_max_referals_info']		= 'Max liczbra graczy których może zwerbować inny gracz';
+$LNG['se_ref_max_referals_info']		= 'Max liczba graczy, których może zwerbować inny gracz';
 $LNG['se_server_colonisation_config'] 	= 'Konfiguracja Kolonizacji';
 $LNG['se_planets_min'] 					= 'Maksymalna ilość kolonii bez badań';
-$LNG['se_planets_min_info'] 			= 'Ilość planet jakie może zasiedlić gracz od początku gry, bez dodatkowych badań';
-$LNG['se_planets_tech'] 				= 'Maksymalna ilość planet które może zasiedlić gracz (0 = brak limitu)';
-$LNG['se_planets_tech_info'] 			= 'Maksymalna ilość planet które może zasiedlić gracz po uwzględnienieu badań';
-$LNG['se_planets_officier'] 			= 'Maksymalna ilość dodatkowych planet które można zasiedlić dzięki oficerom';
-$LNG['se_planets_officier_info'] 		= 'Bonus oficerów do ilości planet. (0 = bez limitu)';
+$LNG['se_planets_min_info'] 			= 'Ilość planet, jakie może zasiedlić gracz od początku gry bez dodatkowych badań';
+$LNG['se_planets_tech'] 				= 'Maksymalna ilość planet, które może zasiedlić gracz (0 = brak limitu)';
+$LNG['se_planets_tech_info'] 			= 'Maksymalna ilość planet, które może zasiedlić gracz po uwzględnienieu badań';
+$LNG['se_planets_officier'] 			= 'Maksymalna ilość dodatkowych planet, które można zasiedlić dzięki oficerom';
+$LNG['se_planets_officier_info'] 		= 'Bonus oficerów do ilości planet (0 = bez limitu)';
 $LNG['se_planets_per_tech'] 			= 'Faktor: Przelicznik na poziom badania astrofizyki';
-$LNG['se_planets_per_tech_info'] 		= 'Poziom odkrytej technologi i liczba planet które może zasiedlić gracz.';
+$LNG['se_planets_per_tech_info'] 		= 'Poziom odkrytej technologi i liczba planet, które może zasiedlić gracz.';
 $LNG['se_silo_factor']					= 'Wielkość silosów rakietowych';
 $LNG['se_silo_factor_info']				= 'Przelicznik wielkości silosów';
 $LNG['se_timzone']						= 'Strefa czasowa universum';
-$LNG['se_dst_mode']						= 'Czas letni?';
-$LNG['se_dst_sel'][0]					= 'Nie';
-$LNG['se_dst_sel'][1]					= 'Tak';
-$LNG['se_dst_sel'][2]					= 'Automatycznie';
 $LNG['se_max_dm_missions']				= 'Max. Dark Metter podczas misji szukaj Dark Metter';
 $LNG['se_alliance_create_min_points']   = 'Ilość punktów potrzebna do założenia sojuszu';
-$LNG['se_disclamerAddress']				= 'Adres';
-$LNG['se_disclamerPhone']				= 'Telefon';
-$LNG['se_disclamerMail']				= 'E-Mail-Adres';
-$LNG['se_disclamerNotice']				= 'Więcej';
+$LNG['se_disclaimerAddress']				= 'Adres';
+$LNG['se_disclaimerPhone']				= 'Telefon';
+$LNG['se_disclaimerMail']				= 'e-mail Adres';
+$LNG['se_disclaimerNotice']				= 'Więcej';
 //###########################################################//
 
 
@@ -643,7 +628,7 @@ $LNG['mu_vertify']					= 'Sprawdź pliki gry!';
 $LNG['mu_cronjob']					= 'Cronjobs'; 
 $LNG['mu_logs']						= 'Admin-Log';
 $LNG['mu_giveaway']					= 'Bonusy';
-$LNG['mu_disclamer']				= 'Ustawienia prawne';
+$LNG['mu_disclaimer']				= 'Ustawienia prawne';
 $LNG['mu_dump']						= 'Baza danych - Kopia';
 
 
@@ -721,8 +706,6 @@ $LNG['ac_minimize_maximize']				= 'Minimum/Maksimum';
 $LNG['ac_account_data']						= 'Dane Konta';
 $LNG['ac_name']								= 'Nazwa';
 $LNG['ac_checkip_title']					= 'IP-Check';
-$LNG['ac_checkip'][1]						= '<font color=aqua>Aktywne</font>';
-$LNG['ac_checkip'][0]						= '<font color=#FF6600>Nie aktywne</font>';
 $LNG['ac_mail']								= 'E-Mail';
 $LNG['ac_perm_mail']						= 'stały E-Mail';
 $LNG['ac_auth_level']						= 'Ranga';
@@ -879,41 +862,41 @@ $LNG['se_delete_succes_p']	= 'Skasowana';
 $LNG['se_confirm_planet']	= 'Planeta zostanie całkowicie zresetowana, czy napewno chcesz to zrobić ? Nazwa planety: ';
 
 // BÚSQUEDA EN TABLA DE USUARIOS
-$LNG['se_search_users'][0]	= 'ID';
-$LNG['se_search_users'][1]	= 'Nazwa';
-$LNG['se_search_users'][2]	= 'E-Mail';
-$LNG['se_search_users'][3]	= 'Ostatnia Aktywność';
-$LNG['se_search_users'][4]	= 'Data rejstracji';
-$LNG['se_search_users'][5]	= 'Ostatnio używane IP';
-$LNG['se_search_users'][6]	= 'Ranga';
-$LNG['se_search_users'][7]	= 'Zablokowany';
-$LNG['se_search_users'][8]	= 'Urlop';
+$LNG['se_search_users_0']	= 'ID';
+$LNG['se_search_users_1']	= 'Nazwa';
+$LNG['se_search_users_2']	= 'E-Mail';
+$LNG['se_search_users_3']	= 'Ostatnia Aktywność';
+$LNG['se_search_users_4']	= 'Data rejstracji';
+$LNG['se_search_users_5']	= 'Ostatnio używane IP';
+$LNG['se_search_users_6']	= 'Ranga';
+$LNG['se_search_users_7']	= 'Zablokowany';
+$LNG['se_search_users_8']	= 'Urlop';
 
 // BÚSQUEDA EN TABLA DE PLANETAS
-$LNG['se_search_planets'][0]	=	'ID';
-$LNG['se_search_planets'][1]	=	'Nazwa';
-$LNG['se_search_planets'][2]	=	"Właściciel";
-$LNG['se_search_planets'][3]	=	"Ostatnia aktywność";
-$LNG['se_search_planets'][4]	=	"Galaktyka";
-$LNG['se_search_planets'][5]	=	"System";
-$LNG['se_search_planets'][6]	=	"Planeta";
-$LNG['se_search_planets'][7]	=	"Księżyc";
+$LNG['se_search_planets_0']	=	'ID';
+$LNG['se_search_planets_1']	=	'Nazwa';
+$LNG['se_search_planets_2']	=	"Właściciel";
+$LNG['se_search_planets_3']	=	"Ostatnia aktywność";
+$LNG['se_search_planets_4']	=	"Galaktyka";
+$LNG['se_search_planets_5']	=	"System";
+$LNG['se_search_planets_6']	=	"Planeta";
+$LNG['se_search_planets_7']	=	"Księżyc";
 
 // BÚSQUEDA EN TABLA DE SUSPENDIDOS
-$LNG['se_search_banned'][0]	=	'ID';
-$LNG['se_search_banned'][1]	=	'Nazwa';
-$LNG['se_search_banned'][2]	=	"Zblokowany od";
-$LNG['se_search_banned'][3]	=	"Zablokowany do";
-$LNG['se_search_banned'][4]	=	"Powód";
-$LNG['se_search_banned'][5]	=	"Autor";
+$LNG['se_search_banned_0']	=	'ID';
+$LNG['se_search_banned_1']	=	'Nazwa';
+$LNG['se_search_banned_2']	=	"Zblokowany od";
+$LNG['se_search_banned_3']	=	"Zablokowany do";
+$LNG['se_search_banned_4']	=	"Powód";
+$LNG['se_search_banned_5']	=	"Autor";
 
 // BÚSQUEDA EN TABLA DE LA ALIANZA
-$LNG['se_search_alliance'][0]	=	'ID';
-$LNG['se_search_alliance'][1]	=	'Nazwa';
-$LNG['se_search_alliance'][2]	=	"TAG";
-$LNG['se_search_alliance'][3]	=	"Lider";
-$LNG['se_search_alliance'][4]	=	"Data założenia";
-$LNG['se_search_alliance'][5]	=	"Liczba członków";
+$LNG['se_search_alliance_0']	=	'ID';
+$LNG['se_search_alliance_1']	=	'Nazwa';
+$LNG['se_search_alliance_2']	=	"TAG";
+$LNG['se_search_alliance_3']	=	"Lider";
+$LNG['se_search_alliance_4']	=	"Data założenia";
+$LNG['se_search_alliance_5']	=	"Liczba członków";
 //###########################################################//
 
 
@@ -1036,49 +1019,49 @@ $LNG['fb_curl_no']						= '<span style="color:red">Brak Curla! Facebook do funkc
 //----------------------------------------------------------------------------//
 //GameModule.php
 
-$LNG['modul'][0]						= 'Sojusz';
-$LNG['modul'][39]						= 'Symulator';
-$LNG['modul'][2]						= 'Budowa - budynki';
-$LNG['modul'][3]						= 'Budowa - badania';
-$LNG['modul'][4]						= 'Budowa - floty';
-$LNG['modul'][5]						= 'Budowa - obrona';
-$LNG['modul'][6]						= 'Lista znajomych';
-$LNG['modul'][7]						= 'Chat';
-$LNG['modul'][8]						= 'DM-Bank';
-$LNG['modul'][9]						= 'Flota';
-$LNG['modul'][10]						= 'Handlarz Floty';
-$LNG['modul'][41]						= 'Skróty floty';
-$LNG['modul'][11]						= 'Galaktyka';
-$LNG['modul'][12]						= 'Hala Sław';
-$LNG['modul'][13]						= 'Handlarz';
-$LNG['modul'][14]						= 'Info';
-$LNG['modul'][15]						= 'Imperium';
-$LNG['modul'][32]						= 'Misja - Wydobywaj';
-$LNG['modul'][42]						= 'Misja - AKS';
-$LNG['modul'][1]						= 'Misja - Atakuj';
-$LNG['modul'][31]						= 'Misja - DM-Misja';
-$LNG['modul'][30]						= 'Misja - Ekspedycje';
-$LNG['modul'][33]						= 'Misja - Zostań';
-$LNG['modul'][35]						= 'Misja - Kolonizuj';
-$LNG['modul'][24]						= 'Misja - Szpieguj';
-$LNG['modul'][36]						= 'Misja - Stacjonuj';
-$LNG['modul'][34]						= 'Misja - Transport';
-$LNG['modul'][29]						= 'Misja - Niszcz';
-$LNG['modul'][16]						= 'Wiadomości';
-$LNG['modul'][17]						= 'Notatki';
-$LNG['modul'][18]						= 'Oficerowie';
-$LNG['modul'][19]						= 'Falanga';
-$LNG['modul'][20]						= 'Karta Gracza';
-$LNG['modul'][21]						= 'Pręgierz';
-$LNG['modul'][40]						= 'Atak Rakietowy';
-$LNG['modul'][22]						= 'Rekordy';
-$LNG['modul'][23]						= 'Zasoby';
-$LNG['modul'][38]						= 'Sprzedawca złomu';
-$LNG['modul'][25]						= 'Statystyki';
-$LNG['modul'][37]						= 'Baner';
-$LNG['modul'][26]						= 'Wyszukiwarka';
-$LNG['modul'][27]						= 'Badania techniczne';
-$LNG['modul'][28]						= 'Technologia';
+$LNG['modul_0']						= 'Sojusz';
+$LNG['modul_39']						= 'Symulator';
+$LNG['modul_2']						= 'Budowa - budynki';
+$LNG['modul_3']						= 'Budowa - badania';
+$LNG['modul_4']						= 'Budowa - floty';
+$LNG['modul_5']						= 'Budowa - obrona';
+$LNG['modul_6']						= 'Lista znajomych';
+$LNG['modul_7']						= 'Chat';
+$LNG['modul_8']						= 'DM-Bank';
+$LNG['modul_9']						= 'Flota';
+$LNG['modul_10']						= 'Handlarz Floty';
+$LNG['modul_41']						= 'Skróty floty';
+$LNG['modul_11']						= 'Galaktyka';
+$LNG['modul_12']						= 'Hala Sław';
+$LNG['modul_13']						= 'Handlarz';
+$LNG['modul_14']						= 'Info';
+$LNG['modul_15']						= 'Imperium';
+$LNG['modul_32']						= 'Misja - Wydobywaj';
+$LNG['modul_42']						= 'Misja - AKS';
+$LNG['modul_1']						= 'Misja - Atakuj';
+$LNG['modul_31']						= 'Misja - DM-Misja';
+$LNG['modul_30']						= 'Misja - Ekspedycje';
+$LNG['modul_33']						= 'Misja - Zostań';
+$LNG['modul_35']						= 'Misja - Kolonizuj';
+$LNG['modul_24']						= 'Misja - Szpieguj';
+$LNG['modul_36']						= 'Misja - Stacjonuj';
+$LNG['modul_34']						= 'Misja - Transport';
+$LNG['modul_29']						= 'Misja - Niszcz';
+$LNG['modul_16']						= 'Wiadomości';
+$LNG['modul_17']						= 'Notatki';
+$LNG['modul_18']						= 'Oficerowie';
+$LNG['modul_19']						= 'Falanga';
+$LNG['modul_20']						= 'Karta Gracza';
+$LNG['modul_21']						= 'Pręgierz';
+$LNG['modul_40']						= 'Atak Rakietowy';
+$LNG['modul_22']						= 'Rekordy';
+$LNG['modul_23']						= 'Zasoby';
+$LNG['modul_38']						= 'Sprzedawca złomu';
+$LNG['modul_25']						= 'Statystyki';
+$LNG['modul_37']						= 'Baner';
+$LNG['modul_26']						= 'Wyszukiwarka';
+$LNG['modul_27']						= 'Badania techniczne';
+$LNG['modul_28']						= 'Technologia';
 
 $LNG['mod_module']						= 'Moduły';
 $LNG['mod_info']						= 'Moduły w grze <br><font color="red">Admini mogą dalej używać nie aktywne opcje!</font>';
@@ -1227,19 +1210,19 @@ $LNG['log_usettings']					= 'Ustawienia uniwersum';
 $LNG['log_statsettings']				= 'Ustawienia statystyk';
 $LNG['log_chatsettings']				= 'Ustawienia Chat';
 $LNG['log_tssettings']					= 'Teamspeak-Konfiguration';
-$LNG['log_disclamersettings']			= 'Impressum';
+$LNG['log_disclamersettings']			= 'Kontakt';
 $LNG['log_uni_short']					= 'Uni';
 $LNG['log_universe']					= 'Universum';
 
 //Cronjobs
-$LNG['cronName']['referral']		= 'Bonus dla poleconych';
-$LNG['cronName']['statistic']		= 'Statystyka';
-$LNG['cronName']['daily']			= 'Zadania dzienne';
-$LNG['cronName']['cleaner']			= 'Usuń przestarzałe dane';
-$LNG['cronName']['inactive']		= 'Usuń nie aktywnych';
-$LNG['cronName']['teamspeak']		= 'Aktualizacja ustawień Teamspeak';
-$LNG['cronName']['tracking']		= 'Wyślij statystyki na główny serwer.';
-$LNG['cronName']['databasedump']	= 'Backup bazy danych';
+$LNG['cronName_referral']		= 'Bonus dla poleconych';
+$LNG['cronName_statistic']		= 'Statystyka';
+$LNG['cronName_daily']			= 'Zadania dzienne';
+$LNG['cronName_cleaner']			= 'Usuń przestarzałe dane';
+$LNG['cronName_inactive']		= 'Usuń nie aktywnych';
+$LNG['cronName_teamspeak']		= 'Aktualizacja ustawień Teamspeak';
+$LNG['cronName_tracking']		= 'Wyślij statystyki na główny serwer.';
+$LNG['cronName_databasedump']	= 'Backup bazy danych';
 
 
 $LNG['cronjob_id']					= 'ID';

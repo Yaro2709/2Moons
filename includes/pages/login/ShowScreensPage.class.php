@@ -1,35 +1,22 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan <info@2moons.cc>
- * @copyright 2006 Perberos <ugamela@perberos.com.ar> (UGamela)
- * @copyright 2008 Chlorel (XNova)
- * @copyright 2012 Jan <info@2moons.cc> (2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 2.0.$Revision: 2242 $ (2012-11-31)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 
-class ShowScreensPage extends AbstractPage
+class ShowScreensPage extends AbstractLoginPage
 {
 	public static $requireModule = 0;
 
@@ -42,27 +29,30 @@ class ShowScreensPage extends AbstractPage
 	{
 		$screenshots	= array();
 		$directoryIterator = new DirectoryIterator('styles/resource/images/login/screens/');
-        foreach ($directoryIterator as $fileinfo) { 
-            if (!$fileinfo->isFile())
+        foreach ($directoryIterator as $fileInfo)
+		{
+			/** @var $fileInfo DirectoryIterator */
+			if (!$fileInfo->isFile())
 			{
 				continue;
             }			
 			
-			$thumbnail = 'styles/resource/images/login/screens/'.$fileinfo->getFilename();
-			if(file_exists('styles/resource/images/login/screens/thumbnails/'.$fileinfo->getFilename()))
+			$thumbnail = 'styles/resource/images/login/screens/'.$fileInfo->getFilename();
+			if(file_exists('styles/resource/images/login/screens/thumbnails/'.$fileInfo->getFilename()))
 			{
-				$thumbnail = 'styles/resource/images/login/screens/thumbnails/'.$fileinfo->getFilename();
+				$thumbnail = 'styles/resource/images/login/screens/thumbnails/'.$fileInfo->getFilename();
 			}
 			
 			$screenshots[]	= array(
-				'path' 		=> 'styles/resource/images/login/screens/'.$fileinfo->getFilename(),
+				'path' 		=> 'styles/resource/images/login/screens/'.$fileInfo->getFilename(),
 				'thumbnail' => $thumbnail,
 			);
 		}
 		
 		$this->assign(array(
 			'screenshots' => $screenshots
-		));;
-		$this->render('page.screens.default.tpl');
+		));
+
+		$this->display('page.screens.default.tpl');
 	}
 }

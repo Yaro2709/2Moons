@@ -1,7 +1,21 @@
 <?php
 
-// 2Moons - Copyright © 2012 Jan Kröpke <info@2moons.cc>
-// Translation into Russian - Copyright © 2012 InquisitorEA <support@moon-hunt.ru>
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
+
+// Translation into Russian - Copyright © 2010-2013 InquisitorEA <support@moon-hunt.ru>
 
 $LNG['Messages']                          = 'Сообщения';
 $LNG['write_message']                     = 'Написать сообщение';
@@ -10,29 +24,27 @@ $LNG['ready']                             = 'Готово';
 $LNG['loading']                           = 'Загрузка...';
 $LNG['invalid_action']                    = 'Недопустимое действие.';
 
-$LNG['type_mission'][1]                   = 'Атака';
-$LNG['type_mission'][2]                   = 'Совместная атака';
-$LNG['type_mission'][3]                   = 'Транспорт';
-$LNG['type_mission'][4]                   = 'Оставить';
-$LNG['type_mission'][5]                   = 'Держаться';
-$LNG['type_mission'][6]                   = 'Шпионаж';
-$LNG['type_mission'][7]                   = 'Колонизировать';
-$LNG['type_mission'][8]                   = 'Переработать';
-$LNG['type_mission'][9]                   = 'Уничтожить';
-$LNG['type_mission'][10]                  = 'Ракетная атака';
-$LNG['type_mission'][11]                  = 'Поиск Тёмной материи';
-$LNG['type_mission'][15]                  = 'Экспедиция';
+$LNG['type_mission_1']                   = 'Атака';
+$LNG['type_mission_2']                   = 'Совместная атака';
+$LNG['type_mission_3']                   = 'Транспорт';
+$LNG['type_mission_4']                   = 'Оставить';
+$LNG['type_mission_5']                   = 'Держаться';
+$LNG['type_mission_6']                   = 'Шпионаж';
+$LNG['type_mission_7']                   = 'Колонизировать';
+$LNG['type_mission_8']                   = 'Переработать';
+$LNG['type_mission_9']                   = 'Уничтожить';
+$LNG['type_mission_10']                  = 'Ракетная атака';
+$LNG['type_mission_11']                  = 'Поиск Тёмной материи';
+$LNG['type_mission_15']                  = 'Экспедиция';
 
-$LNG['type_planet'][1]                    = 'Планета';
-$LNG['type_planet'][2]                    = 'Поле обломков';
-$LNG['type_planet'][3]                    = 'Луна';
+$LNG['type_planet_1']                    = 'Планета';
+$LNG['type_planet_2']                    = 'Поле обломков';
+$LNG['type_planet_3']                    = 'Луна';
 
-$LNG['user_level'] = array (
-	'0' => 'Игрок',
-	'1' => 'Модератор',
-	'2' => 'Оператор',
-	'3' => 'Администратор',
-);
+$LNG['user_level_0']                        = 'Игрок';
+$LNG['user_level_1']                        = 'Модератор';
+$LNG['user_level_2']                        = 'Оператор';
+$LNG['user_level_3']                        = 'Администратор';
 
 // Общее
 $LNG['page_doesnt_exist']                 = 'Страница не существует.';
@@ -380,7 +392,7 @@ $LNG['bd_next_level']                     = 'Следующий уровень:'
 $LNG['bd_need_engine']                    = 'Потребляет <span style="color:#FF0000">%s</span> энергии';
 $LNG['bd_more_engine']                    = 'Производит <span style="color:#00FF00">%s</span> энергии';
 $LNG['bd_jump_gate_action']               = 'Переместиться';
-$LNG['bd_cancel_warning']                 = 'При удалении из очереди будет возвращено только 60% ресурсов.';
+$LNG['bd_cancel_warning']                 = 'При удалении из очереди будет возвращено только 40% ресурсов.';
 $LNG['bd_cancel_send']                    = 'Выбрать - Удалить';
 $LNG['bd_destroy_time']                   = 'Время';
 $LNG['bd_max_ships']                      = 'макс';
@@ -625,6 +637,7 @@ $LNG['al_inside_section']                 = 'Внутренняя компете
 $LNG['al_make_alliance']                  = 'Создание альянса';
 $LNG['al_make_ally_tag_required']         = 'Аббревиатура (3-8 символов)';
 $LNG['al_make_ally_name_required']        = 'Название (3-30 символов)';
+$LNG['al_make_ally_insufficient_points']  = 'У Вас нет достаточно очков, чтобы сформировать альянс.<br>Необходимо иметь %s очков. Вам не хватает %s очков.';
 $LNG['al_make_submit']                    = 'Создать';
 $LNG['al_find_alliances']                 = 'Поиск альянса';
 $LNG['al_find_text']                      = 'Название';
@@ -725,6 +738,7 @@ $LNG['al_rank_desc']['DIPLOMATIC']        = 'Управлять дипломат
 $LNG['al_rank_desc']['RANKS']             = 'Управлять рангами';
 $LNG['al_rank_desc']['MANAGEUSERS']       = 'Управлять членами альянса';
 $LNG['al_rank_desc']['EVENTS']            = 'Видеть события во внутреннем тексте';
+$LNG['al_invalid_rank_name']              = 'Имя ранга может состоять только из букв, цифр, пробелов и символов "_", "-", "."';
 
 // Друзья
 $LNG['bu_request_exists']                 = 'Вы уже отправляли предложение пожружиться этому игроку.';
@@ -941,6 +955,8 @@ $LNG['sys_refferal_title']                = 'Награда за игрока %s
 $LNG['sys_refferal_text']                 = 'Игрок %s, которого Вы привлекли, достиг %s очков.<br><br>В благодарность за привлечённого игрока Вы получаете %s Тёмной материи.';
 $LNG['sys_closed_game']                   = 'Вселенная в данный момент недоступна:';
 $LNG['spec_mail_inactive_title']          = '%s - Напоминание';
+$LNG['sys_back']                          = 'Назад';
+$LNG['sys_forward']                       = 'Дальше';
 
 // Боевой доклад
 $LNG['cr_lost_contact']                   = 'Контакт с флотом потерян.';
@@ -1059,10 +1075,12 @@ $LNG['ti_submit']                         = 'Отправить';
 $LNG['ti_read']                           = 'Запрос прочитан';
 $LNG['ti_answer']                         = 'Ответ';
 $LNG['ti_create']                         = 'Запрос создан игроком';
+$LNG['ti_msgtime']                        = 'Запрос создан';
 $LNG['ti_responded']                      = 'Ответил на запрос ';
 $LNG['ti_not_exist']                      = 'Запрос #%d не существует.';
-$LNG['ti_from']                           = 'От';
+$LNG['ti_from']                           = 'Автор';
 $LNG['ti_re']                             = 'Повтор:';
+$LNG['ti_error_no_subject']               = 'Вы не указали тему запроса.';
 
 // Рекорды
 $LNG['rec_players']                       = 'Игрок';

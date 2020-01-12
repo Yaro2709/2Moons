@@ -1,45 +1,33 @@
 <?php
 
 /**
- *  2Moons
- *  Copyright (C) 2012 Jan
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan <info@2moons.cc>
- * @copyright 2006 Perberos <ugamela@perberos.com.ar> (UGamela)
- * @copyright 2008 Chlorel (XNova)
- * @copyright 2009 Lucky (XGProyecto)
- * @copyright 2012 Jan <info@2moons.cc> (2Moons)
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 2.0 (2012-11-31)
- * @info $Id$
- * @link http://code.google.com/p/2moons/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
 
 class ArrayUtil
 {
-	function combineArrayWithSingleElement($keys, $var) {
+	static public function combineArrayWithSingleElement($keys, $var)
+	{
 		if(empty($keys))
 		{
 			return array();
 		}
 		return array_combine($keys, array_fill(0, count($keys), $var));
 	}
-	
-	function combineArrayWithKeyElements($keys, $var) {
+
+	static public function combineArrayWithKeyElements($keys, $var)
+	{
 		$temp	= array();
 		foreach($keys as $key)
 		{
@@ -57,7 +45,7 @@ class ArrayUtil
 	}
 	
 	// http://www.php.net/manual/en/function.array-key-exists.php#81659
-	function arrayKeyExistsRecrusive($needle, $haystack)
+	static public function arrayKeyExistsRecursive($needle, $haystack)
 	{
 		$result = array_key_exists($needle, $haystack);
 		
@@ -70,7 +58,7 @@ class ArrayUtil
 		{
 			if (is_array($v))
 			{
-				$result = self::arrayKeyExistsRecrusive($needle, $v);
+				$result = self::arrayKeyExistsRecursive($needle, $v);
 			}
 			
 			if ($result)

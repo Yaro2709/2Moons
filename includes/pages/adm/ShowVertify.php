@@ -2,36 +2,23 @@
 
 /**
  *  2Moons
- *  Copyright (C) 2011 Jan Kröpke
+ *  Copyright (C) 2016 Jan-Otto Kröpke
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kröpke <info@2moons.cc>
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
  * @copyright 2009 Lucky
- * @copyright 2011 Jan Kröpke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
  * @version 1.7.0 (2011-12-10)
- * @info $Id$
- * @link http://2moons.cc/
+ * @link https://github.com/jkroepke/2Moons
  */
 
 if (!allowedTo(str_replace(array(dirname(__FILE__), '\\', '/', '.php'), '', __FILE__))) throw new Exception("Permission error!");
 
 function ShowVertify() 
 {
-	global $CONF, $LNG;
 	$EXT		= explode("|", HTTP::_GP("ext", ""));
 	$action 	= HTTP::_GP("action", "");
 	$file	 	= HTTP::_GP("file", "");
@@ -43,7 +30,7 @@ function ShowVertify()
 			$REV	= $REV[2];
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-			curl_setopt($ch, CURLOPT_URL, 'http://2moons.googlecode.com/svn-history/r'.$REV.'/trunk/'.$file);
+			curl_setopt($ch, CURLOPT_URL, 'https://raw.githubusercontent.com/jkroepke/2Moons/master/'.$file);
 			curl_setopt($ch, CURLOPT_HEADER, false);
 			curl_setopt($ch, CURLOPT_USERAGENT, "2Moons Update API");
 			curl_setopt($ch, CURLOPT_CRLF, true);
@@ -71,7 +58,6 @@ function ShowVertify()
 				echo 2;
 				exit;
 			}
-			exit;
 		break;
 		case 'vertify':
 			$template->loadscript('vertify.js');

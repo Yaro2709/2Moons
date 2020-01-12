@@ -1,4 +1,18 @@
 <?php
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 // Translated into English by QwataKayean . All rights reversed (C) 2012
 // 2Moons - Copyright (C) 2010-2012 Slaver
@@ -179,22 +193,22 @@ $LNG['sys_destruc_null']        		   	= 'The deathstars could not charge fully b
 $LNG['fcp_colony']							= 'Colony';
 $LNG['fl_simulate']							= 'Simulate';
 
-$LNG['type_mission'][1]  					= 'Attack';
-$LNG['type_mission'][2]  					= 'Alliance Attack';
-$LNG['type_mission'][3]  					= 'Transport';
-$LNG['type_mission'][4]  					= 'Station';
-$LNG['type_mission'][5]  					= 'Hold';
-$LNG['type_mission'][6]  					= 'Spy';
-$LNG['type_mission'][7]  					= 'Colonisation';
-$LNG['type_mission'][8]  					= 'Recycle';
-$LNG['type_mission'][9]  					= 'Destroy';
-$LNG['type_mission'][11]  					= 'DM Investigation';
-$LNG['type_mission'][15] 					= 'Expedition';
+$LNG['type_mission_1']  					= 'Attack';
+$LNG['type_mission_2']  					= 'Alliance Attack';
+$LNG['type_mission_3']  					= 'Transport';
+$LNG['type_mission_4']  					= 'Station';
+$LNG['type_mission_5']  					= 'Hold';
+$LNG['type_mission_6']  					= 'Spy';
+$LNG['type_mission_7']  					= 'Colonisation';
+$LNG['type_mission_8']  					= 'Recycle';
+$LNG['type_mission_9']  					= 'Destroy';
+$LNG['type_mission_11']  					= 'DM Investigation';
+$LNG['type_mission_15'] 					= 'Expedition';
 
-$LNG['type_planet_short'][1]  				= 'P';
-$LNG['type_planet_short'][2]  				= 'D';
-$LNG['type_planet_short'][3]  				= 'M';
+$LNG['type_planet_short_1']  				= 'P';
+$LNG['type_planet_short_2']  				= 'D';
+$LNG['type_planet_short_3']  				= 'M';
 
-$LNG['type_planet'][1]  					= 'Planet';
-$LNG['type_planet'][2]  					= 'Debris';
-$LNG['type_planet'][3]  					= 'Moon';
+$LNG['type_planet_1']  					= 'Planet';
+$LNG['type_planet_2']  					= 'Debris';
+$LNG['type_planet_3']  					= 'Moon';

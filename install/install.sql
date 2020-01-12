@@ -1,28 +1,18 @@
 /**
  *  2Moons
- *  Copyright (C) 2012 Jan Kr�pke
+ *   by Jan-Otto Kröpke 2009-2016
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * For the full copyright and license information, please view the LICENSE
  *
  * @package 2Moons
- * @author Jan Kr�pke <info@2moons.cc>
- * @copyright 2012 Jan Kr�pke <info@2moons.cc>
- * @license http://www.gnu.org/licenses/gpl.html GNU GPLv3 License
- * @version 1.7.3 (2013-05-19)
- * @info $Id$
- * @link http://2moons.cc/
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
  */
+
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -170,6 +160,9 @@ CREATE TABLE `%PREFIX%config` (
   `game_speed` bigint(20) unsigned NOT NULL DEFAULT '2500',
   `fleet_speed` bigint(20) unsigned NOT NULL DEFAULT '2500',
   `resource_multiplier` smallint(5) unsigned NOT NULL DEFAULT '1',
+  `storage_multiplier` smallint(5) unsigned NOT NULL DEFAULT '1',
+  `message_delete_behavior` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `message_delete_days` tinyint(3) unsigned NOT NULL DEFAULT '7',
   `halt_speed` smallint(5) unsigned NOT NULL DEFAULT '1',
   `Fleet_Cdr` tinyint(3) unsigned NOT NULL DEFAULT '30',
   `Defs_Cdr` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -307,11 +300,19 @@ CREATE TABLE `%PREFIX%cronjobs` (
   `month` varchar(32) NOT NULL,
   `dow` varchar(32) NOT NULL,
   `class` varchar(32) NOT NULL,
-  `nextTime` int(11) NOT NULL DEFAULT '0',
+  `nextTime` int(11) DEFAULT NULL,
   `lock` varchar(32) DEFAULT NULL,
   UNIQUE KEY `cronjobID` (`cronjobID`),
   KEY `isActive` (`isActive`,`nextTime`,`lock`,`cronjobID`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `%PREFIX%cronjobs_log` (
+ `cronjobId` int(11) unsigned NOT NULL,
+ `executionTime` datetime NOT NULL,
+ `lockToken` varchar(32) NOT NULL,
+ KEY `cronjobId` (`cronjobId`,`executionTime`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `%PREFIX%diplo` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -440,9 +441,11 @@ CREATE TABLE `%PREFIX%messages` (
   `message_text` text,
   `message_unread` tinyint(4) NOT NULL DEFAULT '1',
   `message_universe` tinyint(3) unsigned NOT NULL,
+  `message_deleted` int(11) unsigned NULL DEFAULT NULL,
   PRIMARY KEY (`message_id`),
   KEY `message_sender` (`message_sender`),
-  KEY `message_owner` (`message_owner`,`message_type`,`message_unread`)
+  KEY `message_deleted` (`message_deleted`),
+  KEY `message_owner` (`message_owner`,`message_type`,`message_unread`,`message_deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `%PREFIX%multi` (
@@ -641,6 +644,10 @@ CREATE TABLE `%PREFIX%statpoints` (
   KEY `id_owner` (`id_owner`),
   KEY `universe` (`universe`),
   KEY `stat_type` (`stat_type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `%PREFIX%system` (
+  `dbVersion` int(10) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `%PREFIX%ticket` (
@@ -930,6 +937,9 @@ INSERT INTO `%PREFIX%cronjobs` (`cronjobID`, `name`, `isActive`, `min`, `hours`,
 (NULL, 'teamspeak', 0, '*/3', '*', '*', '*', '*', 'TeamSpeakCronjob', 0, NULL),
 (NULL, 'databasedump', 1, '30', '1', '*', '*', '1', 'DumpCronjob', 0, NULL),
 (NULL, 'tracking', 1, FLOOR(RAND() * 60), FLOOR(RAND() * 24), '*', '*', '0', 'TrackingCronjob', 0, NULL);
+
+INSERT INTO `%PREFIX%system` (`dbVersion`) VALUES
+(%DB_VERSION%);
 
 INSERT INTO `%PREFIX%ticket_category` (`categoryID`, `name`) VALUES
 (1, 'Support');

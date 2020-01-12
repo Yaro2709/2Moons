@@ -1,5 +1,18 @@
 <?php
-
+/**
+ *  2Moons 
+ *   by Jan-Otto Kröpke 2009-2016
+ *
+ * For the full copyright and license information, please view the LICENSE
+ *
+ * @package 2Moons
+ * @author Jan-Otto Kröpke <slaver7@gmail.com>
+ * @copyright 2009 Lucky
+ * @copyright 2016 Jan-Otto Kröpke <slaver7@gmail.com>
+ * @licence MIT
+ * @version 1.8.0
+ * @link https://github.com/jkroepke/2Moons
+ */
 
 $LNG['and']									= 'y';
 
@@ -177,22 +190,22 @@ $LNG['sys_destruc_null'] 					= "Las estrellas de la muerten no generan el poder
 $LNG['fcp_colony']							= 'Colonia';
 $LNG['fl_simulate']						= 'Simular';
 
-$LNG['type_mission'][1]  					= 'Atacar';
-$LNG['type_mission'][2]  					= 'Ataque grupal (SAC)';
-$LNG['type_mission'][3]  					= 'Transporte';
-$LNG['type_mission'][4]  					= 'Desplegar';
-$LNG['type_mission'][5]  					= 'Mantener';
-$LNG['type_mission'][6]  					= 'Espiar';
-$LNG['type_mission'][7]  					= 'Colonizar';
-$LNG['type_mission'][8]  					= 'Reciclar';
-$LNG['type_mission'][9]  					= 'Destruir';
-$LNG['type_mission'][11]  					= 'Investigación DM';
-$LNG['type_mission'][15] 					= 'Expedición';
+$LNG['type_mission_1']  					= 'Atacar';
+$LNG['type_mission_2']  					= 'Ataque grupal (SAC)';
+$LNG['type_mission_3']  					= 'Transporte';
+$LNG['type_mission_4']  					= 'Desplegar';
+$LNG['type_mission_5']  					= 'Mantener';
+$LNG['type_mission_6']  					= 'Espiar';
+$LNG['type_mission_7']  					= 'Colonizar';
+$LNG['type_mission_8']  					= 'Reciclar';
+$LNG['type_mission_9']  					= 'Destruir';
+$LNG['type_mission_11']  					= 'Investigación DM';
+$LNG['type_mission_15'] 					= 'Expedición';
 
-$LNG['type_planet_short'][1]  				= 'P';
-$LNG['type_planet_short'][2]  				= 'C.E';
-$LNG['type_planet_short'][3]  				= 'M';
+$LNG['type_planet_short_1']  				= 'P';
+$LNG['type_planet_short_2']  				= 'C.E';
+$LNG['type_planet_short_3']  				= 'M';
 
-$LNG['type_planet'][1]  					= 'Planeta';
-$LNG['type_planet'][2]  					= 'Campo de Escombros';
-$LNG['type_planet'][3]  					= 'Luna';
+$LNG['type_planet_1']  					= 'Planeta';
+$LNG['type_planet_2']  					= 'Campo de Escombros';
+$LNG['type_planet_3']  					= 'Luna';
